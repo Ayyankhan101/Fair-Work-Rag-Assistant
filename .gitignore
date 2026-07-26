@@ -11,9 +11,7 @@ __pycache__/
 *.docx
 data/awards/
 data/awards_new/
-data/vectorstore/
 data/vectorstore_smoke/
-data/docs_cache.pkl
 monitor_build.out
 
 # OS
