@@ -322,20 +322,35 @@ model = "llama-3.1-8b-instant"
 
 ## 🛠️ Development
 
-### Branch Strategy
+### ⛔ Branch Rules (CRITICAL)
 
-| Branch | Purpose | Contents |
-|--------|---------|----------|
-| `main` | Production | README + .gitignore |
-| `develop` | Development | Full codebase + vectorstore |
+| Branch | Direct Push | PR Required | Notes |
+|--------|-------------|-------------|-------|
+| `main` | ❌ **NEVER TOUCH** | ❌ | Owner only - do not touch unless asked |
+| `develop` | ❌ Blocked | ✅ Yes | All development happens here |
+| `feature/*` | ✅ Allowed | No | Create PR to merge into develop |
 
-### Contributing
+### Quick PR (Recommended)
+
+```bash
+# Make changes, then run:
+./scripts/auto-pr.sh "feat: add new award support"
+
+# This will:
+# 1. Create branch: feature/add-new-award-support-{timestamp}
+# 2. Commit changes
+# 3. Push branch
+# 4. Create PR to develop
+# 5. Auto-merge if no conflicts
+```
+
+### Manual PR Flow
 
 1. Fork the repo
 2. Create feature branch: `git checkout -b feature/amazing-feature`
 3. Commit changes: `git commit -m 'Add amazing feature'`
 4. Push to branch: `git push origin feature/amazing-feature`
-5. Open Pull Request
+5. Open Pull Request → **target: develop**
 
 ### Code Quality
 
@@ -379,4 +394,4 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-**Built with ❤️ for Australian employment law**
+
