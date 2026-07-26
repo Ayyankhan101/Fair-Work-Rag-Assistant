@@ -1,0 +1,6 @@
+# Default owner for everything
+* @Ayyankhan101
+
+# Require review for protected branches
+/main @Ayyankhan101
+/develop @Ayyankhan101
