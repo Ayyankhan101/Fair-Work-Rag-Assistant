@@ -73,14 +73,14 @@ graph TB
     GROQ --> O4
     GROQ --> O5
 
-    style User fill:#e1f5fe,stroke:#0288d1,stroke-width:2px
-    style Router fill:#fff3e0,stroke:#f57c00,stroke-width:2px
-    style CAG fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
-    style RAG fill:#fce4ec,stroke:#c62828,stroke-width:2px
-    style VectorDB fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    style Embed fill:#e0f2f1,stroke:#00695c,stroke-width:2px
-    style LLM fill:#fff8e1,stroke:#f9a825,stroke-width:2px
-    style Output fill:#e8eaf6,stroke:#303f9f,stroke-width:2px
+    style User fill:#0277bd,stroke:#01579b,stroke-width:2px,color:#fff
+    style Router fill:#e65100,stroke:#bf360c,stroke-width:2px,color:#fff
+    style CAG fill:#2e7d32,stroke:#1b5e20,stroke-width:2px,color:#fff
+    style RAG fill:#b71c1c,stroke:#880e4f,stroke-width:2px,color:#fff
+    style VectorDB fill:#6a1b9a,stroke:#4a148c,stroke-width:2px,color:#fff
+    style Embed fill:#00695c,stroke:#004d40,stroke-width:2px,color:#fff
+    style LLM fill:#f57f17,stroke:#e65100,stroke-width:2px,color:#000
+    style Output fill:#283593,stroke:#1a237e,stroke-width:2px,color:#fff
 ```
 
 ---
@@ -185,10 +185,10 @@ graph LR
     FIL --> TOP[Top 10 Results]
     TOP --> CTX[Context Window<br/>max 4000 chars]
     
-    style Q fill:#e3f2fd,stroke:#1565c0
-    style RRF fill:#fff3e0,stroke:#ef6c00
-    style FIL fill:#e8f5e9,stroke:#2e7d32
-    style CTX fill:#fce4ec,stroke:#c62828
+    style Q fill:#0277bd,stroke:#01579b,color:#fff
+    style RRF fill:#e65100,stroke:#bf360c,color:#fff
+    style FIL fill:#2e7d32,stroke:#1b5e20,color:#fff
+    style CTX fill:#b71c1c,stroke:#880e4f,color:#fff
 ```
 
 ---
