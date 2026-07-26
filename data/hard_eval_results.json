@@ -1,0 +1,633 @@
+{
+  "summary": {
+    "total_questions": 25,
+    "format_pass": 24,
+    "content_pass": 23,
+    "overall_accuracy": 87.54666666666668,
+    "total_score": 2188.666666666667,
+    "max_score": 2500
+  },
+  "results": [
+    {
+      "id": "H01",
+      "question": "What is the minimum hourly rate for a Level 3 employee under the Cleaning Services Award 2020?",
+      "expected_keywords": [
+        "Cleaning Services Award",
+        "Level 3",
+        "hourly rate",
+        "$"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** $23.23 per hour.\n\n**Award/NES Reference:** Cleaning Services Award 2020\n\n**Clause/Section:** Table 2\u2014Minimum rates, Clause 15.1\n\n**Explanation:** The context specifies that the minimum hourly rate for employees is listed in Table 2\u2014Minimum rates, which is referenced in Clause 15.1. By examining the table, we can find the minimum hourly rate for a Level 3 employee.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 100.0,
+        "max_score": 100,
+        "percentage": 100.0,
+        "details": [
+          "Keywords: 4/4 (40/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H02",
+      "question": "How many consecutive days can an employee work without a day off under the Hospitality Award?",
+      "expected_keywords": [
+        "Hospitality Award",
+        "consecutive days",
+        "7 days",
+        "day off"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 7 consecutive days.\n\n**Award/NES Reference:** Hospitality Industry (General) Award 2020\n\n**Clause/Section:** Clause 15.1(b), Schedule A\u2014Classification Structure and Definitions\n\n**Explanation:** The context specifies that an employee is entitled to a minimum of 1 day off in every 7 consecutive days worked. This is stated in Clause 15.1(b) and reinforced in Schedule A\u2014Classification Structure and Definitions.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 80.0,
+        "max_score": 100,
+        "percentage": 80.0,
+        "details": [
+          "Keywords: 2/4 (20/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H03",
+      "question": "What is the casual loading percentage for casual employees under the General Retail Industry Award?",
+      "expected_keywords": [
+        "General Retail",
+        "casual loading",
+        "25%",
+        "25 percent"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 25%\n\n**Award/NES Reference:** General Retail Industry Award 2020\n\n**Clause/Section:** Clause 11.1\n\n**Explanation:** The context specifies that an employer must pay a casual employee for each hour worked a loading of 25% on top of the minimum hourly rate otherwise applicable under clause 17\u2014Minimum rates.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 90.0,
+        "max_score": 100,
+        "percentage": 90.0,
+        "details": [
+          "Keywords: 3/4 (30/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H04",
+      "question": "Under the Restaurant Industry Award, what are the ordinary hours of work for a full-time employee?",
+      "expected_keywords": [
+        "Restaurant Award",
+        "ordinary hours",
+        "38 hours",
+        "week"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 38 ordinary hours per week.\n\n**Award/NES Reference:** Restaurant Industry Award 2020\n\n**Clause/Section:** Schedule A\u2014Classification Structure and Definitions, 10.2\n\n**Explanation:** The context specifies that a full-time employee is engaged to work at least 38 ordinary hours per week, as stated in Schedule A, 10.2.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 80.0,
+        "max_score": 100,
+        "percentage": 80.0,
+        "details": [
+          "Keywords: 2/4 (20/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H05",
+      "question": "What penalty rate applies to public holidays under the Fast Food Industry Award?",
+      "expected_keywords": [
+        "Fast Food",
+        "public holiday",
+        "penalty",
+        "250%",
+        "225%"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 150% of the employee's ordinary rate of pay for public holidays.\n\n**Award/NES Reference:** Fast Food Industry Award 2020\n\n**Clause/Section:** Clause 20.1, Table 1\n\n**Explanation:** The context specifies that public holidays are paid at 150% of the employee's ordinary rate of pay, as per Clause 20.1 and Table 1, which lists the public holiday penalty rate as 150%.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 84.0,
+        "max_score": 100,
+        "percentage": 84.0,
+        "details": [
+          "Keywords: 3/5 (24/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H06",
+      "question": "What is the minimum annual leave entitlement under the NES?",
+      "expected_keywords": [
+        "NES",
+        "annual leave",
+        "4 weeks",
+        "20 days",
+        "4 weeks per year"
+      ],
+      "difficulty": "nes",
+      "answer": "**Answer:** 4 weeks paid annual leave per year.\n**Award/NES Reference:** National Employment Standards\n**Clause/Section:** Section 87, NES Part 2-2\n**Explanation:** The NES specifies that an employee is entitled to 4 weeks paid annual leave per year, as stated in Section 87 of the NES Part 2-2.\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 92.0,
+        "max_score": 100,
+        "percentage": 92.0,
+        "details": [
+          "Keywords: 4/5 (32/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H07",
+      "question": "How many weeks notice is required for termination after 5 years of continuous service under the NES?",
+      "expected_keywords": [
+        "NES",
+        "notice",
+        "termination",
+        "5 years",
+        "4 weeks",
+        "notice period"
+      ],
+      "difficulty": "nes",
+      "answer": "**Answer:** 4 weeks\n\n**Award/NES Reference:** National Employment Standards\n\n**Clause/Section:** Section 117(3), NES Part 2-2\n\n**Explanation:** The NES specifies notice periods based on continuous service length. According to Section 117(3), an employee with 5+ years of continuous service must give 4 weeks' notice for termination.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 93.33333333333334,
+        "max_score": 100,
+        "percentage": 93.33333333333334,
+        "details": [
+          "Keywords: 5/6 (33/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H08",
+      "question": "What is the maximum probationary period allowed under the Clerks\u2014Private Sector Award?",
+      "expected_keywords": [
+        "Clerks Award",
+        "probation",
+        "6 months",
+        "maximum"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 12 months\n**Award/NES Reference:** Clerks\u2014Private Sector Award 2020\n**Clause/Section:** Clause 12.1\n**Explanation:** The context specifies that the maximum probationary period is 12 months in Clause 12.1 of the Clerks\u2014Private Sector Award 2020.\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 80.0,
+        "max_score": 100,
+        "percentage": 80.0,
+        "details": [
+          "Keywords: 2/4 (20/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H09",
+      "question": "Under the Architects Award, what is the minimum annual salary for a graduate architect?",
+      "expected_keywords": [
+        "Architects Award",
+        "graduate architect",
+        "salary",
+        "minimum"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** $73,694.40 per annum\n\n**Award/NES Reference:** Architects Award 2020\n\n**Clause/Section:** Schedule A\u2014Classification Definitions, Table 1\n\n**Explanation:** The context specifies the minimum annual salary for a Graduate of Architecture in Schedule A\u2014Classification Definitions, Table 1. The rate is $73,694.40 per annum.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 90.0,
+        "max_score": 100,
+        "percentage": 90.0,
+        "details": [
+          "Keywords: 3/4 (30/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H10",
+      "question": "What is the maximum daily hours an employee can work under the Black Coal Mining Industry Award?",
+      "expected_keywords": [
+        "Black Coal",
+        "daily hours",
+        "maximum",
+        "12 hours"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 8 hours\n\n**Award/NES Reference:** Black Coal Mining Industry Award 2020\n\n**Clause/Section:** Clause 14\u2014Ordinary hours of work\n\n**Explanation:** The context specifies that ordinary hours are the hours required to be worked by an employee for the payment of their award classification rate. Clause 14\u2014Ordinary hours of work specifies the ordinary hours of work, but the exact maximum daily hours are not explicitly stated in the provided context. However, the context does mention that a part-time employee is engaged to work less than 35 hours per week (Clause 10.1(a)). Since part-time employees work less than 35 hours per week, it can be inferred that full-time employees work more than 35 hours per week. However, the maximum daily hours are not explicitly stated. \n\nHowever, the context does mention that a part-time employee will be paid the minimum rate for a full-time employee for the hours worked (Clause 10.5). This implies that part-time employees work less than 35 hours per week, but the maximum daily hours for full-time employees are not explicitly stated.\n\nHowever, the context does mention that a permanent night shift employee means an employee who works night shift only, stays on night shift for a longer period than 4 consecutive weeks, or works on a roster that does not give at least one-third of the employee\u2019s working time off night shift in each roster cycle (Clause 2. Definitions). This implies that employees can work night shifts, but the maximum daily hours are not explicitly stated.\n\nHowever, the context does mention that a regular casual employee has the meaning given by section 15A of the Act (Clause 2. Definitions). This implies that casual employees have different working hours, but the maximum daily hours are not explicitly stated.\n\nHowever, the context does mention that a part-time employee will be paid the minimum rate for a full-time employee for the hours worked (Clause 10.5). This implies that part-time employees work less than 35 hours per week, but the maximum daily hours for full-time employees are not explicitly stated.\n\nHowever, the context does mention that a permanent night shift employee means an employee who works night shift only, stays on night shift for a longer period than 4 consecutive weeks, or works on a roster that does not give at least one-third of the employee\u2019s working time off night shift in each roster cycle (Clause 2. Definitions). This implies that employees can work night shifts, but the maximum daily hours are not explicitly stated.\n\nHowever, the context does mention that a regular casual employee has the meaning given by section 15A of the Act (Clause 2. Definitions). This implies that casual employees have different working hours, but the maximum daily hours are not explicitly stated.\n\nHowever, the context does mention that a part-time employee will be paid the minimum rate for a full-time employee for the hours worked (Clause 10.5). This implies that part-time employees work less than 35 hours per week, but the maximum daily hours for full-time employees are not explicitly stated.\n\nHowever, the context does mention that a permanent night shift employee means an employee who works night shift only, stays on night shift for a longer period than 4 consecutive weeks, or works on a roster that does not give at least one-third of the employee\u2019s working time off night shift in each roster cycle (Clause 2. Definitions). This implies that employees can work night shifts, but the maximum daily hours are not explicitly stated.\n\nHowever, the context does mention that a regular casual employee has the meaning given by section 15A of the Act (Clause 2. Definitions). This implies that casual employees have different working hours, but the maximum daily hours are not explicitly stated.\n\nHowever, the context does mention that a part-time employee will be paid the minimum rate for a full-time employee for the hours worked (Clause 10.5). This implies that part-time employees work less than 35 hours per week, but the maximum daily hours for full-time employees are not explicitly stated.\n\nHowever, the context does mention that a permanent night shift employee means an employee who works night shift only, stays on night shift for a longer period than 4 consecutive weeks, or works on a roster that does not give at least one-third of the employee\u2019s working time off night shift in each roster cycle (Clause 2. Definitions). This implies that employees can work night shifts, but the maximum daily hours are not explicitly stated.\n\nHowever, the context does mention that a regular casual employee has the meaning given by section 15A of the Act (Clause 2. Definitions). This implies that casual employees have different working hours, but the maximum daily hours are not explicitly stated.\n\nHowever, the context does mention that a part-time employee will be paid the minimum rate for a full-time employee for the hours worked (Clause 10.5). This implies that part-time employees work less than 35 hours per week, but the maximum daily hours for full-time employees are not explicitly",
+      "format_failures": [
+        "missing **Note:**"
+      ],
+      "content_score": {
+        "score": 90.0,
+        "max_score": 100,
+        "percentage": 90.0,
+        "details": [
+          "Keywords: 3/4 (30/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H11",
+      "question": "What is the weekend penalty rate for Saturday work under the Cleaning Services Award?",
+      "expected_keywords": [
+        "Cleaning Award",
+        "Saturday",
+        "penalty",
+        "150%",
+        "125%"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 130% of the minimum hourly rate for part-time employees.\n\n**Award/NES Reference:** Cleaning Services Award 2020\n\n**Clause/Section:** Table 7\u2014Penalty rates, Column 2\n\n**Explanation:** According to Table 7\u2014Penalty rates, the weekend penalty rate for Saturday work is 130% for part-time employees.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 76.0,
+        "max_score": 100,
+        "percentage": 76.0,
+        "details": [
+          "Keywords: 2/5 (16/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H12",
+      "question": "How many breaks is a full-time employee entitled to during a 8-hour shift under the General Retail Industry Award?",
+      "expected_keywords": [
+        "General Retail",
+        "break",
+        "8-hour",
+        "meal break",
+        "rest break"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** A full-time employee is entitled to one unpaid meal break of at least 30 minutes and one 10-minute paid rest break during an 8-hour shift.\n\n**Award/NES Reference:** General Retail Industry Award 2020\n\n**Clause/Section:** Table 3\u2014Entitlements to meal and rest break(s), Clause 16.2\n\n**Explanation:** According to Table 3, an employee who works 8 hours (more than 5 but less than 7 hours) is entitled to one unpaid meal break of at least 30 minutes and one 10-minute paid rest break.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 100.0,
+        "max_score": 100,
+        "percentage": 100.0,
+        "details": [
+          "Keywords: 5/5 (40/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H13",
+      "question": "What is the minimum engagement period for casual employees under the Hospitality Award?",
+      "expected_keywords": [
+        "Hospitality",
+        "casual",
+        "minimum engagement",
+        "3 hours",
+        "2 hours"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 2 hours\n**Award/NES Reference:** Hospitality Industry (General) Award 2020\n**Clause/Section:** Clause 16.1, Table 2\n**Explanation:** The context specifies that a casual employee is entitled to an unpaid meal break of no less than 30 minutes after the first 2 hours of work and within the first 6 hours of work.\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 84.0,
+        "max_score": 100,
+        "percentage": 84.0,
+        "details": [
+          "Keywords: 3/5 (24/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H14",
+      "question": "Under the NES, what is the maximum unpaid parental leave an employee can take?",
+      "expected_keywords": [
+        "NES",
+        "parental leave",
+        "unpaid",
+        "12 months",
+        "maximum"
+      ],
+      "difficulty": "nes",
+      "answer": "**Answer:** 52 weeks.\n\n**Award/NES Reference:** National Employment Standards\n\n**Clause/Section:** Section 75 of the Fair Work Act, NES Part 2-2\n\n**Explanation:** The NES specifies that an employee is entitled to a maximum of 52 weeks of unpaid parental leave.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 70.0,
+        "max_score": 100,
+        "percentage": 70.0,
+        "details": [
+          "Keywords: 5/5 (40/40)",
+          "Pattern: no match (0/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H15",
+      "question": "What is the public holiday penalty rate for Sunday work under the Restaurant Industry Award?",
+      "expected_keywords": [
+        "Restaurant Award",
+        "Sunday",
+        "penalty",
+        "175%",
+        "150%"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 225% of the minimum hourly rate\n\n**Award/NES Reference:** Restaurant Industry Award 2020\n\n**Clause/Section:** Table 8\u2014Penalty rates, Column 4\n\n**Explanation:** The context specifies the public holiday penalty rate as 225% in Table 8\u2014Penalty rates, Column 4, under the Restaurant Industry Award 2020.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 68.0,
+        "max_score": 100,
+        "percentage": 68.0,
+        "details": [
+          "Keywords: 1/5 (8/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": false
+    },
+    {
+      "id": "H16",
+      "question": "How is overtime calculated for part-time employees under the Professional Employees Award?",
+      "expected_keywords": [
+        "Professional Employees",
+        "overtime",
+        "part-time",
+        "150%",
+        "rate"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** Overtime for part-time employees is calculated at 125% of the minimum hourly rate for hours worked before 6 am on Monday to Saturday, and 150% of the minimum hourly rate for hours worked after 10 pm on Monday to Saturday.\n\n**Award/NES Reference:** Professional Employees Award 2020\n\n**Clause/Section:** Clause 18.4, Table C.1\n\n**Explanation:** The context specifies the overtime rates for part-time employees in Clause 18.4, which states that part-time employees must be paid penalty rates for all hours worked at the direction of the employer. Table C.1 in Schedule C\u2014Summary of Hourly Rates of Pay lists the overtime rates for part-time employees, which are 125% of the minimum hourly rate for hours worked before 6 am on Monday to Saturday, and 150% of the minimum hourly rate for hours worked after 10 pm on Monday to Saturday.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 100.0,
+        "max_score": 100,
+        "percentage": 100.0,
+        "details": [
+          "Keywords: 5/5 (40/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H17",
+      "question": "What notice period is required for a casual employee to terminate employment under the Hair and Beauty Industry Award?",
+      "expected_keywords": [
+        "Hair and Beauty",
+        "casual",
+        "notice",
+        "termination"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 1 week\n**Award/NES Reference:** Hair and Beauty Industry Award 2020\n**Clause/Section:** Clause 11.2(b), Table 13\n**Explanation:** The context specifies that casual employees are entitled to a casual loading, which is used to calculate overtime rates. However, it does not directly specify the notice period for casual employees to terminate employment. The NES Part 2-2, Section 117(3) provides notice periods based on continuous service length, but this is not specific to the Hair and Beauty Industry Award. Since the context does not provide a specific notice period for casual employees, we must refer to the NES. According to the NES, a casual employee is not entitled to notice of termination and must give one week's notice in writing to terminate their employment.\n**Note:** This answer is based on the specific context provided and the NES.",
+      "format_failures": [],
+      "content_score": {
+        "score": 100.0,
+        "max_score": 100,
+        "percentage": 100.0,
+        "details": [
+          "Keywords: 4/4 (40/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H18",
+      "question": "Under the NES, what are the 10 National Employment Standards?",
+      "expected_keywords": [
+        "NES",
+        "10 standards",
+        "National Employment Standards",
+        "annual leave",
+        "sick leave",
+        "notice"
+      ],
+      "difficulty": "nes",
+      "answer": "**Answer:** The 10 National Employment Standards are: \n1. Fair Request for Flexible Working Arrangements\n2. Parental Leave\n3. Annual Leave\n4. Personal/Carer's Leave and Compassionate Leave\n5. Notice of Termination or Redundancy\n6. Public Holidays\n7. Maximum Weekly Hours\n8. Request for Casual Leave\n9. Annual Leave Loading\n10. Long Service Leave\n\n**Award/NES Reference:** National Employment Standards\n\n**Clause/Section:** Section 2, NES Part 2-1\n\n**Explanation:** The context specifies the 10 National Employment Standards in Section 2 of the NES.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 86.66666666666666,
+        "max_score": 100,
+        "percentage": 86.66666666666666,
+        "details": [
+          "Keywords: 4/6 (27/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H19",
+      "question": "What is the maximum number of ordinary hours a junior employee can work in a single day under the Fast Food Industry Award?",
+      "expected_keywords": [
+        "Fast Food",
+        "junior",
+        "hours",
+        "maximum",
+        "11 hours"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 38 ordinary hours per week, which translates to 5.57 ordinary hours per day (38 hours / 7 days), but no specific daily limit is mentioned in the context.\n\n**Award/NES Reference:** Fast Food Industry Award 2020\n\n**Clause/Section:** Clause 10.1, 11.1, Table 4\n\n**Explanation:** The context specifies that a part-time employee works less than 38 ordinary hours per week (Clause 10.1), and a casual employee's ordinary hours may be no more than 38 ordinary hours per week (Clause 11.1). However, it does not specify a daily limit for junior employees. Table 4 lists junior rates based on age, but it does not mention a daily limit.\n\n**Note:** Information is limited \u2014 please consult the full Award text for complete details.",
+      "format_failures": [],
+      "content_score": {
+        "score": 54.0,
+        "max_score": 100,
+        "percentage": 54.0,
+        "details": [
+          "Keywords: 3/5 (24/40)",
+          "Pattern: no match (0/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": false
+    },
+    {
+      "id": "H20",
+      "question": "What is the minimum shift length for evening work under the Sporting Organisations Award?",
+      "expected_keywords": [
+        "Sporting Organisations",
+        "evening",
+        "shift",
+        "minimum"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** 2 hours\n\n**Award/NES Reference:** Sporting Organisations Award 2020\n\n**Clause/Section:** Clause 4.1, 4.2, 4.3, Table 2 (not visible in the context, but implied as part of the Award)\n\n**Explanation:** The context does not explicitly state the minimum shift length for evening work. However, it does mention that the Award covers national, State and Territory sporting organisations with respect to their employees in the classifications in this award. The Award also excludes certain employees, including Chief Executive Officers, coaches, and employees of racing clubs. The context does not provide specific information about shift lengths for evening work. However, it is implied that the Award may have provisions related to shift lengths, but they are not explicitly stated in the provided context.\n\n**Note:** Information is limited \u2014 please consult the full Award text for complete details.",
+      "format_failures": [],
+      "content_score": {
+        "score": 100.0,
+        "max_score": 100,
+        "percentage": 100.0,
+        "details": [
+          "Keywords: 4/4 (40/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H21",
+      "question": "Compare the casual loading between the Cleaning Services Award and the Hospitality Award. Which is higher?",
+      "expected_keywords": [
+        "casual loading",
+        "Cleaning",
+        "Hospitality",
+        "25%",
+        "comparison"
+      ],
+      "difficulty": "comparison",
+      "answer": "**Answer:** The casual loading in the Cleaning Services Award is 25%, while the casual loading in the Hospitality Award is 25% as well.\n\n**Award/NES Reference:** Cleaning Services Award 2020, Hospitality Industry (General) Award 2020\n\n**Clause/Section:** Clause 11.2, Cleaning Services Award 2020; Clause 16.1, Hospitality Industry (General) Award 2020\n\n**Explanation:** The context specifies that the casual loading in the Cleaning Services Award is 25% (Clause 11.2), and the casual loading in the Hospitality Award is also 25% (Clause 16.1).\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 92.0,
+        "max_score": 100,
+        "percentage": 92.0,
+        "details": [
+          "Keywords: 4/5 (32/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H22",
+      "question": "What is the maximum span of ordinary hours for a full-time employee across all Awards in the retail sector?",
+      "expected_keywords": [
+        "retail",
+        "span",
+        "ordinary hours",
+        "12 hours",
+        "General Retail"
+      ],
+      "difficulty": "cross-award",
+      "answer": "**Answer:** 9.00 pm on a Monday to Friday, 6.00 pm on a Saturday, and 6.00 pm on a Sunday.\n\n**Award/NES Reference:** General Retail Industry Award 2020\n\n**Clause/Section:** Clause 15.1, Table 2\n\n**Explanation:** The context specifies the maximum span of ordinary hours for a full-time employee in the retail sector across all Awards. Table 2\u2014Span of hours in Clause 15.1 lists the maximum span of ordinary hours for each day of the week.\n\n**Note:** This answer is based on the specific context provided.",
+      "format_failures": [],
+      "content_score": {
+        "score": 92.0,
+        "max_score": 100,
+        "percentage": 92.0,
+        "details": [
+          "Keywords: 4/5 (32/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H23",
+      "question": "What are the key differences between the NES and Modern Awards regarding annual leave?",
+      "expected_keywords": [
+        "NES",
+        "Modern Award",
+        "annual leave",
+        "difference",
+        "4 weeks",
+        "20 days"
+      ],
+      "difficulty": "comparison",
+      "answer": "**Answer:** Annual leave provisions in the NES and Modern Awards differ in the accrual rate, carry-over, and payment for annual leave. The NES specifies that an employee accrues 4 weeks of annual leave for each year of service (Section 87(1), NES Part 2-2). In contrast, Modern Awards, such as the Pharmacy Industry Award 2020 (Clause 3.2(d)), specify that employees accrue 4 weeks of annual leave for each year of service, but some Awards, like the Fast Food Industry Award 2020 (Clause 3.2(d)), specify 4 weeks for each year of service, but also allow for a maximum of 8 weeks of annual leave to be carried over to the next year.\n\n**Award/NES Reference:** National Employment Standards, Pharmacy Industry Award 2020, Fast Food Industry Award 2020\n\n**Clause/Section:** Section 87(1), NES Part 2-2, Clause 3.2(d), Pharmacy Industry Award 2020, Clause 3.2(d), Fast Food Industry Award 2020\n\n**Explanation:** The context specifies that the NES and Modern Awards have different provisions regarding annual leave accrual, carry-over, and payment. The NES specifies a standard accrual rate, while Modern Awards may have varying provisions.\n\n**Note:** Multiple Awards may apply \u2014 please check specific Award for details",
+      "format_failures": [],
+      "content_score": {
+        "score": 93.33333333333334,
+        "max_score": 100,
+        "percentage": 93.33333333333334,
+        "details": [
+          "Keywords: 5/6 (33/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H24",
+      "question": "Under which Awards can an employee be required to work on public holidays?",
+      "expected_keywords": [
+        "public holiday",
+        "required to work",
+        "Award",
+        "Hospitality",
+        "Retail",
+        "essential"
+      ],
+      "difficulty": "cross-award",
+      "answer": "**Answer:** The Hospitality Industry (General) Award 2020, the Salt Industry Award 2020, the General Retail Industry Award 2020, and the Textile, Clothing, Footwear and Associated Industries Award 2020.\n\n**Award/NES Reference:** Hospitality Industry (General) Award 2020, Salt Industry Award 2020, General Retail Industry Award 2020, Textile, Clothing, Footwear and Associated Industries Award 2020\n\n**Clause/Section:** Clause 33.3(a), Table 12\u2014Penalty rates, Clause 22.3(a), Clause 22.3(b), Schedule F\u2014Outwork and Related Provisions\n\n**Explanation:** The context specifies that public holiday entitlements are provided for in the NES (General Retail Industry Award 2020, Clause 33.1), but the Awards also provide specific provisions for working on public holidays. The Hospitality Industry (General) Award 2020 does not explicitly state that employees can be required to work on public holidays, but the Salt Industry Award 2020, General Retail Industry Award 2020, and Textile, Clothing, Footwear and Associated Industries Award 2020 all have provisions for payment for work on public holidays or substitute days.\n\n**Note:** Multiple Awards may apply \u2014 please check specific Award for details.",
+      "format_failures": [],
+      "content_score": {
+        "score": 93.33333333333334,
+        "max_score": 100,
+        "percentage": 93.33333333333334,
+        "details": [
+          "Keywords: 5/6 (33/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "id": "H25",
+      "question": "What is the minimum hourly rate for a Level 5 employee under the General Retail Industry Award?",
+      "expected_keywords": [
+        "General Retail",
+        "Level 5",
+        "hourly rate",
+        "$"
+      ],
+      "difficulty": "specific",
+      "answer": "**Answer:** $23.23 per hour.\n\n**Award/NES Reference:** General Retail Industry Award 2020\n\n**Clause/Section:** Table 4\u2014Minimum rates\n\n**Explanation:** The context specifies that the minimum hourly rate for a Retail Employee Level 4 is $23.23 per hour in Table 4\u2014Minimum rates. Since the question asks for the minimum hourly rate for a Level 5 employee, we can infer that the rate for Level 5 is higher than Level 4. However, the context does not explicitly state the rate for Level 5. To find the rate for Level 5, we need to examine the pattern of rate increases between levels. Unfortunately, the context does not provide this information. Nevertheless, we can look for a pattern in the rates for other levels. For example, the rate for Level 3 is $19.49 per hour, and the rate for Level 4 is $23.23 per hour, which is an increase of $3.74 per hour. Assuming a similar increase between Level 4 and Level 5, we can estimate the rate for Level 5 as follows: $23.23 + $3.74 = $26.97 per hour. However, this is an estimate and not explicitly stated in the context.\n\n**Note:** Information is limited \u2014 please consult the full Award text for complete details.",
+      "format_failures": [],
+      "content_score": {
+        "score": 100.0,
+        "max_score": 100,
+        "percentage": 100.0,
+        "details": [
+          "Keywords: 4/4 (40/40)",
+          "Pattern: match (30/30)",
+          "Quality: 30/30"
+        ]
+      },
+      "passed": true
+    }
+  ]
+}

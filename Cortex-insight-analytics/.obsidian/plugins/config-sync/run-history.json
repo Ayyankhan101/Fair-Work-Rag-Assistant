@@ -1,0 +1,366 @@
+[
+  {
+    "at": 1785075849427,
+    "kind": "capture",
+    "remote": null,
+    "status": "ok",
+    "changed": 1,
+    "issues": 0,
+    "desc": "1 item captured",
+    "results": [
+      {
+        "group": "graph",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/graph.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [],
+          "updated": [
+            "graph.json"
+          ],
+          "deleted": []
+        }
+      }
+    ]
+  },
+  {
+    "at": 1785068723836,
+    "kind": "capture",
+    "remote": null,
+    "status": "ok",
+    "changed": 1,
+    "issues": 0,
+    "desc": "1 item captured",
+    "results": [
+      {
+        "group": "graph",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/graph.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [],
+          "updated": [
+            "graph.json"
+          ],
+          "deleted": []
+        }
+      }
+    ]
+  },
+  {
+    "at": 1785027934465,
+    "kind": "capture",
+    "remote": null,
+    "status": "ok",
+    "changed": 1,
+    "issues": 0,
+    "desc": "1 item captured",
+    "results": [
+      {
+        "group": "graph",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/graph.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [],
+          "updated": [
+            "graph.json"
+          ],
+          "deleted": []
+        }
+      }
+    ]
+  },
+  {
+    "at": 1785027337862,
+    "kind": "capture",
+    "remote": null,
+    "status": "ok",
+    "changed": 1,
+    "issues": 0,
+    "desc": "1 item captured",
+    "results": [
+      {
+        "group": "graph",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/graph.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [],
+          "updated": [
+            "graph.json"
+          ],
+          "deleted": []
+        }
+      }
+    ]
+  },
+  {
+    "at": 1785026956304,
+    "kind": "capture",
+    "remote": null,
+    "status": "ok",
+    "changed": 1,
+    "issues": 0,
+    "desc": "1 item captured",
+    "results": [
+      {
+        "group": "graph",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/graph.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [],
+          "updated": [
+            "graph.json"
+          ],
+          "deleted": []
+        }
+      }
+    ]
+  },
+  {
+    "at": 1785026634603,
+    "kind": "adopt",
+    "remote": null,
+    "status": "ok",
+    "changed": 1,
+    "issues": 0,
+    "desc": "1 item adopted",
+    "results": [
+      {
+        "group": "plugin-config-sync",
+        "status": "ok",
+        "filesWritten": [
+          ".obsidian/plugins/config-sync/data.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [],
+          "updated": [
+            "data.json"
+          ],
+          "deleted": []
+        }
+      }
+    ]
+  },
+  {
+    "at": 1785026599409,
+    "kind": "capture",
+    "remote": null,
+    "status": "ok",
+    "changed": 9,
+    "issues": 0,
+    "desc": "9 items captured",
+    "results": [
+      {
+        "group": "core-plugins",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/core-plugins.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [
+            "core-plugins.json"
+          ],
+          "updated": [],
+          "deleted": []
+        }
+      },
+      {
+        "group": "graph",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/graph.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [
+            "graph.json"
+          ],
+          "updated": [],
+          "deleted": []
+        }
+      },
+      {
+        "group": "community-plugins",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/community-plugins.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [
+            "community-plugins.json"
+          ],
+          "updated": [],
+          "deleted": []
+        }
+      },
+      {
+        "group": "plugin-opencode",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/plugins/opencode/data.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [
+            "data.json"
+          ],
+          "updated": [],
+          "deleted": []
+        }
+      },
+      {
+        "group": "themes",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/themes/GitHub Theme/manifest.json",
+          "config-sync/store/configdir/themes/GitHub Theme/theme.css"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [
+            "GitHub Theme/manifest.json",
+            "GitHub Theme/theme.css"
+          ],
+          "updated": [],
+          "deleted": []
+        }
+      },
+      {
+        "group": "enabled-css-snippets",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/enabled-css-snippets.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [
+            "enabled-css-snippets.json"
+          ],
+          "updated": [],
+          "deleted": []
+        }
+      },
+      {
+        "group": "appearance",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/appearance.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [
+            "appearance.json"
+          ],
+          "updated": [],
+          "deleted": []
+        }
+      },
+      {
+        "group": "app",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/app.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [
+            "app.json"
+          ],
+          "updated": [],
+          "deleted": []
+        }
+      },
+      {
+        "group": "workspace",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/workspace.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [
+            "workspace.json"
+          ],
+          "updated": [],
+          "deleted": []
+        }
+      }
+    ]
+  },
+  {
+    "at": 1785026141090,
+    "kind": "capture",
+    "remote": null,
+    "status": "ok",
+    "changed": 1,
+    "issues": 0,
+    "desc": "1 item captured",
+    "results": [
+      {
+        "group": "plugin-config-sync",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/plugins/config-sync/data.json"
+        ],
+        "filesDeleted": [],
+        "messages": [
+          "stripped rootPath, remotes, switchExceptions"
+        ],
+        "needsAppReload": false,
+        "changes": {
+          "added": [
+            "data.json"
+          ],
+          "updated": [],
+          "deleted": []
+        }
+      }
+    ]
+  }
+]

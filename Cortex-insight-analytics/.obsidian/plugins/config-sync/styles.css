@@ -1,0 +1,1487 @@
+/* obsidian-config-sync — settings panel */
+
+.config-sync-tabs {
+  display: flex;
+  gap: var(--size-4-1);
+  margin-bottom: var(--size-4-3);
+  border-bottom: 1px solid var(--background-modifier-border);
+  overflow-x: auto;
+}
+
+.config-sync-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--size-2-2);
+  background: none;
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  padding: var(--size-4-1) var(--size-4-2);
+  cursor: pointer;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  flex: none;
+}
+
+.config-sync-tab.is-active {
+  color: var(--text-normal);
+  border-bottom-color: var(--interactive-accent);
+}
+
+.config-sync-tab-icon {
+  display: flex;
+  align-items: center;
+}
+
+.config-sync-search {
+  display: flex;
+  margin-bottom: var(--size-4-4);
+}
+
+/* The qualifier autocomplete dropdown is appended to the input's immediate parent
+   (Obsidian's .search-input-container), so anchor it here — not on the outer wrap. */
+.config-sync-search .search-input-container {
+  width: 100%;
+  position: relative;
+}
+
+.config-sync-empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.config-sync-scope-pills {
+  display: flex;
+  gap: var(--size-4-1);
+  flex-wrap: wrap;
+  margin-bottom: var(--size-4-3);
+}
+
+.config-sync-fpill.is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.config-sync-hit {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-2) var(--size-4-3);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  margin-bottom: var(--size-4-2);
+  cursor: pointer;
+}
+
+.config-sync-hit-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.config-sync-hit-name {
+  font-weight: var(--font-semibold);
+}
+
+.config-sync-hit-desc {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  margin-top: var(--size-2-1);
+}
+
+.config-sync-scopetag {
+  font-size: var(--font-ui-smaller);
+  border-radius: 999px;
+  padding: 1px 8px;
+  background: rgba(var(--interactive-accent-rgb), 0.15);
+  color: var(--interactive-accent);
+  flex: none;
+}
+
+.config-sync-hit-go {
+  color: var(--text-faint);
+  flex: none;
+}
+
+.config-sync-search-highlight {
+  animation: config-sync-jump-flash 1.8s ease-in-out;
+}
+@keyframes config-sync-jump-flash {
+  0%   { background: rgba(var(--interactive-accent-rgb), 0.30); box-shadow: inset 3px 0 0 var(--interactive-accent); }
+  60%  { background: rgba(var(--interactive-accent-rgb), 0.10); box-shadow: inset 3px 0 0 var(--interactive-accent); }
+  100% { background: transparent; box-shadow: inset 3px 0 0 rgba(var(--interactive-accent-rgb), 0); }
+}
+
+.config-sync-rule-name {
+  font-weight: var(--font-semibold);
+}
+
+.config-sync-card-title {
+  font-weight: var(--font-semibold);
+}
+
+.config-sync-rule-name-input {
+  font-family: var(--font-monospace);
+}
+
+.config-sync-rule-spacer {
+  flex: 1;
+}
+
+.config-sync-badge {
+  color: var(--text-accent);
+  font-size: var(--font-ui-smaller);
+}
+
+.config-sync-row {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-2) var(--size-4-3);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  margin-bottom: var(--size-4-2);
+  cursor: pointer;
+}
+
+.config-sync-row.is-open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-bottom: 0;
+}
+
+.config-sync-row.is-static {
+  cursor: default;
+}
+
+/* The wrap is layout-invisible so each item renders as a native theme .setting-item — identical
+   to the General tab and Advanced custom-rule cards (the deep-black card look comes from the
+   user's theme, not a hardcoded color). The chevron sits inline in the row; the expansion wraps
+   to a full-width drawer inside the same card. */
+.config-sync-item-wrap { display: contents; }
+.config-sync-item-wrap > .setting-item { flex-wrap: wrap; }
+.config-sync-item-wrap > .setting-item > .config-sync-item-exp { flex-basis: 100%; }
+.config-sync-row-chevron {
+  color: var(--text-faint);
+  flex: none;
+  cursor: pointer;
+  /* inline-flex: identical inside flex rows (flex items blockify), but stays on the same line
+     as the text when the chevron lives inside .setting-item-name. */
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  vertical-align: text-bottom;
+  margin-right: var(--size-4-1);
+}
+.config-sync-row-chevron svg { width: 16px; height: 16px; }
+/* Compact the device dropdown so it reads at the same visual weight as the mode segment/toggle. */
+.config-sync-item-wrap > .setting-item .setting-item-control select.dropdown {
+  height: auto;
+  font-size: var(--font-ui-smaller);
+  padding: 3px 20px 3px 8px;
+}
+
+.config-sync-row-path {
+  font-family: var(--font-monospace);
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.config-sync-row .config-sync-rule-name,
+.config-sync-row .config-sync-card-title {
+  flex: none;
+}
+
+.config-sync-expand {
+  border: 1px solid var(--background-modifier-border);
+  border-top: none;
+  border-bottom-left-radius: var(--radius-m);
+  border-bottom-right-radius: var(--radius-m);
+  padding: var(--size-4-3);
+  margin-bottom: var(--size-4-2);
+}
+
+.config-sync-expand input,
+.config-sync-expand select {
+  width: 100%;
+}
+
+.config-sync-form-line1 {
+  display: grid;
+  grid-template-columns: 10em 1fr;
+  gap: var(--size-4-3);
+  margin-bottom: var(--size-4-2);
+}
+
+.config-sync-form-line1.has-name {
+  grid-template-columns: minmax(8em, 14em) 10em 1fr;
+}
+
+.config-sync-form-line2 {
+  display: grid;
+  grid-template-columns: 7em 8em 1fr 1fr;
+  gap: var(--size-4-3);
+}
+
+.config-sync-form-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--size-2-1);
+}
+
+.config-sync-add-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--size-4-2);
+  margin: var(--size-4-2) 0;
+  border: 1px dashed var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: none;
+  box-shadow: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: var(--font-ui-small);
+}
+
+.config-sync-add-row:hover {
+  color: var(--text-normal);
+  border-color: var(--interactive-accent);
+}
+
+.config-sync-row-type {
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  padding: 0 var(--size-2-2);
+  flex: none;
+}
+
+.config-sync-remote-path {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--size-4-2);
+}
+
+.config-sync-remote-path > div:first-child {
+  flex: 1;
+}
+
+.config-sync-remote-git {
+  display: grid;
+  grid-template-columns: 1fr 8em 1fr;
+  gap: var(--size-4-3);
+}
+
+.config-sync-remote-test {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-2);
+}
+
+.config-sync-test-strip:empty {
+  display: none;
+}
+
+.config-sync-test-strip {
+  margin-top: var(--size-4-1);
+  padding: var(--size-4-1) var(--size-4-2);
+  border-radius: var(--radius-s);
+  font-size: var(--font-ui-smaller);
+  border: 1px solid transparent;
+}
+
+.config-sync-test-strip.is-testing {
+  color: var(--text-muted);
+}
+
+.config-sync-test-strip.is-ok {
+  color: var(--color-green);
+  background: rgba(var(--color-green-rgb), 0.1);
+  border-color: rgba(var(--color-green-rgb), 0.4);
+}
+
+.config-sync-test-strip.is-caution {
+  color: var(--color-orange);
+  background: rgba(var(--color-orange-rgb), 0.1);
+  border-color: rgba(var(--color-orange-rgb), 0.4);
+}
+
+.config-sync-test-strip.is-error {
+  color: var(--color-red);
+  background: rgba(var(--color-red-rgb), 0.1);
+  border-color: rgba(var(--color-red-rgb), 0.4);
+}
+
+/* Phone layout — Obsidian sets body.is-phone; no pixel breakpoints */
+body.is-phone .config-sync-tab:not(.is-active) .config-sync-tab-label {
+  display: none;
+}
+
+body.is-phone .config-sync-form-line1,
+body.is-phone .config-sync-form-line1.has-name,
+body.is-phone .config-sync-form-line2 {
+  grid-template-columns: 1fr;
+}
+
+body.is-phone .config-sync-remote-git {
+  grid-template-columns: 1fr;
+}
+
+body.is-phone .config-sync-item-wrap .setting-item {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+body.is-phone .config-sync-item-wrap .setting-item-info {
+  width: 100%;
+}
+
+body.is-phone .config-sync-item-wrap .setting-item-control {
+  width: 100%;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+body.is-phone .config-sync-item-wrap .setting-item-control .checkbox-container {
+  margin-left: auto;
+}
+
+body.is-phone .config-sync-detect-badge {
+  white-space: nowrap;
+}
+
+body.is-phone .config-sync-fkey {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.config-sync-status-row {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-1) 0;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.config-sync-state {
+  font-size: var(--font-ui-smaller);
+  flex: none;
+}
+
+.config-sync-state.is-in-sync { color: var(--color-green); }
+.config-sync-state.is-local-changed { color: var(--color-orange); }
+.config-sync-state.is-store-newer { color: var(--interactive-accent); }
+.config-sync-state.is-differs { color: var(--color-orange); }
+.config-sync-state.is-not-captured { color: var(--text-faint); }
+
+.config-sync-status-error {
+  color: var(--text-error);
+  font-size: var(--font-ui-smaller);
+  margin: 0 0 var(--size-4-1) var(--size-4-3);
+}
+
+.config-sync-picker-insync {
+  opacity: 0.55;
+}
+
+.config-sync-report-title { display: flex; align-items: center; gap: var(--size-4-2); }
+.config-sync-report-pills { display: flex; gap: var(--size-4-1); margin-left: auto; }
+/* Panel base type scale (batch 4 ⑥): rows and anything unstyled inherit the same size as
+   Obsidian's own list UIs; smaller/small overrides below stay as the compact steps. */
+.config-sync-center { font-size: var(--font-ui-small); }
+
+.config-sync-pill { font-size: var(--font-ui-smaller); border-radius: 999px; padding: 1px 8px; }
+.config-sync-pill.is-neutral { background: var(--background-modifier-border); color: var(--text-normal); }
+.config-sync-pill.is-up { background: rgba(var(--color-orange-rgb), 0.15); color: var(--color-orange); }
+.config-sync-pill.is-down { background: rgba(var(--interactive-accent-rgb), 0.15); color: var(--interactive-accent); }
+.config-sync-pill.is-ok { background: rgba(var(--color-green-rgb), 0.15); color: var(--color-green); }
+.config-sync-pill.is-none { background: var(--background-modifier-hover); color: var(--text-muted); }
+.config-sync-pill.is-push { background: rgba(var(--color-pink-rgb), 0.15); color: var(--color-pink); }
+.config-sync-pill.is-pull { background: rgba(var(--color-cyan-rgb), 0.15); color: var(--color-cyan); }
+.config-sync-pill.is-warn { background: none; color: var(--color-orange); margin-left: var(--size-4-1); }
+
+.config-sync-fpillrow { display: flex; flex-wrap: wrap; gap: var(--size-4-1); min-width: 0; }
+.config-sync-fpill { background: none; border: 1px solid var(--background-modifier-border); border-radius: 999px; padding: 2px 10px; font-size: var(--font-ui-smaller); color: var(--text-muted); cursor: pointer; box-shadow: none; height: auto; }
+
+.config-sync-fpill.is-active { background: var(--interactive-accent); border-color: var(--interactive-accent); color: var(--text-on-accent); }
+
+.config-sync-sect .config-sync-pill { margin-right: var(--size-4-1); }
+
+.config-sync-report-sub { color: var(--text-muted); font-size: var(--font-ui-smaller); margin-bottom: var(--size-4-2); }
+.config-sync-sect { display: flex; align-items: center; font-size: var(--font-ui-smaller); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); padding: calc(var(--size-4-3) + var(--size-4-1)) 2px var(--size-4-1); border-bottom: 1px solid var(--background-modifier-border); }
+.config-sync-card { background: var(--background-secondary); border: 1px solid var(--background-modifier-border); border-radius: var(--radius-m); padding: 0 var(--size-4-3); }
+.config-sync-report-row { display: flex; align-items: center; gap: var(--size-4-2); padding: var(--size-4-2) 0; border-bottom: 1px solid var(--background-modifier-border); cursor: pointer; }
+.config-sync-card > .config-sync-report-row:last-of-type { border-bottom: none; }
+.config-sync-chip { font-size: var(--font-ui-smaller); border-radius: 999px; padding: 0 var(--size-4-2); flex: none; }
+.config-sync-chip.is-add { background: rgba(var(--color-green-rgb), 0.15); color: var(--color-green); }
+.config-sync-chip.is-upd { background: rgba(var(--color-blue-rgb), 0.15); color: var(--color-blue); }
+.config-sync-chip.is-del { background: rgba(var(--color-red-rgb), 0.15); color: var(--color-red); }
+.config-sync-report-files { font-family: var(--font-monospace); font-size: var(--font-ui-smaller); margin: 0 0 var(--size-4-2) var(--size-4-4); }
+.config-sync-report-files .is-add { color: var(--color-green); }
+.config-sync-report-files .is-upd { color: var(--color-blue); }
+.config-sync-report-files .is-del { color: var(--color-red); text-decoration: line-through; }
+.config-sync-unchanged { color: var(--text-muted); font-size: var(--font-ui-smaller); margin-top: var(--size-4-2); cursor: pointer; }
+
+.config-sync-dot-capture, .config-sync-dot-apply { position: relative; }
+.config-sync-dot-capture::after, .config-sync-dot-apply::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.config-sync-dot-capture::after { background: var(--color-orange); }
+.config-sync-dot-apply::after { background: var(--interactive-accent); }
+
+.config-sync-statusbar { display: inline-flex; align-items: center; gap: var(--size-2-2); }
+.config-sync-statusbar .config-sync-sb-icon { display: inline-flex; --icon-size: 13px; }
+.config-sync-statusbar .svg-icon { flex: none; }
+.config-sync-statusbar.is-clean .config-sync-sb-icon { color: var(--text-faint); }
+.config-sync-sb-seg { font-variant-numeric: tabular-nums; font-weight: 500; }
+.config-sync-sb-seg.is-up { color: var(--color-orange); }
+.config-sync-sb-seg.is-down { color: var(--interactive-accent); }
+.config-sync-sb-seg.is-push { color: var(--color-pink); }
+.config-sync-sb-seg.is-pull { color: var(--color-cyan); }
+
+/* Opt-in mobile force-show: CSS class only — no MutationObserver, no inline styles, so it
+   cannot fight Remotely Save's mechanism (whichever is enabled wins its own lane). */
+body.is-mobile.config-sync-mobile-statusbar .status-bar {
+  display: flex;
+  margin-bottom: var(--mobile-toolbar-height, 52px);
+}
+
+.config-sync-hub-row { display: flex; align-items: center; gap: var(--size-4-2); padding: var(--size-4-2) 0; border-bottom: 1px solid var(--background-modifier-border); cursor: pointer; white-space: nowrap; }
+.config-sync-hub-row .config-sync-rule-name { flex: none; }
+.config-sync-card > .config-sync-hub-row:last-of-type { border-bottom: none; }
+.config-sync-state-icon { flex: none; width: 1.2em; text-align: center; font-size: var(--font-ui-small); display: inline-flex; align-items: center; justify-content: center; }
+.config-sync-state-icon svg { width: 13px; height: 13px; }
+.config-sync-action-icon { display: inline-flex; align-items: center; vertical-align: -0.12em; }
+.config-sync-action-icon svg { width: 1em; height: 1em; }
+.config-sync-side-badge .config-sync-action-icon,
+.config-sync-pill .config-sync-action-icon,
+.config-sync-fpill-short .config-sync-action-icon { margin-right: 2px; }
+.config-sync-action-icon.is-up { color: var(--color-orange); }
+.config-sync-action-icon.is-down { color: var(--interactive-accent); }
+.config-sync-action-icon.is-push { color: var(--color-pink); }
+.config-sync-action-icon.is-pull { color: var(--color-cyan); }
+.config-sync-state-icon.is-up { color: var(--color-orange); }
+.config-sync-state-icon.is-down { color: var(--interactive-accent); }
+.config-sync-state-icon.is-neq, .config-sync-state-icon.is-miss { color: var(--text-faint); }
+.config-sync-state-icon.is-none { color: var(--text-faint); }
+.config-sync-state-icon.is-ok { color: var(--color-green); }
+.config-sync-state-icon.is-pull { color: var(--color-cyan); }
+.config-sync-state-icon.is-push { color: var(--color-pink); }
+.config-sync-state-icon.is-locked { color: var(--color-cyan); }
+
+.config-sync-mode-badge { color: var(--text-faint); display: inline-flex; align-items: center; }
+.config-sync-mode-badge svg { width: 12px; height: 12px; }
+.config-sync-doto-pill { font-size: 10.5px; line-height: 1.6; border-radius: 6px; padding: 1px 8px; margin-left: var(--size-4-2); color: var(--color-orange); border: 1px solid rgba(var(--color-orange-rgb), 0.45); white-space: nowrap; }
+
+/* custom-drawn checkboxes (same inputs, no native rendering) */
+.config-sync-hub-row input[type="checkbox"],
+.config-sync-mainbar input[type="checkbox"],
+.config-sync-section-head input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  border: 1.5px solid var(--text-faint);
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+  flex: none;
+  background: transparent;
+}
+
+.config-sync-hub-row input[type="checkbox"]:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.config-sync-hub-row input[type="checkbox"].is-capture:checked {
+  background: var(--color-orange);
+  border-color: var(--color-orange);
+}
+
+.config-sync-hub-row input[type="checkbox"].is-apply:checked {
+  background: var(--interactive-accent);
+  border-color: var(--interactive-accent);
+}
+
+.config-sync-hub-row input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: -3px;
+  left: 1px;
+  font-size: 12px;
+  color: var(--text-on-accent);
+}
+
+/* Select-alls (mainbar + section heads) stay grey — they carry no direction — but bright
+   grey (定稿档② 2026-07-17), not the muted fill that read as a broken checkbox. */
+.config-sync-mainbar input[type="checkbox"]:checked,
+.config-sync-section-head input[type="checkbox"]:checked {
+  background: var(--text-normal);
+  border-color: var(--text-normal);
+}
+
+.config-sync-mainbar input[type="checkbox"]:checked::after,
+.config-sync-section-head input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: -3px;
+  left: 1px;
+  font-size: 12px;
+  color: var(--background-primary);
+}
+
+.config-sync-mainbar input[type="checkbox"]:indeterminate,
+.config-sync-section-head input[type="checkbox"]:indeterminate {
+  background: var(--text-normal);
+  border-color: var(--text-normal);
+}
+
+.config-sync-mainbar input[type="checkbox"]:indeterminate::after,
+.config-sync-section-head input[type="checkbox"]:indeterminate::after {
+  content: "−";
+  position: absolute;
+  top: -3px;
+  left: 3px;
+  font-size: 12px;
+  color: var(--background-primary);
+}
+
+.config-sync-mainbar input[type="checkbox"]:disabled,
+.config-sync-section-head input[type="checkbox"]:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.config-sync-hub-row.is-insync { opacity: 0.55; }
+.config-sync-hub-row.is-nosettings .config-sync-rule-name { color: var(--text-muted); font-weight: 400; }
+.config-sync-actionbar { display: flex; gap: var(--size-4-2); justify-content: flex-end; margin-top: var(--size-4-3); }
+/* Direction-colored action buttons at every count (batch 4 ⑤): Capture is solid orange,
+   Apply solid accent (mod-cta) — the remote Pull/Push primary language. High enough
+   specificity to outrank theme button rules and Obsidian's button:disabled; the 0-item
+   state is the same color, just faded. */
+.config-sync-actionbar button.config-sync-btn-capture,
+.config-sync-actionbar button.config-sync-btn-capture:disabled { background: var(--color-orange); color: var(--background-primary); border: none; }
+.config-sync-actionbar button.mod-cta:disabled { background: var(--interactive-accent); color: var(--text-on-accent); }
+.config-sync-btnwrap button:disabled { opacity: 0.5; }
+.config-sync-remote-btn.is-pull.is-primary { background: var(--color-cyan); color: var(--background-primary); border: none; }
+.config-sync-remote-btn.is-push.is-primary { background: var(--color-pink); color: var(--background-primary); border: none; }
+.config-sync-remote-btn.is-dimmed { opacity: 0.55; }
+.config-sync-remote-btn.is-pull:not(.is-primary) { color: var(--color-cyan); }
+.config-sync-remote-btn.is-push:not(.is-primary) { color: var(--color-pink); }
+body.is-mobile .config-sync-actionbar { flex-wrap: wrap; }
+body.is-mobile .config-sync-actionbar .config-sync-staged-count { flex: 1 1 100%; }
+body.is-mobile .config-sync-actionbar button { padding: var(--size-4-1) var(--size-4-2); }
+
+.config-sync-btnwrap { display: inline-flex; flex-direction: column; }
+
+.config-sync-progress { height: 2px; margin-top: 3px; background: rgba(var(--color-orange-rgb), 0.25); border-radius: 1px; overflow: hidden; }
+
+.config-sync-progress > div { height: 100%; width: 0; background: var(--color-orange); }
+
+.config-sync-btnwrap:has(button.mod-cta) .config-sync-progress { background: rgba(var(--interactive-accent-rgb), 0.25); }
+
+.config-sync-btnwrap:has(button.mod-cta) .config-sync-progress > div { background: var(--interactive-accent); }
+
+button.is-busy::before { content: ""; width: 11px; height: 11px; margin-right: 6px; border: 2px solid var(--background-modifier-border); border-top-color: currentColor; border-radius: 50%; display: inline-block; animation: config-sync-spin 0.9s linear infinite; }
+
+@keyframes config-sync-spin { to { transform: rotate(360deg); } }
+
+.config-sync-expand-note { color: var(--text-muted); font-size: var(--font-ui-smaller); font-style: italic; margin: 0 0 var(--size-4-1) 0; font-family: var(--font-interface); }
+.config-sync-more-files { color: var(--text-muted); cursor: pointer; }
+.config-sync-seg { display: inline-flex; border: 1px solid var(--background-modifier-border); border-radius: 5px; overflow: hidden; margin: 2px 0 var(--size-4-1) 0; font-family: var(--font-interface); }
+
+.config-sync-seg-btn { background: none; border: none; border-radius: 0; box-shadow: none; height: auto; padding: 1px 9px; font-size: var(--font-ui-smaller); color: var(--text-muted); cursor: pointer; }
+
+.config-sync-seg-btn.is-capture { color: var(--color-orange); }
+
+.config-sync-seg-btn.is-apply { color: var(--interactive-accent); }
+
+.config-sync-seg-btn.is-capture.is-on { background: rgba(var(--color-orange-rgb), 0.25); color: var(--color-orange); }
+
+.config-sync-seg-btn.is-apply.is-on { background: rgba(var(--interactive-accent-rgb), 0.25); color: var(--interactive-accent); }
+
+.config-sync-staged-count { color: var(--text-muted); font-size: var(--font-ui-smaller); }
+
+.config-sync-center-head { display: flex; align-items: center; gap: var(--size-4-2); padding-bottom: var(--size-4-2); }
+
+.config-sync-center-title { font-size: var(--font-ui-medium); font-weight: 600; }
+
+.config-sync-center-head .config-sync-report-pills { margin-left: 0; }
+
+.config-sync-center-refreshed { margin-left: auto; color: var(--text-faint); font-size: var(--font-ui-smaller); }
+
+.config-sync-self-chip { display: inline-flex; align-items: center; gap: 4px; font-size: var(--font-ui-smaller); border-radius: 999px; padding: 1px 9px; border: 1px solid transparent; cursor: pointer; }
+.config-sync-self-chip .config-sync-self-chip-ic { display: inline-flex; }
+.config-sync-self-chip .config-sync-self-chip-ic svg { width: 13px; height: 13px; }
+.config-sync-self-chip.is-up { border-color: rgba(var(--color-orange-rgb), 0.5); color: var(--color-orange); }
+.config-sync-self-chip.is-down { border-color: rgba(var(--interactive-accent-rgb), 0.5); color: var(--interactive-accent); }
+.config-sync-self-chip.is-ok { border-color: rgba(var(--color-green-rgb), 0.5); color: var(--color-green); }
+.config-sync-head-divider { width: 1px; height: 16px; background: var(--background-modifier-border); flex: none; }
+
+.config-sync-shell { display: grid; grid-template-columns: minmax(150px, 22%) minmax(0, 1fr); gap: var(--size-4-3); }
+
+.config-sync-side { display: flex; flex-direction: column; gap: 3px; }
+/* Scope list container: rebuilt in place on each search keystroke (hit-count badges), so it
+   carries the sidebar's own column layout while the search input above it stays put. */
+.config-sync-side-scope { display: flex; flex-direction: column; gap: 3px; }
+
+.config-sync-side-head { font-size: var(--font-ui-smaller); text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); padding: var(--size-4-1) 4px; display: flex; align-items: center; gap: var(--size-4-1); }
+
+.config-sync-side-head-remotes { margin-top: var(--size-4-2); }
+
+/* Visual grouping in the sidebar (This device / Remotes / History). */
+.config-sync-side-divider { height: 1px; background: var(--background-modifier-border); margin: var(--size-4-2) 4px; }
+
+/* ── Run history ─────────────────────────────────────────────────────────── */
+.config-sync-hhead { display: flex; align-items: baseline; gap: var(--size-4-2); margin-bottom: var(--size-4-1); }
+.config-sync-hhead-title { font-size: var(--font-ui-medium); font-weight: 700; }
+.config-sync-hhead-count { color: var(--text-faint); font-size: var(--font-ui-smaller); }
+.config-sync-hclear { margin-left: auto; color: var(--color-orange); font-size: var(--font-ui-smaller); cursor: pointer; }
+.config-sync-hempty { color: var(--text-muted); font-style: italic; padding: var(--size-4-4) 0; }
+.config-sync-hlegend { display: flex; flex-wrap: wrap; gap: var(--size-4-3); color: var(--text-muted); font-size: var(--font-ui-smaller); margin-bottom: var(--size-4-2); }
+.config-sync-hstat.is-ok { color: var(--color-green); }
+.config-sync-hstat.is-warn { color: var(--color-orange); }
+.config-sync-hstat.is-error { color: var(--color-red); }
+.config-sync-htable { width: 100%; border-collapse: collapse; font-size: var(--font-ui-small); }
+.config-sync-htable th { text-align: left; font-size: var(--font-ui-smaller); text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-faint); font-weight: 600; padding: var(--size-4-1) var(--size-4-2); border-bottom: 1px solid var(--background-modifier-border); white-space: nowrap; }
+.config-sync-htable td { padding: var(--size-4-2); border-bottom: 1px solid var(--background-modifier-border); white-space: nowrap; }
+.config-sync-hrow { cursor: pointer; }
+.config-sync-hrow:hover td { background: var(--background-modifier-hover); }
+.config-sync-htd-st { text-align: center; }
+.config-sync-htd-act { font-weight: 600; }
+.config-sync-hglyph.is-in { color: var(--interactive-accent); }
+.config-sync-hglyph.is-out { color: var(--color-orange); }
+.config-sync-hglyph.is-remove { color: var(--text-muted); }
+.config-sync-hglyph.is-up { color: var(--color-orange); }
+.config-sync-hglyph.is-down { color: var(--interactive-accent); }
+.config-sync-hglyph.is-push { color: var(--color-pink); }
+.config-sync-hglyph.is-pull { color: var(--color-cyan); }
+.config-sync-hglyph svg { width: 13px; height: 13px; vertical-align: -0.12em; }
+.config-sync-hd-affname { font-weight: var(--font-semibold); padding: var(--size-4-1) 0; border-bottom: 1px solid var(--background-modifier-border); }
+.config-sync-hd-affpath { font-family: var(--font-monospace); color: var(--text-muted); font-size: var(--font-ui-smaller); padding: var(--size-4-1) 0; border-bottom: 1px solid var(--background-modifier-border); }
+.config-sync-htd-when { font-family: var(--font-monospace); color: var(--text-muted); font-size: var(--font-ui-smaller); }
+.config-sync-htd-num { text-align: right; color: var(--text-muted); }
+.config-sync-htd-num.is-issues { color: var(--color-orange); font-weight: 600; }
+.config-sync-htd-sum { white-space: normal; color: var(--text-muted); width: 100%; }
+.config-sync-htd-chev { color: var(--text-faint); text-align: center; }
+.config-sync-hback { color: var(--interactive-accent); cursor: pointer; font-size: var(--font-ui-smaller); margin-bottom: var(--size-4-2); }
+.config-sync-hdhead { display: flex; align-items: center; gap: var(--size-4-2); }
+.config-sync-hdtitle { font-size: var(--font-ui-medium); font-weight: 700; }
+.config-sync-hdwhen { color: var(--text-faint); font-size: var(--font-ui-smaller); font-family: var(--font-monospace); }
+.config-sync-hddesc { color: var(--text-muted); margin: var(--size-4-1) 0 var(--size-4-3); }
+
+/* ── Run history — compact card layout (narrow screens) ──────────────────── */
+.config-sync-hcard { border: 1px solid var(--background-modifier-border); background: var(--background-secondary); border-radius: var(--radius-m); padding: 11px 12px; margin-bottom: var(--size-4-2); cursor: pointer; }
+.config-sync-hcard:hover { background: var(--background-modifier-hover); }
+.config-sync-hcard-top { display: flex; align-items: center; gap: var(--size-4-2); }
+.config-sync-hcard-act { flex: 1; min-width: 0; font-weight: var(--font-semibold); display: inline-flex; align-items: center; gap: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.config-sync-hcard-chev { margin-left: auto; color: var(--text-faint); font-size: var(--font-ui-medium); flex: none; }
+.config-sync-hcard-when { font-family: var(--font-monospace); color: var(--text-faint); font-size: var(--font-ui-smaller); margin: 3px 0 6px; }
+.config-sync-hcard-sum { color: var(--text-muted); font-size: var(--font-ui-small); margin-bottom: 9px; }
+.config-sync-hcard-foot { display: flex; flex-wrap: wrap; gap: var(--size-4-2); }
+.config-sync-hcard-pill { font-size: var(--font-ui-smaller); padding: 1px 8px; border-radius: 999px; }
+.config-sync-hcard-pill.is-chg { background: var(--background-modifier-hover); color: var(--text-muted); }
+.config-sync-hcard-pill.is-iss { background: rgba(var(--color-orange-rgb), 0.14); color: var(--color-orange); }
+
+/* ── Post-adopt guidance banner ──────────────────────────────────────────── */
+.config-sync-guide { display: flex; gap: var(--size-4-3); border: 1px solid rgba(var(--interactive-accent-rgb), 0.45); background: rgba(var(--interactive-accent-rgb), 0.08); border-radius: 10px; padding: 12px 14px; margin-bottom: var(--size-4-3); }
+.config-sync-guide-ic { font-size: 18px; color: var(--interactive-accent); flex: none; }
+.config-sync-guide-body { flex: 1; min-width: 0; }
+.config-sync-guide-title { font-weight: var(--font-bold); }
+.config-sync-guide-sub { color: var(--text-muted); font-size: var(--font-ui-smaller); margin-top: 2px; }
+.config-sync-guide-caution { color: var(--color-orange); font-size: var(--font-ui-smaller); margin-top: 8px; padding: 7px 9px; border-radius: 7px; background: rgba(var(--color-orange-rgb), 0.1); border: 1px solid rgba(var(--color-orange-rgb), 0.35); }
+.config-sync-guide-acts { display: flex; gap: var(--size-4-2); margin-top: 10px; }
+.config-sync-guide-x { color: var(--text-faint); flex: none; cursor: pointer; }
+
+/* ── Stop syncing + store leftover ───────────────────────────────────────── */
+.config-sync-segrow { display: flex; align-items: center; gap: var(--size-4-2); }
+.config-sync-stopsync-foot { display: flex; margin-top: var(--size-4-2); }
+.config-sync-stopsync {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 5px;
+  color: var(--color-red); font-size: var(--font-ui-smaller); cursor: pointer;
+  padding: 3px 10px; border: 1px solid rgba(var(--color-red-rgb), 0.4); border-radius: 6px;
+}
+.config-sync-stopsync svg { width: 14px; height: 14px; }
+.config-sync-fpill.is-leftover { color: var(--color-orange); border-color: rgba(var(--color-orange-rgb), 0.5); }
+.config-sync-fpill.is-leftover.is-active { background: var(--color-orange); border-color: var(--color-orange); color: var(--background-primary); }
+.config-sync-section.is-leftover { border-color: rgba(var(--color-orange-rgb), 0.45); }
+.config-sync-section.is-leftover .config-sync-section-title { color: var(--color-orange); }
+.config-sync-oflow { display: flex; align-items: center; gap: var(--size-4-3); padding: var(--size-4-2) 0; border-bottom: 1px solid var(--background-modifier-border); }
+.config-sync-oflow:last-child { border-bottom: none; }
+.config-sync-ofinfo { min-width: 0; flex: 1; }
+.config-sync-ofname { font-weight: var(--font-semibold); }
+.config-sync-ofpath { font-family: var(--font-monospace); color: var(--text-faint); font-size: var(--font-ui-smaller); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.config-sync-ofsize { color: var(--text-faint); font-size: var(--font-ui-smaller); white-space: nowrap; }
+.config-sync-ofdel { color: var(--color-red); font-size: var(--font-ui-smaller); cursor: pointer; white-space: nowrap; }
+
+.config-sync-side-item { display: flex; align-items: center; gap: 5px; padding: 6px 9px; border-radius: 8px; border: 1px solid transparent; cursor: pointer; font-size: var(--font-ui-small); }
+
+.config-sync-side-item.is-active { background: rgba(var(--interactive-accent-rgb), 0.14); border-color: rgba(var(--interactive-accent-rgb), 0.4); color: var(--text-normal); }
+
+.config-sync-side-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.config-sync-side-badge { font-size: 10px; border-radius: 8px; padding: 0 5px; flex: none; }
+
+.config-sync-side-badge.is-up { background: rgba(var(--color-orange-rgb), 0.15); color: var(--color-orange); }
+
+.config-sync-side-badge.is-down { background: rgba(var(--interactive-accent-rgb), 0.15); color: var(--interactive-accent); }
+
+.config-sync-side-badge.is-ok { background: rgba(var(--color-green-rgb), 0.15); color: var(--color-green); }
+
+.config-sync-side-badge.is-none { background: var(--background-modifier-hover); color: var(--text-muted); }
+
+/* Config Sync self layer: the sidebar hero card + its dedicated pane (renderConfigSyncMode). */
+/* A distinct card (not a list row): icon tile + title/sublabel + status pill, echoing the header self-chip. */
+.config-sync-side-self { display: flex; align-items: center; gap: 8px; padding: 9px 10px; border-radius: 8px; cursor: pointer; background: rgba(var(--interactive-accent-rgb), 0.08); border: 1px solid rgba(var(--interactive-accent-rgb), 0.28); }
+.config-sync-side-self:hover { border-color: rgba(var(--interactive-accent-rgb), 0.5); }
+.config-sync-side-self.is-active { background: rgba(var(--interactive-accent-rgb), 0.16); border-color: rgba(var(--interactive-accent-rgb), 0.55); }
+.config-sync-side-self-ic { display: flex; align-items: center; justify-content: center; flex: none; width: 26px; height: 26px; border-radius: 7px; background: rgba(var(--interactive-accent-rgb), 0.18); color: var(--interactive-accent); }
+.config-sync-side-self-ic svg { width: 15px; height: 15px; }
+.config-sync-side-self-text { flex: 1; min-width: 0; }
+.config-sync-side-self-title { font-size: var(--font-ui-small); font-weight: var(--font-semibold); line-height: 1.2; color: var(--text-normal); }
+.config-sync-side-self-sub { font-size: var(--font-ui-smaller); color: var(--text-muted); line-height: 1.3; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.config-sync-side-self-pill { flex: none; font-size: 10px; border-radius: 999px; padding: 1px 8px; border: 1px solid transparent; }
+.config-sync-side-self-pill.is-up { border-color: rgba(var(--color-orange-rgb), 0.5); color: var(--color-orange); }
+.config-sync-side-self-pill.is-down { border-color: rgba(var(--interactive-accent-rgb), 0.5); color: var(--interactive-accent); }
+.config-sync-side-self-pill.is-ok { border-color: rgba(var(--color-green-rgb), 0.5); color: var(--color-green); }
+.config-sync-self-pane { padding: 2px 2px 12px; }
+.config-sync-self-title { display: flex; align-items: center; gap: 8px; font-size: var(--font-ui-medium); font-weight: var(--font-bold); }
+.config-sync-self-title-ic { color: var(--interactive-accent); flex: none; }
+.config-sync-self-pill { font-size: var(--font-ui-smaller); border-radius: 999px; padding: 1px 9px; margin-left: 4px; }
+.config-sync-self-pill.is-down { background: rgba(var(--interactive-accent-rgb), 0.15); color: var(--interactive-accent); }
+.config-sync-self-pill.is-up { background: rgba(var(--color-orange-rgb), 0.15); color: var(--color-orange); }
+.config-sync-self-pill.is-ok { background: rgba(var(--color-green-rgb), 0.15); color: var(--color-green); }
+.config-sync-self-title-sp { flex: 1; }
+.config-sync-self-settings-btn { display: inline-flex; align-items: center; gap: 4px; font-size: var(--font-ui-smaller); color: var(--text-muted); background: var(--background-modifier-hover); border: 1px solid var(--background-modifier-border); border-radius: 6px; padding: 2px 9px; cursor: pointer; box-shadow: none; height: auto; }
+.config-sync-self-settings-btn:hover { color: var(--interactive-accent); border-color: rgba(var(--interactive-accent-rgb), 0.5); }
+.config-sync-self-settings-btn .config-sync-self-settings-ic { display: inline-flex; }
+.config-sync-self-settings-btn .config-sync-self-settings-ic svg { width: 13px; height: 13px; }
+.config-sync-self-sub { color: var(--text-muted); font-size: var(--font-ui-smaller); margin: 8px 0 14px; line-height: 1.5; max-width: 640px; }
+.config-sync-self-block { border: 1px solid var(--background-modifier-border); background: var(--background-secondary); border-radius: 9px; padding: 12px 14px; margin-bottom: 12px; }
+.config-sync-self-block.is-act { border-color: rgba(var(--interactive-accent-rgb), 0.45); background: rgba(var(--interactive-accent-rgb), 0.06); }
+.config-sync-self-block.is-gated { opacity: 0.6; }
+.config-sync-self-block-h { font-weight: var(--font-bold); font-size: var(--font-ui-small); margin-bottom: 4px; }
+.config-sync-self-block-s { color: var(--text-muted); font-size: var(--font-ui-smaller); margin-bottom: 10px; line-height: 1.45; }
+.config-sync-self-caution { color: var(--color-orange); font-size: var(--font-ui-smaller); margin: 8px 0 10px; padding: 7px 9px; border-radius: 7px; background: rgba(var(--color-orange-rgb), 0.1); border: 1px solid rgba(var(--color-orange-rgb), 0.35); }
+.config-sync-self-delta { display: flex; flex-direction: column; gap: 4px; margin-bottom: 11px; }
+.config-sync-self-drow { display: flex; align-items: center; gap: 8px; font-size: var(--font-ui-small); }
+.config-sync-self-dg { width: 14px; text-align: center; font-family: var(--font-monospace); }
+.config-sync-self-drow.is-add .config-sync-self-dg { color: var(--color-green); }
+.config-sync-self-drow.is-del { color: var(--text-muted); text-decoration: line-through; }
+.config-sync-self-drow.is-del .config-sync-self-dg { color: var(--color-red); }
+.config-sync-self-acts { display: flex; align-items: center; gap: 8px; }
+.config-sync-self-acts button.config-sync-btn-capture { background: var(--color-orange); color: var(--background-primary); border: none; }
+.config-sync-self-hint { color: var(--text-muted); font-size: var(--font-ui-smaller); }
+.config-sync-self-viewchange { color: var(--interactive-accent); font-size: var(--font-ui-smaller); cursor: pointer; margin-top: var(--size-4-1); }
+
+.config-sync-main { display: flex; flex-direction: column; min-width: 0; }
+
+.config-sync-mainbar { display: flex; align-items: center; gap: var(--size-4-1); padding-bottom: var(--size-4-2); flex-wrap: wrap; padding-right: calc(var(--size-4-3) + 1px); }
+
+.config-sync-mainbar .config-sync-search-wrap { margin-left: auto; width: 140px; }
+.config-sync-mainbar-search { background: var(--background-primary); border: 1px solid var(--background-modifier-border); border-radius: 6px; padding: 2px 8px; font-size: var(--font-ui-smaller); width: 100%; }
+
+.config-sync-remote-head { color: var(--text-muted); font-size: var(--font-ui-small); padding-bottom: var(--size-4-2); }
+
+.config-sync-shell.is-compact { grid-template-columns: 1fr; }
+
+.config-sync-switcher { display: flex; align-items: center; gap: var(--size-4-1); width: 100%; background: var(--background-secondary); border: 1px solid var(--background-modifier-border); border-radius: 8px; padding: 7px 11px; cursor: pointer; font-size: var(--font-ui-small); }
+
+.config-sync-switcher-chev { margin-left: auto; color: var(--text-faint); }
+
+.config-sync-switcher-menu { background: var(--background-secondary); border: 1px solid var(--background-modifier-border); border-radius: 9px; padding: 5px; box-shadow: var(--shadow-s); }
+
+/* iter20 — per-item sync mode, fields editor, passphrase */
+
+.config-sync-detect-badge { margin-left: var(--size-4-2); font-size: var(--font-ui-smaller); color: var(--color-orange); background: rgba(var(--color-orange-rgb), 0.12); border-radius: 9px; padding: 1px 8px; }
+
+.config-sync-fields-editor { border-top: 1px solid var(--background-modifier-border); margin-top: var(--size-4-2); padding-top: var(--size-4-2); }
+
+.config-sync-fieldrow { display: flex; align-items: center; gap: var(--size-4-2); padding: var(--size-4-1) 0; border-bottom: 1px solid var(--background-modifier-border); font-size: var(--font-ui-smaller); }
+
+.config-sync-fieldrow:last-of-type { border-bottom: none; }
+
+.config-sync-fkey { font-family: var(--font-monospace); color: var(--text-normal); }
+.config-sync-flock { display: inline-flex; align-items: center; color: var(--text-muted); flex: none; }
+.config-sync-flock svg { width: 13px; height: 13px; }
+.config-sync-fieldrow-xspacer { width: var(--size-4-6); flex: none; }
+
+.config-sync-ftag { font-size: 9.5px; color: var(--text-faint); }
+.config-sync-ftag.is-detected { color: var(--color-orange); } /* matches the JSON legend's detected color */
+
+.config-sync-act { display: inline-flex; border: 1px solid var(--background-modifier-border); border-radius: 5px; overflow: hidden; flex: none; }
+
+.config-sync-act-btn { background: none; border: none; border-radius: 0; box-shadow: none; height: auto; padding: 1px 8px; font-size: 10px; color: var(--text-muted); cursor: pointer; }
+
+.config-sync-act-btn.is-strip.is-on { background: rgba(var(--color-red-rgb), 0.18); color: var(--color-red); }
+
+.config-sync-act-btn.is-encrypt.is-on { background: rgba(var(--color-cyan-rgb), 0.18); color: var(--color-cyan); }
+
+.config-sync-addrow { display: flex; gap: var(--size-4-2); margin-top: var(--size-4-2); }
+
+.config-sync-addrow-input { flex: 1; background: var(--background-primary); border: 1px solid var(--background-modifier-border); border-radius: 6px; padding: 3px 9px; font-size: var(--font-ui-smaller); color: var(--text-normal); }
+
+.config-sync-addrow-btn { background: var(--background-modifier-form-field); border: 1px solid var(--background-modifier-border); border-radius: 5px; padding: 3px 11px; font-size: var(--font-ui-smaller); color: var(--text-normal); cursor: pointer; }
+
+.config-sync-passphrase-status { color: var(--text-muted); font-size: var(--font-ui-smaller); margin-top: var(--size-2-1); }
+
+/* Touch targets — Obsidian sets body.is-mobile on phones and tablets */
+body.is-mobile .config-sync-hub-row { min-height: 44px; }
+
+
+
+/* ⑦ Filter pills (定稿 B): compact glyph+count pills on one line; the scroll container
+   stays only as an overflow safety net for extreme counts/font scales. */
+body.is-mobile .config-sync-fpillrow {
+  flex: 1 1 100%;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+body.is-mobile .config-sync-fpillrow::-webkit-scrollbar { display: none; }
+body.is-mobile .config-sync-fpill { flex: none; white-space: nowrap; }
+.config-sync-fpill-short { display: none; }
+body.is-mobile .config-sync-fpill .config-sync-fpill-long { display: none; }
+body.is-mobile .config-sync-fpill .config-sync-fpill-short { display: inline; }
+
+body.is-mobile .config-sync-segrow { flex-wrap: wrap; }
+
+body.is-mobile .config-sync-fpill,
+body.is-mobile .config-sync-seg-btn,
+body.is-mobile .config-sync-side-item,
+body.is-mobile .config-sync-switcher,
+body.is-mobile .config-sync-unchanged,
+body.is-mobile .config-sync-more-files {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+}
+
+body.is-mobile .config-sync-side-item,
+body.is-mobile .config-sync-switcher,
+body.is-mobile .config-sync-unchanged {
+  display: flex;
+}
+
+body.is-mobile .config-sync-hub-row input[type="checkbox"]:checked::after,
+body.is-mobile .config-sync-mainbar input[type="checkbox"]:checked::after,
+body.is-mobile .config-sync-mainbar input[type="checkbox"]:indeterminate::after,
+body.is-mobile .config-sync-section-head input[type="checkbox"]:checked::after,
+body.is-mobile .config-sync-section-head input[type="checkbox"]:indeterminate::after {
+  top: 4px;
+  left: 4px;
+}
+
+/* 0.20.0 report styling */
+.config-sync-report-legend { color: var(--text-faint); font-size: var(--font-ui-smaller); margin: 2px 0 8px; }
+.config-sync-sect .config-sync-sect-count { margin-left: 6px; font-size: 10px; }
+.config-sync-pill.is-statenote { background: rgba(var(--color-cyan-rgb), 0.18); color: var(--color-cyan); }
+
+/* 0.20.0 inline result strip */
+/* Sticky dock: opaque backing so scrolling rows don't bleed through the strip's translucent
+   tint; pins the outcome to the top of the scroll viewport (see renderResultStrip). */
+.config-sync-strip-dock { position: sticky; top: 0; z-index: 5; background: var(--background-primary); padding-bottom: var(--size-4-2); border-bottom: 1px solid var(--background-modifier-border); margin-bottom: var(--size-4-2); }
+.config-sync-strip-dock .config-sync-strip { margin-bottom: 0; }
+.config-sync-strip { border: 1px solid rgba(var(--color-green-rgb), 0.35); background: rgba(var(--color-green-rgb), 0.07); border-radius: 8px; padding: 8px 12px; margin-bottom: 8px; }
+.config-sync-strip.is-transfer { border-color: rgba(var(--color-cyan-rgb), 0.4); background: rgba(var(--color-cyan-rgb), 0.07); }
+/* Outcome tone (batch: honest run reports) — the strip is green only when the run is clean. */
+.config-sync-strip.is-warn { border-color: rgba(var(--color-orange-rgb), 0.5); background: rgba(var(--color-orange-rgb), 0.09); }
+.config-sync-strip.is-error { border-color: rgba(var(--color-red-rgb), 0.5); background: rgba(var(--color-red-rgb), 0.09); }
+.config-sync-strip.is-warn .config-sync-strip-check { color: var(--color-orange); }
+.config-sync-strip.is-error .config-sync-strip-check { color: var(--color-red); }
+.config-sync-strip-head { display: flex; align-items: center; gap: 8px; }
+.config-sync-strip-meta { display: contents; }
+.config-sync-strip-check { color: var(--color-green); }
+.config-sync-strip-title { font-weight: 600; }
+.config-sync-strip-toggle { color: var(--interactive-accent); cursor: pointer; font-size: var(--font-ui-smaller); }
+.config-sync-strip-close { margin-left: auto; color: var(--text-faint); cursor: pointer; }
+.config-sync-strip-body { margin-top: 6px; }
+body.is-mobile .config-sync-strip-head { flex-wrap: wrap; }
+body.is-mobile .config-sync-strip-close { order: 2; }
+body.is-mobile .config-sync-strip-meta {
+  order: 3;
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  flex-wrap: wrap;
+  padding-left: var(--size-4-5);
+  margin-top: var(--size-2-3);
+}
+body.is-mobile .config-sync-strip-meta .config-sync-report-pills { margin-left: 0; }
+
+/* 0.20.0 availability sections */
+.config-sync-section { border: 1px dashed var(--background-modifier-border); border-radius: 8px; padding: 8px var(--size-4-3); margin-top: 8px; }
+/* One checkbox column (batch 3 ①): the section's own frame carries the card inset; the
+   nested card drops its frame so section rows share the main card's checkbox column. */
+.config-sync-section .config-sync-card { border: none; background: transparent; padding: 0; border-radius: 0; }
+.config-sync-section-head input[type="checkbox"] { margin-left: auto; }
+.config-sync-section-hint + input[type="checkbox"] { margin-left: 0; }
+.config-sync-section.is-open { border-style: solid; }
+.config-sync-section.is-outdated { border-color: rgba(var(--color-pink-rgb), 0.45); }
+.config-sync-section.is-not-installed { border-color: rgba(var(--color-orange-rgb), 0.45); }
+.config-sync-section-head { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+.config-sync-section.is-outdated .config-sync-section-title { color: var(--color-pink); }
+.config-sync-section.is-not-installed .config-sync-section-title { color: var(--color-orange); }
+.config-sync-section-title { font-weight: 600; }
+.config-sync-section-hint { margin-left: auto; color: var(--text-faint); font-size: var(--font-ui-smaller); }
+.config-sync-section-note { color: var(--text-faint); font-style: italic; font-size: var(--font-ui-smaller); padding: 4px 0 2px 18px; }
+.config-sync-version-line { color: var(--text-faint); font-size: var(--font-ui-smaller); padding: 2px 0; }
+.config-sync-version-line.is-amber { color: var(--color-orange); }
+.config-sync-seg-label { color: var(--text-faint); font-size: 10px; margin-top: 4px; }
+.config-sync-seg-btn.is-policy.is-on { background: rgba(var(--color-cyan-rgb), 0.22); color: var(--color-cyan); }
+.config-sync-side-search { width: 100%; margin-bottom: 6px; }
+.config-sync-side-badge.is-neutral { background: var(--background-modifier-hover); color: var(--text-normal); }
+
+/* 0.21.0 settings-mutation rollback: inline per-row error when a write fails */
+.config-sync-save-error { color: var(--text-error); font-size: var(--font-ui-smaller); margin-top: 4px; }
+
+/* 0.21.0 unified row expansion: fields / data.json view / advanced */
+.config-sync-cust { color: var(--text-accent); font-size: var(--font-ui-smaller); margin-left: var(--size-4-2); }
+.config-sync-item-exp { border-top: 1px solid var(--background-modifier-border); margin-top: var(--size-4-2); padding-top: var(--size-4-2); }
+.config-sync-explabel { color: var(--text-muted); font-size: var(--font-ui-smaller); text-transform: uppercase; letter-spacing: 0.05em; margin: var(--size-4-2) 0 var(--size-2-1); }
+.config-sync-explabel:first-child { margin-top: 0; }
+.config-sync-link { color: var(--text-accent); cursor: pointer; font-size: var(--font-ui-smaller); }
+.config-sync-jsonbody { margin-top: var(--size-2-2); }
+.config-sync-json-empty { color: var(--text-faint); font-style: italic; font-size: var(--font-ui-smaller); }
+.config-sync-json-pre { white-space: pre-wrap; word-break: break-all; font-family: var(--font-monospace); font-size: var(--font-ui-smaller); line-height: 1.55; background: var(--background-secondary); border: 1px solid var(--background-modifier-border); border-radius: var(--radius-s); padding: var(--size-4-2); max-height: 220px; overflow: auto; margin: 0; }
+.config-sync-json-key { border-radius: 3px; padding: 0 2px; color: var(--color-blue); }
+.config-sync-json-key.config-sync-json-none, .config-sync-json-key.config-sync-json-detected { cursor: pointer; }
+.config-sync-json-key.config-sync-json-encrypt { color: var(--color-cyan); background: rgba(var(--color-cyan-rgb), 0.15); }
+.config-sync-json-key.config-sync-json-strip { color: var(--color-red); background: rgba(var(--color-red-rgb), 0.15); }
+.config-sync-json-key.config-sync-json-detected { color: var(--color-orange); text-decoration: underline dotted; }
+.config-sync-json-val { color: var(--text-muted); }
+.config-sync-json-num { color: var(--color-green); }
+.config-sync-json-legend { color: var(--text-muted); font-size: var(--font-ui-smaller); margin-top: var(--size-2-2); }
+.config-sync-json-legend .config-sync-json-encrypt { color: var(--color-cyan); }
+.config-sync-json-legend .config-sync-json-strip { color: var(--color-red); }
+.config-sync-json-legend .config-sync-json-detected { color: var(--color-orange); }
+.config-sync-adv-toggle { cursor: pointer; }
+/* Custom location: Location · Type · Path on one row, Path flexes to fill the rest. */
+.config-sync-cl-row { display: flex; gap: var(--size-4-2); align-items: flex-end; }
+.config-sync-cl-field { display: flex; flex-direction: column; gap: var(--size-2-1); }
+.config-sync-cl-field.path { flex: 1; min-width: 0; }
+.config-sync-cl-field.path input[type="text"] { width: 100%; box-sizing: border-box; }
+.config-sync-cl-lbl { font-size: var(--font-ui-smaller); text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+.config-sync-reset-link { display: inline-block; margin-top: var(--size-4-2); }
+
+/* 0.21.0 select-all checkbox alignment */
+/* Specificity must beat the base `.config-sync-mainbar input[type="checkbox"] { margin: 0 }`
+   rule, or the auto margin is dropped and the box never right-aligns to the row column. */
+.config-sync-mainbar input[type="checkbox"].config-sync-selectall { margin-left: auto; }
+.config-sync-selectall-idle { visibility: hidden; }
+
+/* 0.21.0 device-specific badge (§3.3): dissolved "Not recommended" section replaced by an inline caution badge */
+.config-sync-devbadge { margin-left: var(--size-4-2); font-size: var(--font-ui-smaller); color: var(--color-orange); background: rgba(var(--color-orange-rgb), 0.12); border-radius: 9px; padding: 1px 8px; }
+
+/* ── Pull conflict modal (self-config model, v4 定稿) ─────────────────────── */
+.config-sync-cm {
+  width: 680px;
+  max-width: 92vw;
+}
+
+.config-sync-cm-header {
+  padding-bottom: var(--size-4-2);
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.config-sync-cm-title { font-weight: 600; font-size: var(--font-ui-large); }
+.config-sync-cm-sub { color: var(--text-muted); font-size: var(--font-ui-smaller); margin-top: 2px; }
+
+.config-sync-cm-body {
+  max-height: 55vh;
+  overflow-y: auto;
+  padding: var(--size-4-3) 0;
+}
+
+.config-sync-cm-auto {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  background: rgba(var(--color-green-rgb), 0.05);
+  margin-bottom: var(--size-4-3);
+}
+
+.config-sync-cm-auto-head { display: flex; align-items: center; gap: var(--size-4-2); padding: var(--size-4-1) var(--size-4-3); cursor: pointer; }
+.config-sync-cm-auto-check { color: var(--color-green); }
+.config-sync-cm-auto-label { font-weight: 500; }
+.config-sync-cm-auto-counts { color: var(--text-muted); font-size: var(--font-ui-smaller); }
+.config-sync-cm-auto-list { padding: 0 var(--size-4-3) var(--size-4-2); font-size: var(--font-ui-smaller); color: var(--text-muted); line-height: 1.8; }
+.config-sync-cm-auto-line { display: flex; gap: var(--size-4-2); }
+.config-sync-cm-mark { width: 14px; text-align: center; flex: none; }
+.config-sync-cm-mark.is-add { color: var(--color-green); }
+.config-sync-cm-mark.is-same { color: var(--color-blue); }
+.config-sync-cm-mark.is-kept { color: var(--color-orange); }
+
+.config-sync-cm-chead { display: flex; align-items: center; gap: var(--size-4-2); margin-bottom: var(--size-4-2); }
+.config-sync-cm-ctitle { font-weight: 600; }
+.config-sync-cm-csub { color: var(--text-muted); font-size: var(--font-ui-smaller); }
+.config-sync-cm-allbtn { font-size: var(--font-ui-smaller); padding: 2px 10px; }
+
+.config-sync-cm-conflict {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  margin-bottom: var(--size-4-2);
+  overflow: hidden;
+}
+
+.config-sync-cm-conflict.is-unresolved { border-color: rgba(var(--color-orange-rgb), 0.55); }
+.config-sync-cm-conflict:not(.is-unresolved) .config-sync-cm-warn { display: none; }
+
+.config-sync-cm-crow { display: flex; align-items: center; gap: var(--size-4-2); padding: var(--size-4-2) var(--size-4-3); cursor: pointer; background: var(--background-secondary); }
+.config-sync-cm-cname { font-weight: 600; flex: none; }
+.config-sync-cm-kind { font-size: 10px; letter-spacing: 0.4px; padding: 1px 7px; border-radius: 8px; flex: none; }
+.config-sync-cm-kind.is-definition { color: var(--color-orange); background: rgba(var(--color-orange-rgb), 0.13); border: 1px solid rgba(var(--color-orange-rgb), 0.35); }
+.config-sync-cm-kind.is-file { color: var(--color-blue); background: rgba(var(--color-blue-rgb), 0.13); border: 1px solid rgba(var(--color-blue-rgb), 0.35); }
+.config-sync-cm-rel { color: var(--text-faint); font-size: var(--font-ui-smaller); font-family: var(--font-monospace); flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.config-sync-cm-warn { color: var(--color-orange); font-size: var(--font-ui-smaller); flex: none; white-space: nowrap; }
+.config-sync-cm-chev { color: var(--text-faint); }
+
+.config-sync-cm-seg { display: flex; border: 1px solid var(--background-modifier-border); border-radius: var(--radius-s); overflow: hidden; flex: none; }
+.config-sync-cm-segbtn { font-size: var(--font-ui-smaller); padding: 3px 12px; border: none; border-radius: 0; background: transparent; color: var(--text-muted); cursor: pointer; box-shadow: none; }
+.config-sync-cm-segbtn + .config-sync-cm-segbtn { border-left: 1px solid var(--background-modifier-border); }
+.config-sync-cm-segbtn.is-on { background: rgba(var(--interactive-accent-rgb), 0.18); color: var(--text-accent); }
+
+.config-sync-cm-difftools { display: flex; align-items: center; gap: var(--size-4-2); padding: var(--size-4-1) var(--size-4-3); border-top: 1px solid var(--background-modifier-border); }
+.config-sync-cm-diffmeta { color: var(--text-faint); font-size: var(--font-ui-smaller); font-family: var(--font-monospace); }
+.config-sync-cm-viewseg { display: flex; border: 1px solid var(--background-modifier-border); border-radius: var(--radius-s); overflow: hidden; }
+.config-sync-cm-viewbtn { font-size: 10.5px; padding: 2px 9px; border: none; border-radius: 0; background: transparent; color: var(--text-muted); cursor: pointer; box-shadow: none; }
+.config-sync-cm-viewbtn + .config-sync-cm-viewbtn { border-left: 1px solid var(--background-modifier-border); }
+.config-sync-cm-viewbtn.is-on { background: var(--background-modifier-hover); color: var(--text-normal); }
+
+.config-sync-cm-diffpane { border-top: 1px solid var(--background-modifier-border); font-family: var(--font-monospace); font-size: var(--font-ui-smaller); line-height: 1.75; max-height: 240px; overflow: auto; padding: var(--size-4-1) 0; }
+.config-sync-cm-dline { padding: 0 var(--size-4-3); white-space: pre; }
+.config-sync-cm-dline.is-common { color: var(--text-faint); }
+.config-sync-cm-dline.is-del { background: rgba(var(--color-red-rgb), 0.14); color: var(--color-red); }
+.config-sync-cm-dline.is-ins { background: rgba(var(--color-green-rgb), 0.14); color: var(--color-green); }
+.config-sync-cm-dline.is-delhead { color: var(--color-red); }
+.config-sync-cm-dline.is-inshead { color: var(--color-green); }
+.config-sync-cm-dline.is-pad { visibility: hidden; }
+.config-sync-cm-dgap { padding: 0 10px; color: var(--text-faint); font-style: italic; background: var(--background-secondary); border-top: 1px dashed var(--background-modifier-border); border-bottom: 1px dashed var(--background-modifier-border); }
+.config-sync-cm-diffbig { padding: var(--size-4-2) var(--size-4-3); color: var(--text-muted); font-family: var(--font-ui); }
+
+.config-sync-cm-split { display: flex; }
+.config-sync-cm-splitpane { flex: 1; min-width: 0; overflow-x: auto; }
+.config-sync-cm-splitpane + .config-sync-cm-splitpane { border-left: 1px solid var(--background-modifier-border); }
+
+.config-sync-cm-footer { display: flex; align-items: center; gap: var(--size-4-2); padding-top: var(--size-4-2); border-top: 1px solid var(--background-modifier-border); }
+.config-sync-cm-status { color: var(--text-muted); font-size: var(--font-ui-smaller); }
+
+.config-sync-cm-footer button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Fresh-device adopt banner (self-config model 定稿) ───────────────────── */
+.config-sync-bootstrap {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-3);
+  padding: var(--size-4-2) var(--size-4-3);
+  margin-bottom: var(--size-4-3);
+  border: 1px solid rgba(var(--interactive-accent-rgb), 0.4);
+  border-radius: var(--radius-m);
+  background: rgba(var(--interactive-accent-rgb), 0.08);
+}
+
+.config-sync-bootstrap-icon { font-size: var(--font-ui-large); }
+.config-sync-bootstrap-text { flex: 1; min-width: 0; }
+.config-sync-bootstrap-title { font-weight: 600; font-size: var(--font-ui-small); }
+.config-sync-bootstrap-sub { color: var(--text-muted); font-size: var(--font-ui-smaller); margin-top: 1px; }
+.config-sync-bootstrap-adopt { flex: none; }
+.config-sync-bootstrap-dismiss { color: var(--text-muted); cursor: pointer; flex: none; padding: 0 var(--size-4-1); }
+.config-sync-bootstrap-dismiss:hover { color: var(--text-normal); }
+
+.config-sync-expdesc { color: var(--text-faint); font-size: var(--font-ui-smaller); margin-bottom: var(--size-4-1); }
+
+/* ── Switch-list "Local decisions (this device)" (定稿 switch-exceptions.html) ── */
+.config-sync-ldlist { display: flex; flex-direction: column; gap: var(--size-2-1); }
+
+.config-sync-ldrow {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-2-1) var(--size-4-2);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+}
+
+.config-sync-ldrow-gsep { margin-top: var(--size-4-3); }
+
+.config-sync-ldrow.is-local,
+.config-sync-ldrow.is-auto {
+  border-color: rgba(var(--color-orange-rgb), 0.4);
+  background: rgba(var(--color-orange-rgb), 0.05);
+}
+
+.config-sync-ldname { font-weight: 500; }
+.config-sync-ldhint { color: var(--text-faint); font-size: var(--font-ui-smaller); }
+.config-sync-ldstate { color: var(--text-muted); font-size: var(--font-ui-smaller); }
+.config-sync-ldrow.is-local .config-sync-ldstate,
+.config-sync-ldrow.is-auto .config-sync-ldstate { color: var(--color-orange); }
+
+/* Pin affordance (enabled-css-snippets only), 定稿 snippet-scope-refined-v2.html.
+   Unpinned rows: a Lucide "pin" that stays hidden until the row is hovered — an occasional
+   action, not a permanent control. Pinned rows: a filled orange "Pinned here" chip + Unpin. */
+.config-sync-ld-pin {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 80ms ease-in-out;
+}
+.config-sync-ld-pin svg { width: 14px; height: 14px; }
+.config-sync-ldrow:hover .config-sync-ld-pin,
+.config-sync-ld-pin:focus-visible { opacity: 0.65; }
+.config-sync-ld-pin:hover { opacity: 1; }
+
+.config-sync-ld-pinchip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--size-2-1);
+  margin-left: var(--size-4-2);
+  padding: 1px 8px;
+  border-radius: 9px;
+  font-size: var(--font-ui-smaller);
+  line-height: 1.6;
+  white-space: nowrap;
+  color: var(--color-orange);
+  background: rgba(var(--color-orange-rgb), 0.14);
+}
+.config-sync-ld-pinchip-icon { display: inline-flex; align-items: center; }
+.config-sync-ld-pinchip-icon svg { width: 11px; height: 11px; }
+
+.config-sync-ld-unpin {
+  color: var(--text-accent);
+  font-size: var(--font-ui-smaller);
+  cursor: pointer;
+}
+.config-sync-ld-unpin:hover { text-decoration: underline; }
+
+/* Per-snippet "Active on" scope dropdown — outlined orange chip once a device scope is set,
+   plain/low-emphasis at the "All devices" default (定稿 snippet-scope-refined-v2.html). */
+.config-sync-ld-scope {
+  height: auto;
+  font-size: var(--font-ui-smaller);
+  padding: 3px 20px 3px 8px;
+}
+.config-sync-ld-scope.is-scoped {
+  color: var(--color-orange);
+  border-color: rgba(var(--color-orange-rgb), 0.5);
+}
+
+.config-sync-ldnote { color: var(--color-orange); font-size: var(--font-ui-smaller); margin-left: var(--size-4-1); }
+.config-sync-lddetail { color: var(--color-orange); font-family: var(--font-monospace); font-size: var(--font-ui-smaller); padding: 1px 0; }
+
+/* Orphan snippets notice + removal (Task 3) */
+.config-sync-orphan-sec { border-top: 1px solid var(--background-modifier-border); }
+.config-sync-orphan-notice { display: flex; align-items: center; gap: var(--size-4-2); padding: var(--size-4-2) var(--size-4-3); cursor: pointer; }
+.config-sync-orphan-ic { color: var(--text-faint); }
+.config-sync-orphan-nt { color: var(--text-muted); font-size: var(--font-ui-smaller); }
+.config-sync-orphan-act { color: var(--text-accent); font-size: var(--font-ui-smaller); }
+.config-sync-orphan-chev { color: var(--text-faint); font-size: var(--font-ui-smaller); }
+.config-sync-orphan-desc { color: var(--text-faint); font-size: var(--font-ui-smaller); padding: 0 var(--size-4-3) var(--size-4-2); line-height: 1.4; }
+.config-sync-orphan-row { display: flex; align-items: center; gap: var(--size-4-2); padding: var(--size-2-3) var(--size-4-3); opacity: 0.85; }
+.config-sync-orphan-name { color: var(--text-muted); }
+.config-sync-orphan-tag { color: var(--text-faint); font-size: var(--font-ui-smaller); border: 1px solid var(--background-modifier-border); border-radius: var(--radius-s); padding: 0 var(--size-2-2); }
+.config-sync-orphan-remove, .config-sync-orphan-removeall { color: var(--text-error); font-size: var(--font-ui-smaller); cursor: pointer; }
+
+/* ── Passphrase status badge (定稿 feedback-trio) ── */
+.config-sync-ppbadge {
+  font-size: var(--font-ui-smaller);
+  padding: 2px 9px;
+  border-radius: 9px;
+  flex: none;
+}
+
+.config-sync-ppbadge.is-set {
+  color: var(--color-green);
+  background: rgba(var(--color-green-rgb), 0.12);
+  border: 1px solid rgba(var(--color-green-rgb), 0.4);
+}
+
+.config-sync-ppbadge.is-unset {
+  color: var(--color-orange);
+  background: rgba(var(--color-orange-rgb), 0.12);
+  border: 1px solid rgba(var(--color-orange-rgb), 0.4);
+}
+
+/* ── Inline change diff (Sync Center rows, 定稿 feedback-trio) ── */
+.config-sync-diffable { cursor: pointer; }
+.config-sync-diffhint { color: var(--text-faint); font-family: var(--font-ui); font-size: var(--font-ui-smaller); }
+.config-sync-inline-diff {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  margin: var(--size-4-1) 0 var(--size-4-2);
+  overflow: hidden;
+}
+
+/* Passphrase row: badge must never overlap the wrapped description (ddd.png) */
+.config-sync-ppset .setting-item-control { flex-wrap: wrap; justify-content: flex-end; row-gap: var(--size-2-1); }
+.config-sync-ppbadge { white-space: nowrap; }
+
+/* Bidirectional switch-list divergence (定稿 2026-07-17): amber-edged summary of what each
+   direction destroys, plus the exclude shortcut button underneath. */
+.config-sync-divergence {
+  border-left: 3px solid var(--text-warning);
+  background: var(--background-secondary);
+  border-radius: 0 6px 6px 0;
+  padding: var(--size-4-1) var(--size-4-2);
+  margin: var(--size-4-1) 0;
+  font-size: var(--font-ui-smaller);
+}
+.config-sync-divergence-line { color: var(--text-muted); }
+.config-sync-divergence-line::first-letter { color: var(--text-warning); }
+
+/* Search context (定稿): the main card's labeled head while searching, and the inline
+   explanation under an inert (uncheckable) hit. */
+.config-sync-section-head.is-plain { cursor: default; padding: var(--size-4-1) 0; }
+.config-sync-inert-note {
+  color: var(--text-faint);
+  font-style: italic;
+  font-size: var(--font-ui-smaller);
+  padding: 0 var(--size-4-2) var(--size-4-1) calc(var(--size-4-2) + 20px);
+}
+
+/* Exclude-extras confirmation modal rows. */
+.config-sync-exclude-row {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-1) 0;
+  font-family: var(--font-monospace);
+  font-size: var(--font-ui-smaller);
+}
+.config-sync-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-3);
+}
+
+/* Header manual-refresh sits inline with the "refreshed Xm ago" note, at the same default
+   icon size as the Remotes ↻ (batch 2 ④ — a forced 14px read as a different icon). */
+.config-sync-center-refresh { margin-left: var(--size-4-1); }
+
+/* Live run status line (定稿 2026-07-17): right-aligned monospace "Name — phase…" with a
+   pulsing dot; the slow hint appends after ~8s on one step. */
+.config-sync-runline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--size-4-2);
+  margin-top: var(--size-4-1);
+  color: var(--text-muted);
+  font-family: var(--font-monospace);
+  font-size: var(--font-ui-smaller);
+}
+.config-sync-runline-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--interactive-accent);
+  flex: none;
+  animation: config-sync-pulse 1s ease-in-out infinite alternate;
+}
+.config-sync-runline-slow { color: var(--text-faint); font-style: italic; }
+@keyframes config-sync-pulse {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+/* Indeterminate shimmer over the button progress bar while a step runs. */
+.config-sync-progress.is-active { position: relative; overflow: hidden; }
+.config-sync-progress.is-active::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -30%;
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, var(--text-on-accent), transparent);
+  opacity: 0.6;
+  animation: config-sync-shimmer 1.2s linear infinite;
+}
+@keyframes config-sync-shimmer {
+  from { left: -30%; }
+  to { left: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .config-sync-runline-dot { animation: none; }
+  .config-sync-progress.is-active::after { animation: none; opacity: 0.35; left: 35%; }
+}
+
+/* ── Mobile layout fixes (定稿 mobile-fixes-mockup, 2026-07-17) ──
+   All scoped to body.is-mobile: desktop layouts are untouched. */
+
+/* ① Passphrase: the input takes a full line of its own (the caret used to land on the Set
+   button); buttons follow on a right-aligned row below. */
+body.is-mobile .config-sync-ppset .setting-item-control { flex-wrap: wrap; justify-content: flex-end; }
+body.is-mobile .config-sync-ppset .setting-item-control input {
+  flex: 1 1 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ② Exclusion rows: the plugin name gets its own full line (no more mid-name wrapping);
+   the state phrase, included/excluded text and toggle share the second line. */
+body.is-mobile .config-sync-ldrow { flex-wrap: wrap; row-gap: 2px; }
+body.is-mobile .config-sync-ldrow .config-sync-ldname {
+  flex: 1 1 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ③ Long names truncate on one line instead of pushing the checkbox out of its column. */
+body.is-mobile .config-sync-hub-row .config-sync-rule-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+body.is-mobile .config-sync-hub-row .config-sync-rule-spacer { display: none; }
+
+/* ④ Checkboxes: compact 24px box (Obsidian's mobile default renders as a giant block).
+   A transparent-padding hit-area trick doesn't survive Obsidian's own checkbox styling
+   (background-clip/border land on the outer box), so visual = touch target here. */
+body.is-mobile .config-sync-hub-row input[type="checkbox"],
+body.is-mobile .config-sync-mainbar input[type="checkbox"],
+body.is-mobile .config-sync-sect input[type="checkbox"],
+body.is-mobile .config-sync-section-head input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  box-sizing: border-box;
+  border-radius: 6px;
+  flex: none;
+}
+
+/* ⑤ Compact header: title and small pills share one line, the "refreshed …" text hides
+   (the ↻ tooltip keeps the information), nothing wraps mid-word. */
+body.is-mobile .config-sync-center-refreshed { display: none; }
+body.is-mobile .config-sync-center-head { flex-wrap: wrap; row-gap: var(--size-2-1); }
+body.is-mobile .config-sync-center-title { white-space: nowrap; }
+body.is-mobile .config-sync-center-head .config-sync-pill {
+  font-size: var(--font-ui-smaller);
+  padding: 1px 8px;
+  min-height: 0;
+  line-height: 1.5;
+}
+
+/* ── Mobile polish round 2 (2026-07-17) ── */
+
+/* ① The action bar must clear Obsidian's floating mobile navbar — plus room for a floating
+   status-bar pill (a common snippet/theme pattern sits fixed above the navbar). Overshoot is
+   harmless: it is scroll-past space at the end of the list. */
+body.is-mobile .config-sync-center {
+  padding-bottom: calc(var(--mobile-toolbar-height, 48px) + 88px);
+}
+
+/* ② The search row separates from the filter pills (own line, full width minus select-all). */
+body.is-mobile .config-sync-mainbar { row-gap: var(--size-4-2); }
+body.is-mobile .config-sync-mainbar .config-sync-search-wrap {
+  flex: 1 1 calc(100% - 44px);
+  min-width: 0;
+}
+
+/* ③ The scope switcher matches the pills' height instead of undercutting them. */
+body.is-mobile .config-sync-switcher {
+  min-height: 44px;
+  font-size: var(--font-ui-small);
+}
+
+/* ④ The header ↻ glyph shares the checkbox column's right edge (desktop too).
+   Calibrated by geometry probe for the default-size glyph (batch 2 ④ dropped the old
+   14px override): card inner right inset minus the clickable-icon's own padding. */
+.config-sync-center-refresh {
+  margin-left: 0;
+  margin-right: 7px;
+}
+.config-sync-center-head { padding-right: 0; }
+/* Mobile only: the "refreshed …" note is hidden there, so the ↻ (last child) needs its own
+   auto margin. On desktop the note's margin-left:auto already right-aligns the pair — a
+   second auto margin here would split the free space and center the note (batch 2 ①). */
+body.is-mobile .config-sync-center-head > :last-child { margin-left: auto; }
+
+/* ⑥ Expanded-item detail: one scale for everything inside (desktop + mobile) — buttons,
+   file lines and notes all sit at --font-ui-smaller with a shared indent and rhythm. */
+.config-sync-report-files .config-sync-seg { margin: var(--size-2-1) 0; }
+.config-sync-report-files .config-sync-seg-btn {
+  font-size: var(--font-ui-smaller);
+  padding: 2px 10px;
+}
+body.is-mobile .config-sync-report-files .config-sync-seg-btn {
+  min-height: 32px;
+  padding: 4px 12px;
+}
+body.is-mobile .config-sync-report-files { font-size: var(--font-ui-small); }
+
+/* Qualifier-search autocomplete dropdown */
+.config-sync-search-wrap {
+  position: relative;
+}
+.config-sync-qac {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: var(--layer-popover);
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-s);
+  overflow: hidden;
+}
+.config-sync-qac-opt {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4-2);
+  padding: var(--size-4-1) var(--size-4-3);
+  cursor: pointer;
+  font-size: var(--font-ui-small);
+}
+.config-sync-qac-opt.is-sel {
+  background: var(--background-modifier-hover);
+}
+.config-sync-qac-ic {
+  display: inline-flex;
+  color: var(--text-muted);
+}
+.config-sync-qac-ic svg {
+  width: var(--icon-xs);
+  height: var(--icon-xs);
+}
+.config-sync-qac-txt {
+  color: var(--text-normal);
+  font-family: var(--font-monospace);
+}
+.config-sync-qac-desc {
+  margin-left: auto;
+  color: var(--text-faint);
+  font-size: var(--font-ui-smaller);
+}

@@ -1,0 +1,137 @@
+{
+  "pkmMode": "auto",
+  "ribbonButtons": {
+    "sync": true,
+    "revert": true
+  },
+  "statusInMenu": true,
+  "statusBarItem": true,
+  "statusBarRemote": true,
+  "ribbonDot": false,
+  "mobileStatusBar": false,
+  "remoteAutoCheck": true,
+  "localPeriodicCheck": true,
+  "groups": [
+    {
+      "name": "core-plugins",
+      "path": "{configDir}/core-plugins.json",
+      "type": "file",
+      "devices": "all",
+      "description": "Which core plugins are turned on. Mirrors the whole list across devices.",
+      "label": "Enabled core plugins"
+    },
+    {
+      "name": "graph",
+      "path": "{configDir}/graph.json",
+      "type": "file",
+      "devices": "all",
+      "label": "Graph view"
+    },
+    {
+      "name": "community-plugins",
+      "path": "{configDir}/community-plugins.json",
+      "type": "file",
+      "devices": "all",
+      "description": "Which community plugins are turned on — not the plugins themselves or their settings. Mirrors the whole list: plugins enabled only on the target device get turned off.",
+      "label": "Enabled community plugins"
+    },
+    {
+      "name": "plugin-config-sync",
+      "path": "{configDir}/plugins/config-sync/data.json",
+      "type": "file",
+      "devices": "all",
+      "mode": "fields",
+      "fields": [
+        {
+          "pattern": "rootPath",
+          "action": "strip",
+          "locked": true
+        },
+        {
+          "pattern": "remotes",
+          "action": "strip",
+          "locked": true
+        },
+        {
+          "pattern": "switchExceptions",
+          "action": "strip",
+          "locked": true
+        }
+      ],
+      "description": "Settings of config-sync.",
+      "label": "Config Sync"
+    },
+    {
+      "name": "plugin-opencode",
+      "path": "{configDir}/plugins/opencode/data.json",
+      "type": "file",
+      "devices": "all",
+      "description": "Settings of opencode.",
+      "label": "OpenCode"
+    },
+    {
+      "name": "themes",
+      "path": "{configDir}/themes",
+      "type": "dir",
+      "devices": "all",
+      "description": "Installed theme files.",
+      "label": "Themes"
+    },
+    {
+      "name": "enabled-css-snippets",
+      "path": "{configDir}/enabled-css-snippets.json",
+      "type": "file",
+      "devices": "all",
+      "description": "Which CSS snippets are on, per device.",
+      "label": "Enabled CSS snippets"
+    },
+    {
+      "name": "appearance",
+      "path": "{configDir}/appearance.json",
+      "type": "file",
+      "devices": "all",
+      "mode": "fields",
+      "fields": [
+        {
+          "pattern": "enabledCssSnippets",
+          "action": "strip",
+          "locked": true
+        }
+      ],
+      "description": "Theme choice, fonts and interface appearance.",
+      "label": "Appearance"
+    },
+    {
+      "name": "app",
+      "path": "{configDir}/app.json",
+      "type": "file",
+      "devices": "all",
+      "description": "Editor, Files & links and other general options (app.json).",
+      "label": "App settings"
+    },
+    {
+      "name": "snippets",
+      "path": "{configDir}/snippets",
+      "type": "dir",
+      "devices": "all",
+      "description": "Your CSS snippets.",
+      "label": "CSS snippets"
+    },
+    {
+      "name": "hotkeys",
+      "path": "{configDir}/hotkeys.json",
+      "type": "file",
+      "devices": "all",
+      "description": "Custom keyboard shortcuts.",
+      "label": "Hotkeys"
+    }
+  ],
+  "snippetScopes": {},
+  "bratPluginIndex": {},
+  "runHistory": {
+    "enabled": true,
+    "path": "",
+    "maxCount": 50,
+    "maxDays": 30
+  }
+}

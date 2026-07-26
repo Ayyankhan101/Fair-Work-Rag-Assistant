@@ -1,0 +1,28 @@
+# Environment
+.env
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Large data (not in repo)
+*.pdf
+*.zip
+*.docx
+data/awards/
+data/awards_new/
+data/vectorstore/
+data/vectorstore_smoke/
+data/docs_cache.pkl
+monitor_build.out
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log

@@ -1,0 +1,33 @@
+{
+  "capturedAt": "2026-07-26T14:24:09.422Z",
+  "groups": {
+    "core-plugins": {
+      "sourceAppVersion": "1.12.7"
+    },
+    "graph": {
+      "sourceAppVersion": "1.12.7"
+    },
+    "community-plugins": {
+      "sourceAppVersion": "1.12.7"
+    },
+    "plugin-config-sync": {
+      "sourcePluginVersion": "1.9.0"
+    },
+    "plugin-opencode": {
+      "sourcePluginVersion": "1.3.13",
+      "desktopOnly": true
+    },
+    "themes": {
+      "sourceAppVersion": "1.12.7"
+    },
+    "enabled-css-snippets": {
+      "sourceAppVersion": "1.12.7"
+    },
+    "appearance": {
+      "sourceAppVersion": "1.12.7"
+    },
+    "app": {
+      "sourceAppVersion": "1.12.7"
+    }
+  }
+}

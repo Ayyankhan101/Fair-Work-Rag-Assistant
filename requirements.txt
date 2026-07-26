@@ -1,0 +1,10 @@
+turbovec[langchain]
+langchain
+langchain-groq
+fastembed
+pdfplumber
+gradio
+python-dotenv
+beautifulsoup4
+lxml
+numpy
