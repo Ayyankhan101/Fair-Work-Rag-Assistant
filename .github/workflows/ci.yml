@@ -1,0 +1,39 @@
+name: Python CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install ruff
+      - name: Lint with ruff
+        run: ruff check src/ scripts/
+      - name: Format check
+        run: ruff format --check src/ scripts/
+
+  test-imports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Test imports
+        run: |
+          python -c "from src.config import detect_award, detect_topic"
+          python -c "from src.rag import build_rag_chain"
+          python -c "from src.cag import build_cag_chain"
+          python -c "from src.router import route_query"
+          echo "All imports OK ✅"
