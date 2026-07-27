@@ -94,11 +94,42 @@ def md_to_documents(md_path: str) -> list[Document]:
     with open(md_path) as f:
         content = f.read()
     
-    # Extract award name from first # header
-    award_match = re.search(r'^# (.+)$', content, re.MULTILINE)
-    award_name = award_match.group(1).strip() if award_match else os.path.basename(md_path)
-    
+    # Extract award name — try multiple strategies
+    award_name = None
     source_file = os.path.basename(md_path).replace('.md', '.pdf')
+    
+    # Strategy 1: Check manual overrides
+    AWARD_OVERRIDES = {
+        "clerk-award.md": "Clerks—Private Sector Award 2010",
+        "workplace-relations-act-1996.md": None,  # Skip non-award files
+    }
+    if os.path.basename(md_path) in AWARD_OVERRIDES:
+        award_name = AWARD_OVERRIDES[os.path.basename(md_path)]
+        if award_name is None:
+            return []  # Skip this file
+    
+    # Strategy 2: Look for "Award 20XX" in first 1000 chars (standalone line)
+    if not award_name:
+        for line in content[:2000].split('\n'):
+            award_match = re.search(r'([A-Z][A-Za-z\s—\-]+Award\s+20\d{2})', line)
+            if award_match:
+                award_name = award_match.group(1).strip()
+                break
+    
+    # Strategy 3: First # header (only if it contains "Award")
+    if not award_name:
+        header_match = re.search(r'^# (.+)$', content, re.MULTILINE)
+        if header_match:
+            header = header_match.group(1).strip()
+            if 'award' in header.lower():
+                award_name = header
+    
+    # Strategy 4: Extract from filename
+    if not award_name:
+        # clerk-award.md → Clerks Award
+        name_part = source_file.replace('.pdf', '').replace('-', ' ').title()
+        award_name = f"{name_part} Award 2020"
+    
     sections = parse_md_sections(content, award_name, source_file)
     
     documents = []

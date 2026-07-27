@@ -13,23 +13,22 @@ from filtered_retriever import AwardFilteredRetriever
 from config import AWARD_PATTERNS, TOPIC_KEYWORDS, detect_award, detect_topic
 
 
-RAG_PROMPT_TEMPLATE = """You are an expert on Australian employment law. Your task is to answer questions using ONLY the provided context from Modern Awards and the National Employment Standards (NES).
+SYSTEM_PROMPT = """You are a Fair Work Award expert assistant for Australian employment law.
 
-CRITICAL RULES:
-1. EXTRACT specific numbers, percentages, time periods, and dollar amounts from the context.
-2. NEVER say "not specified", "not explicitly stated", or "the context does not contain" — ALWAYS provide the best answer from the context.
-3. If context contains multiple relevant clauses, SYNTHESIZE them into a complete answer.
-4. For questions about a specific Award, PRIORITIZE that Award's provisions.
-5. For general questions (e.g., "overtime rules", "penalty rates"), COMPARE across multiple Awards.
-6. Use EXACT figures from context (e.g., "30 minutes", "150%", "$23.23").
-7. Reference specific clause numbers and section titles from context.
-8. If you find a number in the context, STATE IT CONFIDENTLY — do not hedge with "approximately" or "up to".
-9. If the context references a table or schedule, mention the table name even if the exact figure isn't visible.
-10. When the question asks "what is X", you MUST provide a specific answer with a number — never give a vague response.
-11. RATE TABLE RULE: If the question asks for a specific dollar amount or hourly rate, scan ALL context documents for tables, schedules, or rate summaries. Look for patterns like "$XX.XX", "Table X", "Schedule B", "Minimum rates", "Hourly Rates". If you find a rate table, extract the exact dollar figure for the requested level/classification.
-12. OVERTIME RATE RULE: For overtime questions, always look for percentage rates (150%, 200%, etc.) and specify the tiers (e.g., "150% for first 2 hours, 200% thereafter").
+You answer questions about Modern Awards and the National Employment Standards (NES).
 
-RESPONSE FORMAT (use exactly this structure):
+RULES:
+1. ONLY use the provided context to answer — never fabricate information.
+2. Extract specific numbers, percentages, time periods, and dollar amounts from the context.
+3. If the context does not contain enough information, say "I don't have enough information to answer this question accurately."
+4. If you're unsure, say "I'm not certain — please consult the full Award text or a Fair Work specialist."
+5. Reference specific clause numbers and section titles from context.
+6. For questions about a specific Award, PRIORITIZE that Award's provisions.
+7. For general questions, COMPARE across multiple Awards when context allows.
+8. If the context references a table or schedule, mention the table name.
+9. NEVER make up numbers, dates, or clause references not in the context.
+
+RESPONSE FORMAT:
 
 **Answer:** [Direct answer with specific numbers/details from context]
 
@@ -41,31 +40,25 @@ RESPONSE FORMAT (use exactly this structure):
 
 **Note:** [One of: "Multiple Awards may apply — please check specific Award for details" OR "Information is limited — please consult the full Award text for complete details" OR "This answer is based on the specific context provided"]
 
-EXAMPLES OF GOOD ANSWERS:
+EXAMPLES:
 
 Example 1 - Specific Award question:
+Context: [Hospitality Industry (General) Award 2020 - Clause 16.1] An employee must be given an unpaid meal break of not less than 30 minutes...
 Q: "What is the minimum break under the Hospitality Award?"
 **Answer:** An unpaid meal break of no less than 30 minutes.
 **Award/NES Reference:** Hospitality Industry (General) Award 2020
-**Clause/Section:** Clause 16.1, 16.2, Table 2
-**Explanation:** The context specifies a 30-minute unpaid meal break in Clause 16 and Table 2.
+**Clause/Section:** Clause 16.1
+**Explanation:** The context specifies a 30-minute unpaid meal break in Clause 16.
 **Note:** This answer is based on the specific context provided.
 
-Example 2 - General topic question:
-Q: "What are overtime rules for a casual employee?"
-**Answer:** Casual employees receive overtime at 150% for the first 2-3 hours, then 200% thereafter, varying by Award. For example, under the General Retail Industry Award, casual overtime is 150% for first 2 hours, 200% thereafter. Under the Cleaning Services Award, it is 150% for first 3 hours, 200% thereafter.
-**Award/NES Reference:** Multiple Awards (General Retail Industry Award 2020, Cleaning Services Award 2020, Vehicle Repair, Services and Retail Award 2020)
-**Clause/Section:** Various clauses across Awards
-**Explanation:** Multiple Awards in the context specify different overtime rates for casual employees. The answer synthesizes rates from multiple Awards.
-**Note:** Multiple Awards may apply — please check specific Award for details.
-
-Example 3 - NES question:
-Q: "What is the notice period for resignation under the NES?"
-**Answer:** Under section 117 of the Fair Work Act, an employee must give notice based on their period of continuous service: less than 1 year = 1 week, 1-3 years = 2 weeks, 3-5 years = 3 weeks, 5+ years = 4 weeks.
-**Award/NES Reference:** National Employment Standards
-**Clause/Section:** Section 117(3), NES Part 2-2
-**Explanation:** The NES specifies notice periods based on continuous service length.
-**Note:** This answer is based on the specific context provided.
+Example 2 - Insufficient context:
+Context: [General Retail Industry Award 2020 - Clause 15] Overtime is payable at 150%...
+Q: "What is the minimum salary for a Level 5 retail employee in 2024?"
+**Answer:** I don't have enough information to answer this question accurately. The context mentions overtime rates but does not include specific salary rates for Level 5 employees.
+**Award/NES Reference:** General Retail Industry Award 2020
+**Clause/Section:** Clause 15
+**Explanation:** The retrieved context covers overtime provisions but does not contain salary rate tables.
+**Note:** Information is limited — please consult the full Award text for complete details.
 
 Context:
 {context}
@@ -88,6 +81,35 @@ def get_llm(fallback=False) -> ChatGroq:
         temperature=0,
         max_tokens=1024,
     )
+
+
+def needs_clarification(question: str) -> bool:
+    """Check if question needs clarification before answering."""
+    import re
+    q = question.lower().strip()
+    
+    # Too short to be meaningful
+    if len(q) < 5:
+        return True
+    
+    # Greetings only
+    greeting_patterns = [
+        r'^(hi|hello|hey|greetings|good morning|good afternoon|good evening)[\s!]*$',
+        r'^(yo|sup|howdy|hiya)[\s!]*$',
+    ]
+    if any(re.match(p, q) for p in greeting_patterns):
+        return True
+    
+    # Just a question word
+    just_question = r'^(what|how|when|where|who|why|can|could|would|should|is|are|do|does|did|tell|explain|show)[\s?]*$'
+    if re.match(just_question, q):
+        return True
+    
+    # Just punctuation
+    if all(c in '?!. ' for c in q):
+        return True
+    
+    return False
 
 
 def format_docs(docs, max_chars=4000) -> str:
@@ -161,7 +183,10 @@ def create_rag_chain(vectorstore, cag_cache=None, docstore_path=None):
         filtered_retriever = None
         hybrid_retriever = semantic_retriever
 
-    prompt = ChatPromptTemplate.from_template(RAG_PROMPT_TEMPLATE)
+    prompt = ChatPromptTemplate.from_messages([
+        SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT),
+        HumanMessagePromptTemplate.from_template("{question}"),
+    ])
 
     # Award name mapping for filtering (from shared config)
     AWARD_KEYWORDS = AWARD_PATTERNS
@@ -214,6 +239,23 @@ def create_rag_chain(vectorstore, cag_cache=None, docstore_path=None):
 
 def ask_question(rag_chain, question: str) -> str:
     """Ask a question and get a formatted answer with auto-fallback on rate limit."""
+    import re
+    
+    # Check if question needs clarification
+    if needs_clarification(question):
+        return """**Answer:** Could you please provide more details about your question?
+
+**Award/NES Reference:** N/A
+
+**Clause/Section:** N/A
+
+**Explanation:** Your question appears to be too brief or unclear for me to provide an accurate answer.
+
+**Note:** Please ask a specific question about a Modern Award or the National Employment Standards. For example:
+- "What is the minimum break under the Hospitality Award?"
+- "What are the casual loading rates in the Retail Award?"
+- "How much annual leave am I entitled to under the NES?" """
+    
     try:
         response = rag_chain.invoke(question)
         return response
@@ -222,7 +264,7 @@ def ask_question(rag_chain, question: str) -> str:
             print(f"Rate limit hit, retrying with fallback model (smaller context)...")
             # Rebuild chain with fallback model and smaller k
             from langchain_groq import ChatGroq
-            from langchain_core.prompts import ChatPromptTemplate
+            from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
             from langchain_core.output_parsers import StrOutputParser
             
             fallback_llm = get_llm(fallback=True)
@@ -233,7 +275,10 @@ def ask_question(rag_chain, question: str) -> str:
                 # Rebuild with smaller k
                 fallback_chain = (
                     original_context_builder  # Same context builder
-                    | ChatPromptTemplate.from_template(RAG_PROMPT_TEMPLATE)
+                    | ChatPromptTemplate.from_messages([
+                        SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT),
+                        HumanMessagePromptTemplate.from_template("{question}"),
+                    ])
                     | fallback_llm
                     | StrOutputParser()
                 )
@@ -241,7 +286,10 @@ def ask_question(rag_chain, question: str) -> str:
                 # Fallback: rebuild entire chain
                 fallback_chain = (
                     {"context": original_context_builder, "question": lambda x: x}
-                    | ChatPromptTemplate.from_template(RAG_PROMPT_TEMPLATE)
+                    | ChatPromptTemplate.from_messages([
+                        SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT),
+                        HumanMessagePromptTemplate.from_template("{question}"),
+                    ])
                     | fallback_llm
                     | StrOutputParser()
                 )

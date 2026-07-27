@@ -1,10 +1,28 @@
 """Filtered retriever for award-specific queries."""
 import re
 import json
+from difflib import SequenceMatcher
 from typing import List, Optional
 from langchain_core.retrievers import BaseRetriever
 from langchain_core.documents import Document
 from config import AWARD_PATTERNS, TOPIC_KEYWORDS
+
+
+def fuzzy_match(query: str, target: str, threshold: float = 0.6) -> float:
+    """Fuzzy match ratio between query and target."""
+    return SequenceMatcher(None, query.lower(), target.lower()).ratio()
+
+
+def deduplicate_docs(docs: List[Document]) -> List[Document]:
+    """Remove duplicate documents by content hash."""
+    seen = set()
+    unique = []
+    for doc in docs:
+        content_hash = hash(doc.page_content[:200])
+        if content_hash not in seen:
+            seen.add(content_hash)
+            unique.append(doc)
+    return unique
 
 
 class AwardFilteredRetriever(BaseRetriever):
@@ -46,11 +64,16 @@ class AwardFilteredRetriever(BaseRetriever):
         if not award_name:
             return []
         
-        # Filter by award name
-        award_docs = [
-            doc for doc in self.all_docs
-            if award_name.lower() in doc.metadata.get('award_name', '').lower()
-        ]
+        # Filter by award name with fuzzy matching
+        award_docs = []
+        for doc in self.all_docs:
+            doc_award = doc.metadata.get('award_name', '')
+            # Exact match
+            if award_name.lower() in doc_award.lower():
+                award_docs.append(doc)
+            # Fuzzy match
+            elif fuzzy_match(award_name, doc_award) > 0.7:
+                award_docs.append(doc)
         
         # Filter by topic keywords
         if topic_keywords:
@@ -72,19 +95,12 @@ class AwardFilteredRetriever(BaseRetriever):
             scored_docs.sort(key=lambda x: x[0], reverse=True)
             
             if scored_docs:
-                return [doc for _, doc in scored_docs[:20]]
+                return deduplicate_docs([doc for _, doc in scored_docs[:30]])
         
-        return award_docs[:20]
+        return deduplicate_docs(award_docs[:30])
     
     def _general_topic_retrieval(self, query: str, topic_keywords: List[str]) -> List[Document]:
-        """Retrieve documents for general topics without specific award.
-        
-        Improved scoring:
-        - Exact phrase match = 5 points
-        - Single keyword match = 1 point
-        - Clause number presence = 2 bonus points
-        - Percentage/number in content = 1 bonus point
-        """
+        """Retrieve documents for general topics without specific award."""
         scored_docs = []
         for doc in self.all_docs:
             content_lower = doc.page_content.lower()
@@ -127,7 +143,7 @@ class AwardFilteredRetriever(BaseRetriever):
             if award not in seen_awards or len(diverse_docs) < 5:
                 diverse_docs.append(doc)
                 seen_awards.add(award)
-            if len(diverse_docs) >= 15:
+            if len(diverse_docs) >= 20:
                 break
         
         return diverse_docs
