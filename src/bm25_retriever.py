@@ -4,7 +4,6 @@ from rank_bm25 import BM25Okapi
 from langchain_core.retrievers import BaseRetriever
 from langchain_core.documents import Document
 from typing import List
-import os
 
 
 class BM25Retriever(BaseRetriever):

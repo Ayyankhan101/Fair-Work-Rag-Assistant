@@ -1,5 +1,6 @@
 """RAG chain with Groq LLM for Fair Work Awards & NES Q&A."""
 import os
+import re
 from typing import Optional
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
@@ -86,7 +87,6 @@ def get_llm(fallback=False) -> ChatGroq:
 
 def needs_clarification(question: str) -> bool:
     """Check if question needs clarification before answering."""
-    import re
     q = question.lower().strip()
     
     # Too short to be meaningful
@@ -118,7 +118,6 @@ def format_docs(docs, max_chars=4000) -> str:
     
     Strips contextual retrieval prefix before displaying to user.
     """
-    import re
     formatted = []
     total_chars = 0
     for i, doc in enumerate(docs):
@@ -244,8 +243,6 @@ def create_rag_chain(vectorstore, cag_cache=None, docstore_path=None):
 
 def ask_question(rag_chain, question: str) -> str:
     """Ask a question and get a formatted answer with auto-fallback on rate limit."""
-    import re
-    
     # Check if question needs clarification
     if needs_clarification(question):
         return """**Answer:** Could you please provide more details about your question?

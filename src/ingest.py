@@ -131,38 +131,6 @@ AWARD_URL_MAP = {
     'ma000153': 'australian-government-industry-award-2016',
 }
 
-# Numbered PDFs → award name from content
-NUMBERED_AWARD_SLUGS = {
-    '1': 'salt-industry-award-2020',
-    '2': 'seafood-processing-award-2020',
-    '3': 'seagoing-industry-award-2020',
-    '4': 'security-services-industry-award-2020',
-    '5': 'silviculture-award-2020',
-    '6': 'industry-award-2010',
-    '7': 'sporting-organisations-award-2020',
-    '9': 'stevedoring-industry-award-2020',
-    '10': 'storage-services-and-wholesale-award-2020',
-    '11': 'sugar-industry-award-2020',
-    '12': 'supported-employment-services-award-2020',
-    '13': 'surveying-award-2020',
-    '14': 'telecommunications-services-award-2020',
-    '15': 'telstra-award-2015',
-    '17': 'timber-industry-award-2020',
-    '18': 'transport-cash-in-transit-award-2020',
-    '19': 'travelling-shows-award-2020',
-    '20': 'vehicle-repair-services-and-retail-award-2020',
-    '22': 'victorian-government-schools-award-2016',
-    '23': 'employees-award-2016',
-    '24': 'victorian-local-government-award-2015',
-    '25': 'victorian-public-service-award-2016',
-    '26': 'victorian-state-government-agencies-award-2015',
-    '27': 'minerals-award-2015',
-    '28': 'waste-management-award-2020',
-    '29': 'water-industry-award-2020',
-    '30': 'wine-industry-award-2020',
-    '31': 'wool-storage-sampling-and-testing-award-2020',
-}
-
 
 def extract_award_name_from_pdf(pdf_path: str) -> str:
     """Extract award name from first page of PDF."""
@@ -184,10 +152,6 @@ def get_award_slug(source_file: str) -> str:
     # Try ma000xxx mapping
     if base in AWARD_URL_MAP:
         return AWARD_URL_MAP[base]
-
-    # Try numbered mapping
-    if base in NUMBERED_AWARD_SLUGS:
-        return NUMBERED_AWARD_SLUGS[base]
 
     # Fallback: use filename
     return base.lower()

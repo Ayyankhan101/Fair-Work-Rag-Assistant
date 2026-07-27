@@ -1,0 +1,61 @@
+{
+  "documents": {
+    "docs_anthropic_com_en_docs_about-claude_models.md": {
+      "url": "https://docs.anthropic.com/en/docs/about-claude/models",
+      "title": "Models overview - Claude Platform Docs",
+      "fetchedAt": "2026-07-27T17:19:06.669Z",
+      "expiresAt": "2026-07-28T17:19:06.669Z",
+      "size": 308
+    },
+    "openai_com_api_pricing_.md": {
+      "url": "https://openai.com/api/pricing/",
+      "title": "Business Pricing | OpenAI",
+      "fetchedAt": "2026-07-27T17:19:06.869Z",
+      "expiresAt": "2026-07-28T17:19:06.869Z",
+      "size": 988
+    },
+    "platform_openai_com_docs_pricing.md": {
+      "url": "https://platform.openai.com/docs/pricing",
+      "title": "Untitled",
+      "fetchedAt": "2026-07-27T17:19:14.618Z",
+      "expiresAt": "2026-07-28T17:19:14.618Z",
+      "size": 8196
+    },
+    "docs_cohere_com_docs_reranking.md": {
+      "url": "https://docs.cohere.com/docs/reranking",
+      "title": "An Overview of Cohere&#x27;s Rerank Model | Cohere",
+      "fetchedAt": "2026-07-27T17:19:32.579Z",
+      "expiresAt": "2026-07-28T17:19:32.579Z",
+      "size": 8294
+    },
+    "cohere_com_pricing.md": {
+      "url": "https://cohere.com/pricing",
+      "title": "Pricing | Secure and Scalable Enterprise AI | Cohere",
+      "fetchedAt": "2026-07-27T17:19:40.572Z",
+      "expiresAt": "2026-07-28T17:19:40.572Z",
+      "size": 7570
+    },
+    "www_anthropic_com_pricing.md": {
+      "url": "https://www.anthropic.com/pricing",
+      "title": "Plans &amp; Pricing | Claude by Anthropic",
+      "fetchedAt": "2026-07-27T17:19:41.496Z",
+      "expiresAt": "2026-07-28T17:19:41.496Z",
+      "size": 15155
+    },
+    "docs_cohere_com_reference_rerank.md": {
+      "url": "https://docs.cohere.com/reference/rerank",
+      "title": "Rerank API (v2) | Cohere",
+      "fetchedAt": "2026-07-27T17:20:12.860Z",
+      "expiresAt": "2026-07-28T17:20:12.860Z",
+      "size": 3415
+    },
+    "github_com_pinchtab_pinchtab.md": {
+      "url": "https://github.com/pinchtab/pinchtab",
+      "title": "GitHub - pinchtab/pinchtab: High-performance browser automation bridge and multi-instance orchestrator with advanced stealth injection and real-time dashboard. · GitHub",
+      "fetchedAt": "2026-07-27T19:50:25.944Z",
+      "expiresAt": "2026-07-28T19:50:25.944Z",
+      "size": 15285
+    }
+  },
+  "lastUpdated": "2026-07-27T19:50:25.970Z"
+}

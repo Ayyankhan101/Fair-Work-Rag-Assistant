@@ -10,9 +10,14 @@ __pycache__/
 *.zip
 *.docx
 data/awards/
-data/awards_new/
+data/vectorstore/
 data/vectorstore_smoke/
+data/md_awards/
+data/docs_cache.pkl
+
+# Build artifacts
 monitor_build.out
+build_store.log
 
 # OS
 .DS_Store
@@ -24,7 +29,6 @@ Thumbs.db
 
 # Logs
 *.log
-data/md_awards/
 
 # Node
 .opencode/node_modules/
