@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "C:\Users\HP\Documents\GitHub\fair-work-rag-assistant\Quality Assurance Officer\tools\offline_request_matrix.py", line 33, in <module>
+    import rag  # noqa: E402
+    ^^^^^^^^^^
+  File "C:\Users\HP\Documents\GitHub\fair-work-rag-assistant\src\rag.py", line 10, in <module>
+    from bm25_retriever import build_bm25_retriever_from_docstore
+  File "C:\Users\HP\Documents\GitHub\fair-work-rag-assistant\src\bm25_retriever.py", line 3, in <module>
+    from rank_bm25 import BM25Okapi
+ModuleNotFoundError: No module named 'rank_bm25'

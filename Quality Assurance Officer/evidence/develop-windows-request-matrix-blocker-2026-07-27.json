@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "date": "2026-07-27",
+  "candidate": {
+    "branch": "develop",
+    "commit": "dd3bd45d58f430b6f88a927d7eee6ce1a815098d",
+    "source": "temporary git archive",
+    "data": "current QA working-tree data artifacts"
+  },
+  "environment": {
+    "operating_system": "Windows",
+    "python_utf8_forced": false,
+    "provider_request": false
+  },
+  "command_intent": "execute the 60-case offline RAG+CAG request matrix",
+  "result": "blocked before first request",
+  "exception": {
+    "type": "UnicodeDecodeError",
+    "codec": "cp1252",
+    "byte": "0x8d",
+    "position": 1009,
+    "path": "develop:src/cag.py",
+    "operation": "read data/nes/nes_combined.txt without an explicit encoding"
+  },
+  "follow_up": {
+    "forced_utf8_run_performed": true,
+    "evidence": "offline-request-matrix-develop-forced-utf8-2026-07-27.json",
+    "qualification": "diagnostic workaround only; does not convert the natural Windows failure into a pass"
+  }
+}

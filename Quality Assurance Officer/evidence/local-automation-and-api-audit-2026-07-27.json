@@ -1,0 +1,123 @@
+{
+  "record_type": "diagnostic_qa_execution",
+  "run_date": "2026-07-27",
+  "timezone": "Asia/Karachi",
+  "branch": "QA",
+  "head": "fb9028a8978393968788038492c7d17af02ed42b",
+  "candidate_immutable": false,
+  "product_files_changed_during_run": false,
+  "test_inventory": {
+    "tracked_test_files_at_head": 0,
+    "working_tree_test_files": 4,
+    "working_tree_test_methods": 16,
+    "documented_test_specifications": 485
+  },
+  "checks": {
+    "unit_tests_host": {
+      "status": "pass",
+      "passed": 16,
+      "failed": 0
+    },
+    "unit_tests_isolated": {
+      "status": "pass",
+      "passed": 16,
+      "failed": 0,
+      "duration_seconds": 0.103
+    },
+    "statement_coverage": {
+      "status": "fail",
+      "statements": 652,
+      "missed": 571,
+      "percent": 12,
+      "zero_percent_modules": [
+        "src/app.py",
+        "src/bm25_retriever.py",
+        "src/fastembeddings.py",
+        "src/filtered_retriever.py",
+        "src/hybrid_retriever.py",
+        "src/ingest.py",
+        "src/rag.py",
+        "src/vectorstore.py"
+      ]
+    },
+    "ruff_ci_scope": {
+      "check": "pass",
+      "format": "pass"
+    },
+    "ruff_expanded_scope": {
+      "check": "pass",
+      "format": "pass"
+    },
+    "documentation_style": {
+      "status": "pass",
+      "markdown_files_checked": 37
+    },
+    "git_diff_check": {
+      "status": "pass",
+      "line_ending_warnings": true
+    },
+    "isolated_ci_imports": {
+      "status": "pass_after_cached_retry",
+      "first_attempt": "timeout_after_60_seconds",
+      "second_attempt_seconds": 6.7
+    },
+    "application_import": {
+      "status": "fail_timeout",
+      "attempt_timeouts_seconds": [
+        20,
+        50
+      ]
+    },
+    "offline_fallback_probe": {
+      "status": "fail",
+      "trigger": "HTTP 429 rate_limit",
+      "provider_request_sent": false,
+      "message_count": 1,
+      "message_type": "HumanMessage",
+      "system_message_present": false,
+      "nested_context_dictionary": true,
+      "question_occurrences": 2,
+      "smaller_context_produced": false
+    },
+    "live_provider_inference": {
+      "status": "not_run",
+      "reason": "No provider credentials or approved spend were available."
+    }
+  },
+  "resolved_direct_dependencies": {
+    "turbovec": "0.8.0",
+    "langchain": "1.3.14",
+    "langchain-groq": "1.1.3",
+    "groq": "0.37.1",
+    "fastembed": "0.8.0",
+    "pdfplumber": "0.11.10",
+    "gradio": "6.20.0",
+    "python-dotenv": "1.2.2",
+    "beautifulsoup4": "4.15.0",
+    "lxml": "6.1.1",
+    "numpy": "2.4.0",
+    "rank-bm25": "0.2.2"
+  },
+  "dependency_warnings": [
+    "numpy==2.4.0 was reported as yanked for a backward-compatibility bug.",
+    "requirements.txt contains no version pins or hashes."
+  ],
+  "provider_credentials": {
+    "GROQ_API_KEY": false,
+    "GEMINI_API_KEY": false,
+    "GOOGLE_API_KEY": false,
+    "OPENROUTER_API_KEY": false,
+    "OPENAI_API_KEY": false
+  },
+  "current_groq_configuration": {
+    "primary_model": "llama-3.3-70b-versatile",
+    "fallback_model": "llama-3.1-8b-instant",
+    "temperature_effective": 1e-08,
+    "max_tokens": 1024,
+    "request_timeout": null,
+    "max_retries_inherited": 2,
+    "streaming": false,
+    "output_count": 1
+  },
+  "disposition": "failed"
+}

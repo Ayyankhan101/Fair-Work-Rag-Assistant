@@ -1,0 +1,1847 @@
+unformatted: File would be reformatted
+  --> build_store.py:1:1
+   |
+2  | """Build vector store from all award PDFs + NES."""
+3  +
+4  | import os
+--------------------------------------------------------------------------------
+26 |         docs = pickle.load(f)
+   -     print(f"  Loaded {len(docs)} cached chunks in {time.time()-start:.0f}s", flush=True)
+27 +     print(
+28 +         f"  Loaded {len(docs)} cached chunks in {time.time() - start:.0f}s", flush=True
+29 +     )
+30 | else:
+--------------------------------------------------------------------------------
+35 |         pickle.dump(docs, f, protocol=pickle.HIGHEST_PROTOCOL)
+   -     print(f"  Ingested {len(docs)} chunks in {time.time()-start:.0f}s", flush=True)
+36 +     print(f"  Ingested {len(docs)} chunks in {time.time() - start:.0f}s", flush=True)
+37 |     print(f"  Cached docs to {CACHE_PATH}", flush=True)
+--------------------------------------------------------------------------------
+61 | start_batch = start_idx // BATCH_SIZE
+   - for batch_no, batch_start in enumerate(range(start_idx, len(docs), BATCH_SIZE), start=start_batch + 1):
+   -     batch = docs[batch_start:batch_start + BATCH_SIZE]
+62 + for batch_no, batch_start in enumerate(
+63 +     range(start_idx, len(docs), BATCH_SIZE), start=start_batch + 1
+64 + ):
+65 +     batch = docs[batch_start : batch_start + BATCH_SIZE]
+66 |     store.add_documents(batch)
+--------------------------------------------------------------------------------
+90 |     CHECKPOINT_PATH.unlink()
+   - print(f"Done. Vector store saved. Total: {time.time()-start:.0f}s", flush=True)
+91 + print(f"Done. Vector store saved. Total: {time.time() - start:.0f}s", flush=True)
+   |
+
+unformatted: File would be reformatted
+   --> scripts\eval_hard.py:1:1
+    |
+2   | """Hard eval suite: 20+ questions with expected answers for content accuracy scoring."""
+3   +
+4   | import json
+--------------------------------------------------------------------------------
+28  |         "question": "How many consecutive days can an employee work without a day off under the Hospitality Award?",
+    -         "expected_keywords": ["Hospitality Award", "consecutive days", "7 days", "day off"],
+29  +         "expected_keywords": [
+30  +             "Hospitality Award",
+31  +             "consecutive days",
+32  +             "7 days",
+33  +             "day off",
+34  +         ],
+35  |         "expected_pattern": r"(7|seven)\s*(consecutive\s*)?days",
+--------------------------------------------------------------------------------
+61  |         "question": "What is the minimum annual leave entitlement under the NES?",
+    -         "expected_keywords": ["NES", "annual leave", "4 weeks", "20 days", "4 weeks per year"],
+62  +         "expected_keywords": [
+63  +             "NES",
+64  +             "annual leave",
+65  +             "4 weeks",
+66  +             "20 days",
+67  +             "4 weeks per year",
+68  +         ],
+69  |         "expected_pattern": r"(4\s*weeks|20\s*days)",
+--------------------------------------------------------------------------------
+74  |         "question": "How many weeks notice is required for termination after 5 years of continuous service under the NES?",
+    -         "expected_keywords": ["NES", "notice", "termination", "5 years", "4 weeks", "notice period"],
+75  +         "expected_keywords": [
+76  +             "NES",
+77  +             "notice",
+78  +             "termination",
+79  +             "5 years",
+80  +             "4 weeks",
+81  +             "notice period",
+82  +         ],
+83  |         "expected_pattern": r"(4\s*weeks|notice\s*period\s*for\s*5\s*years)",
+--------------------------------------------------------------------------------
+95  |         "question": "Under the Architects Award, what is the minimum annual salary for a graduate architect?",
+    -         "expected_keywords": ["Architects Award", "graduate architect", "salary", "minimum"],
+96  +         "expected_keywords": [
+97  +             "Architects Award",
+98  +             "graduate architect",
+99  +             "salary",
+100 +             "minimum",
+101 +         ],
+102 |         "expected_pattern": r"(\$|salary|annual)",
+--------------------------------------------------------------------------------
+121 |         "question": "How many breaks is a full-time employee entitled to during a 8-hour shift under the General Retail Industry Award?",
+    -         "expected_keywords": ["General Retail", "break", "8-hour", "meal break", "rest break"],
+122 +         "expected_keywords": [
+123 +             "General Retail",
+124 +             "break",
+125 +             "8-hour",
+126 +             "meal break",
+127 +             "rest break",
+128 +         ],
+129 |         "expected_pattern": r"(meal\s*break|rest\s*break|1\s*break|2\s*breaks)",
+--------------------------------------------------------------------------------
+134 |         "question": "What is the minimum engagement period for casual employees under the Hospitality Award?",
+    -         "expected_keywords": ["Hospitality", "casual", "minimum engagement", "3 hours", "2 hours"],
+135 +         "expected_keywords": [
+136 +             "Hospitality",
+137 +             "casual",
+138 +             "minimum engagement",
+139 +             "3 hours",
+140 +             "2 hours",
+141 +         ],
+142 |         "expected_pattern": r"(3\s+\w*\s*hours|2\s+\w*\s*hours|minimum\s*engagement)",
+--------------------------------------------------------------------------------
+147 |         "question": "Under the NES, what is the maximum unpaid parental leave an employee can take?",
+    -         "expected_keywords": ["NES", "parental leave", "unpaid", "12 months", "maximum"],
+148 +         "expected_keywords": [
+149 +             "NES",
+150 +             "parental leave",
+151 +             "unpaid",
+152 +             "12 months",
+153 +             "maximum",
+154 +         ],
+155 |         "expected_pattern": r"(12\s*months|maximum\s*unpaid\s*parental)",
+--------------------------------------------------------------------------------
+167 |         "question": "How is overtime calculated for part-time employees under the Professional Employees Award?",
+    -         "expected_keywords": ["Professional Employees", "overtime", "part-time", "150%", "rate"],
+168 +         "expected_keywords": [
+169 +             "Professional Employees",
+170 +             "overtime",
+171 +             "part-time",
+172 +             "150%",
+173 +             "rate",
+174 +         ],
+175 |         "expected_pattern": r"(150\s*%|overtime\s*rate|part.time\s*overtime)",
+--------------------------------------------------------------------------------
+187 |         "question": "Under the NES, what are the 10 National Employment Standards?",
+    -         "expected_keywords": ["NES", "10 standards", "National Employment Standards", "annual leave", "sick leave", "notice"],
+188 +         "expected_keywords": [
+189 +             "NES",
+190 +             "10 standards",
+191 +             "National Employment Standards",
+192 +             "annual leave",
+193 +             "sick leave",
+194 +             "notice",
+195 +         ],
+196 |         "expected_pattern": r"(10\s*standards|annual\s*leave|sick\s*leave|notice)",
+--------------------------------------------------------------------------------
+215 |         "question": "Compare the casual loading between the Cleaning Services Award and the Hospitality Award. Which is higher?",
+    -         "expected_keywords": ["casual loading", "Cleaning", "Hospitality", "25%", "comparison"],
+216 +         "expected_keywords": [
+217 +             "casual loading",
+218 +             "Cleaning",
+219 +             "Hospitality",
+220 +             "25%",
+221 +             "comparison",
+222 +         ],
+223 |         "expected_pattern": r"(25\s*%|casual\s*loading|higher|lower|same)",
+--------------------------------------------------------------------------------
+228 |         "question": "What is the maximum span of ordinary hours for a full-time employee across all Awards in the retail sector?",
+    -         "expected_keywords": ["retail", "span", "ordinary hours", "12 hours", "General Retail"],
+229 +         "expected_keywords": [
+230 +             "retail",
+231 +             "span",
+232 +             "ordinary hours",
+233 +             "12 hours",
+234 +             "General Retail",
+235 +         ],
+236 |         "expected_pattern": r"(12\s*hours|span\s*of\s*hours|retail)",
+--------------------------------------------------------------------------------
+241 |         "question": "What are the key differences between the NES and Modern Awards regarding annual leave?",
+    -         "expected_keywords": ["NES", "Modern Award", "annual leave", "difference", "4 weeks", "20 days"],
+242 +         "expected_keywords": [
+243 +             "NES",
+244 +             "Modern Award",
+245 +             "annual leave",
+246 +             "difference",
+247 +             "4 weeks",
+248 +             "20 days",
+249 +         ],
+250 |         "expected_pattern": r"(4\s*weeks|20\s*days|difference|NES|Award)",
+--------------------------------------------------------------------------------
+255 |         "question": "Under which Awards can an employee be required to work on public holidays?",
+    -         "expected_keywords": ["public holiday", "required to work", "Award", "Hospitality", "Retail", "essential"],
+256 +         "expected_keywords": [
+257 +             "public holiday",
+258 +             "required to work",
+259 +             "Award",
+260 +             "Hospitality",
+261 +             "Retail",
+262 +             "essential",
+263 +         ],
+264 |         "expected_pattern": r"(public\s*holiday|required|essential|Hospitality|Retail)",
+--------------------------------------------------------------------------------
+298 |     """Score content accuracy against expected answer.
+    -     
+299 +
+300 |     Scoring:
+--------------------------------------------------------------------------------
+307 |     details = []
+    -     
+308 +
+309 |     answer_lower = answer.lower()
+    -     
+310 +
+311 |     # Check keyword presence with synonym matching
+--------------------------------------------------------------------------------
+319 |         # Synonym matching for common variations
+    -         elif kw_lower == "casual loading" and ("casual" in answer_lower and "loading" in answer_lower):
+320 +         elif kw_lower == "casual loading" and (
+321 +             "casual" in answer_lower and "loading" in answer_lower
+322 +         ):
+323 |             keywords_found += 1
+    -         elif kw_lower == "hourly rate" and ("hourly" in answer_lower or "rate" in answer_lower):
+324 +         elif kw_lower == "hourly rate" and (
+325 +             "hourly" in answer_lower or "rate" in answer_lower
+326 +         ):
+327 |             keywords_found += 1
+    -         elif kw_lower == "notice period" and ("notice" in answer_lower or "termination" in answer_lower):
+328 +         elif kw_lower == "notice period" and (
+329 +             "notice" in answer_lower or "termination" in answer_lower
+330 +         ):
+331 |             keywords_found += 1
+    -         elif kw_lower == "meal break" and ("meal" in answer_lower or "break" in answer_lower):
+332 +         elif kw_lower == "meal break" and (
+333 +             "meal" in answer_lower or "break" in answer_lower
+334 +         ):
+335 |             keywords_found += 1
+    -         elif kw_lower == "rest break" and ("rest" in answer_lower or "break" in answer_lower):
+336 +         elif kw_lower == "rest break" and (
+337 +             "rest" in answer_lower or "break" in answer_lower
+338 +         ):
+339 |             keywords_found += 1
+    -         elif kw_lower == "penalty" and ("penalty" in answer_lower or "penalties" in answer_lower):
+340 +         elif kw_lower == "penalty" and (
+341 +             "penalty" in answer_lower or "penalties" in answer_lower
+342 +         ):
+343 |             keywords_found += 1
+--------------------------------------------------------------------------------
+349 |             keywords_found += 1
+    -         elif kw_lower == "junior" and ("junior" in answer_lower or "under 18" in answer_lower):
+350 +         elif kw_lower == "junior" and (
+351 +             "junior" in answer_lower or "under 18" in answer_lower
+352 +         ):
+353 |             keywords_found += 1
+    -         elif kw_lower == "apprentice" and ("apprentice" in answer_lower or "trainee" in answer_lower):
+354 +         elif kw_lower == "apprentice" and (
+355 +             "apprentice" in answer_lower or "trainee" in answer_lower
+356 +         ):
+357 |             keywords_found += 1
+    -         elif kw_lower == "12 months" and ("12 months" in answer_lower or "52 weeks" in answer_lower):
+358 +         elif kw_lower == "12 months" and (
+359 +             "12 months" in answer_lower or "52 weeks" in answer_lower
+360 +         ):
+361 |             keywords_found += 1
+    -         elif kw_lower == "20 days" and ("20 days" in answer_lower or "4 weeks" in answer_lower):
+362 +         elif kw_lower == "20 days" and (
+363 +             "20 days" in answer_lower or "4 weeks" in answer_lower
+364 +         ):
+365 |             keywords_found += 1
+    -         elif kw_lower == "minimum engagement" and ("minimum" in answer_lower and ("engagement" in answer_lower or "engaged" in answer_lower)):
+366 +         elif kw_lower == "minimum engagement" and (
+367 +             "minimum" in answer_lower
+368 +             and ("engagement" in answer_lower or "engaged" in answer_lower)
+369 +         ):
+370 |             keywords_found += 1
+371 |         elif kw_lower == "rate" and ("rate" in answer_lower or "%" in answer_lower):
+372 |             keywords_found += 1
+    -         elif kw_lower == "3 hours" and ("3 hours" in answer_lower or "3 consecutive hours" in answer_lower):
+373 +         elif kw_lower == "3 hours" and (
+374 +             "3 hours" in answer_lower or "3 consecutive hours" in answer_lower
+375 +         ):
+376 |             keywords_found += 1
+    -         elif kw_lower == "consecutive days" and ("consecutive" in answer_lower and "day" in answer_lower):
+377 +         elif kw_lower == "consecutive days" and (
+378 +             "consecutive" in answer_lower and "day" in answer_lower
+379 +         ):
+380 |             keywords_found += 1
+    -         elif kw_lower == "7 days" and ("7 days" in answer_lower or "seven days" in answer_lower):
+381 +         elif kw_lower == "7 days" and (
+382 +             "7 days" in answer_lower or "seven days" in answer_lower
+383 +         ):
+384 |             keywords_found += 1
+    -         elif kw_lower == "day off" and ("day off" in answer_lower or "days off" in answer_lower):
+385 +         elif kw_lower == "day off" and (
+386 +             "day off" in answer_lower or "days off" in answer_lower
+387 +         ):
+388 |             keywords_found += 1
+    -     
+389 +
+390 |     keyword_score = (keywords_found / len(keywords)) * 40 if keywords else 40
+391 |     score += keyword_score
+392 |     max_score += 40
+    -     details.append(f"Keywords: {keywords_found}/{len(keywords)} ({keyword_score:.0f}/40)")
+    -     
+393 +     details.append(
+394 +         f"Keywords: {keywords_found}/{len(keywords)} ({keyword_score:.0f}/40)"
+395 +     )
+396 +
+397 |     # Check pattern match (more flexible)
+--------------------------------------------------------------------------------
+402 |         if not pattern_match and "%" in pattern:
+    -             pattern_match = bool(re.search(r'\d+\s*%', answer_lower))
+403 +             pattern_match = bool(re.search(r"\d+\s*%", answer_lower))
+404 |         if not pattern_match and "$" in pattern:
+    -             pattern_match = bool(re.search(r'\$\d+', answer_lower))
+405 +             pattern_match = bool(re.search(r"\$\d+", answer_lower))
+406 |         pattern_score = 30 if pattern_match else 0
+407 |         score += pattern_score
+408 |         max_score += 30
+    -         details.append(f"Pattern: {'match' if pattern_match else 'no match'} ({pattern_score}/30)")
+409 +         details.append(
+410 +             f"Pattern: {'match' if pattern_match else 'no match'} ({pattern_score}/30)"
+411 +         )
+412 |     else:
+413 |         max_score += 30
+414 |         details.append("Pattern: N/A (30/30)")
+    -     
+415 +
+416 |     # Check answer quality (length, specificity, completeness)
+--------------------------------------------------------------------------------
+424 |     # Bonus for specific numbers/percentages
+    -     if re.search(r'\d+\s*%', answer_lower) or re.search(r'\$\d+', answer_lower):
+425 +     if re.search(r"\d+\s*%", answer_lower) or re.search(r"\$\d+", answer_lower):
+426 |         quality_score = min(quality_score + 5, 30)
+427 |     # Bonus for clause references
+    -     if re.search(r'clause\s*\d+', answer_lower) or re.search(r'section\s*\d+', answer_lower):
+428 +     if re.search(r"clause\s*\d+", answer_lower) or re.search(
+429 +         r"section\s*\d+", answer_lower
+430 +     ):
+431 |         quality_score = min(quality_score + 5, 30)
+432 |     score += quality_score
+433 |     max_score += 30
+434 |     details.append(f"Quality: {quality_score}/30")
+    -     
+435 +
+436 |     return {
+--------------------------------------------------------------------------------
+447 |     out_path = ROOT / "data" / "hard_eval_results.json"
+    -     
+448 +
+449 |     if not (store_dir / "index.tvim").exists():
+450 |         print("Vector store missing. Build first.")
+451 |         return 1
+    -     
+452 +
+453 |     print("Loading vector store...")
+454 |     vectorstore = load_vectorstore(str(store_dir))
+455 |     docstore_path = str(store_dir / "docstore.json")
+456 |     rag_chain = create_rag_chain(vectorstore, docstore_path=docstore_path)
+    -     
+457 +
+458 |     results = []
+--------------------------------------------------------------------------------
+462 |     content_pass = 0
+    -     
+463 +
+464 |     for i, q in enumerate(HARD_QUESTIONS):
+    -         print(f"\n[{i+1}/{len(HARD_QUESTIONS)}] {q['id']}: {q['question'][:60]}...")
+    -         
+465 +         print(f"\n[{i + 1}/{len(HARD_QUESTIONS)}] {q['id']}: {q['question'][:60]}...")
+466 +
+467 |         try:
+468 |             answer = ask_question(rag_chain, q["question"])
+469 |         except Exception as e:
+470 |             answer = f"Error: {e}"
+    -         
+471 +
+472 |         # Format validation
+473 |         fmt = validate_format(answer)
+474 |         if fmt:
+475 |             format_failures += 1
+    -         
+476 +
+477 |         # Content scoring
+478 |         content = score_content(answer, q)
+479 |         total_score += content["score"]
+480 |         max_total += content["max_score"]
+    -         
+481 +
+482 |         passed = content["percentage"] >= 70
+483 |         if passed:
+484 |             content_pass += 1
+    -         
+485 +
+486 |         status = "✓" if passed else "✗"
+    -         print(f"  {status} Content: {content['percentage']:.0f}% ({content['score']:.0f}/{content['max_score']:.0f})")
+    -         
+    -         results.append({
+    -             "id": q["id"],
+    -             "question": q["question"],
+    -             "expected_keywords": q["expected_keywords"],
+    -             "difficulty": q["difficulty"],
+    -             "answer": answer,
+    -             "format_failures": fmt,
+    -             "content_score": content,
+    -             "passed": passed,
+    -         })
+    -         
+487 +         print(
+488 +             f"  {status} Content: {content['percentage']:.0f}% ({content['score']:.0f}/{content['max_score']:.0f})"
+489 +         )
+490 +
+491 +         results.append(
+492 +             {
+493 +                 "id": q["id"],
+494 +                 "question": q["question"],
+495 +                 "expected_keywords": q["expected_keywords"],
+496 +                 "difficulty": q["difficulty"],
+497 +                 "answer": answer,
+498 +                 "format_failures": fmt,
+499 +                 "content_score": content,
+500 +                 "passed": passed,
+501 +             }
+502 +         )
+503 +
+504 |         # Rate limit avoidance
+505 |         if i < len(HARD_QUESTIONS) - 1:
+506 |             time.sleep(1)
+    -     
+507 +
+508 |     # Summary
+509 |     overall = (total_score / max_total) * 100 if max_total > 0 else 0
+    -     
+510 +
+511 |     summary = {
+--------------------------------------------------------------------------------
+518 |     }
+    -     
+519 +
+520 |     output = {"summary": summary, "results": results}
+521 |     out_path.write_text(json.dumps(output, indent=2))
+    -     
+    -     print(f"\n{'='*60}")
+522 +
+523 +     print(f"\n{'=' * 60}")
+524 |     print(f"EVAL SUMMARY")
+    -     print(f"{'='*60}")
+525 +     print(f"{'=' * 60}")
+526 |     print(f"Total Questions: {summary['total_questions']}")
+--------------------------------------------------------------------------------
+530 |     print(f"Saved to: {out_path}")
+    -     
+531 +
+532 |     return 0 if summary["overall_accuracy"] >= 95 else 1
+    |
+
+unformatted: File would be reformatted
+ --> scripts\eval_prd_questions.py:1:1
+  |
+2 | """Run 12 PRD sample questions and validate response format."""
+3 +
+4 | import json
+  |
+
+unformatted: File would be reformatted
+  --> scripts\rename_pdfs.py:1:1
+   |
+2  | """Rename PDFs with proper award names for better context."""
+3  +
+4  | import os
+--------------------------------------------------------------------------------
+15 |     # Remove special characters
+   -     name = re.sub(r'[<>:"/\\|?*]', '', name)
+16 +     name = re.sub(r'[<>:"/\\|?*]', "", name)
+17 |     # Replace multiple spaces with single space
+   -     name = re.sub(r'\s+', ' ', name)
+18 +     name = re.sub(r"\s+", " ", name)
+19 |     # Strip whitespace
+--------------------------------------------------------------------------------
+26 |     temp_dir = Path("data/awards_temp")
+   -     
+27 +
+28 |     # Get existing PDFs
+29 |     existing_pdfs = {p.name for p in awards_dir.glob("*.pdf")}
+   -     
+30 +
+31 |     # Process temp PDFs
+32 |     renamed = 0
+33 |     skipped = 0
+34 |     errors = 0
+   -     
+35 +
+36 |     for pdf_path in temp_dir.glob("**/*.pdf"):
+37 |         if pdf_path.name in existing_pdfs:
+38 |             skipped += 1
+39 |             continue
+   -         
+40 +
+41 |         try:
+--------------------------------------------------------------------------------
+45 |                 new_path = awards_dir / new_name
+   -                 
+46 +
+47 |                 # Avoid overwriting
+--------------------------------------------------------------------------------
+54 |                             break
+   -                 
+55 +
+56 |                 os.rename(str(pdf_path), str(new_path))
+--------------------------------------------------------------------------------
+61 |                 import shutil
+62 +
+63 |                 dest = awards_dir / pdf_path.name
+--------------------------------------------------------------------------------
+72 |             print(f"  ERROR: {pdf_path.name}: {e}")
+   -     
+73 +
+74 |     print(f"\nRenamed: {renamed}, Skipped: {skipped}, Errors: {errors}")
+   |
+
+unformatted: File would be reformatted
+ --> scripts\smoke_test_rag.py:1:1
+  |
+2 | """Smoke test RAG answers and output format."""
+3 +
+4 | import re
+  |
+
+unformatted: File would be reformatted
+ --> scripts\smoke_test_retrieval.py:1:1
+  |
+2 | """Smoke test retrieval quality on built TurboVec store."""
+3 +
+4 | import sys
+  |
+
+unformatted: File would be reformatted
+  --> src\app.py:1:1
+   |
+1  | """Gradio web interface for Fair Work Awards & NES Q&A."""
+2  +
+3  | import os
+--------------------------------------------------------------------------------
+44 |         decision = route_question(message, cag_cache)
+   -         
+45 +
+46 |         # Log routing decision
+   -         print(f"Route: {decision.route.value} | Confidence: {decision.confidence} | Reason: {decision.reasoning}")
+   -         
+47 +         print(
+48 +             f"Route: {decision.route.value} | Confidence: {decision.confidence} | Reason: {decision.reasoning}"
+49 +         )
+50 +
+51 |         # Get answer (chain handles CAG/RAG internally)
+52 |         response = ask_question(rag_chain, message)
+   -         
+53 +
+54 |         # Add routing info for debugging
+--------------------------------------------------------------------------------
+79 |     gr.Markdown("# Fair Work Awards & NES Q&A Assistant")
+   -     gr.Markdown("Ask questions about Australia's Modern Awards and National Employment Standards.")
+80 +     gr.Markdown(
+81 +         "Ask questions about Australia's Modern Awards and National Employment Standards."
+82 +     )
+83 |
+   |
+
+unformatted: File would be reformatted
+  --> src\bm25_retriever.py:1:1
+   |
+1  | """BM25 retriever for hybrid search."""
+2  +
+3  | import json
+--------------------------------------------------------------------------------
+12 |     """BM25 retriever using rank_bm25."""
+   -     
+13 +
+14 |     bm25: BM25Okapi = None
+15 |     docs: List[Document] = []
+16 |     tokenized_corpus: List[List[str]] = []
+   -     
+17 +
+18 |     class Config:
+19 |         arbitrary_types_allowed = True
+   -     
+20 +
+21 |     def _tokenize(self, text: str) -> List[str]:
+22 |         """Simple whitespace + lowercase tokenization."""
+23 |         return text.lower().split()
+   -     
+24 +
+25 |     def _build_index(self, documents: List[Document]):
+--------------------------------------------------------------------------------
+29 |         self.bm25 = BM25Okapi(self.tokenized_corpus)
+   -     
+30 +
+31 |     def _get_relevant_documents(self, query: str) -> List[Document]:
+32 |         """Retrieve top-k documents using BM25."""
+33 |         if self.bm25 is None:
+34 |             return []
+   -         
+35 +
+36 |         tokenized_query = self._tokenize(query)
+37 |         scores = self.bm25.get_scores(tokenized_query)
+   -         
+38 +
+39 |         # Get top-k indices
+40 |         k = min(15, len(self.docs))
+   -         top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:k]
+   -         
+41 +         top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[
+42 +             :k
+43 +         ]
+44 +
+45 |         return [self.docs[i] for i in top_indices]
+--------------------------------------------------------------------------------
+51 |         docstore = json.load(f)
+   -     
+52 +
+53 |     docs = []
+   -     for doc_id, doc in docstore['docs'].items():
+   -         text = doc.get('text', '')
+   -         metadata = doc.get('metadata', {})
+54 +     for doc_id, doc in docstore["docs"].items():
+55 +         text = doc.get("text", "")
+56 +         metadata = doc.get("metadata", {})
+57 |         docs.append(Document(page_content=text, metadata=metadata))
+   -     
+58 +
+59 |     retriever = BM25Retriever()
+60 |     retriever._build_index(docs)
+   -     
+61 +
+62 |     return retriever
+   |
+
+unformatted: File would be reformatted
+   --> src\cag.py:1:1
+    |
+1   | """Cache-Augmented Generation (CAG) context cache for NES and high-frequency Award clauses."""
+2   +
+3   | import os
+--------------------------------------------------------------------------------
+11  | CAG_KEYWORDS = NES_KEYWORDS + [
+    -     "meal break", "rest break", "minimum break",
+    -     "overtime", "penalty rates", "weekend",
+    -     "allowance", "classification", "minimum rate",
+    -     "notice period", "resignation",
+12  +     "meal break",
+13  +     "rest break",
+14  +     "minimum break",
+15  +     "overtime",
+16  +     "penalty rates",
+17  +     "weekend",
+18  +     "allowance",
+19  +     "classification",
+20  +     "minimum rate",
+21  +     "notice period",
+22  +     "resignation",
+23  | ]
+--------------------------------------------------------------------------------
+27  |     """Manages pre-loaded context for CAG path."""
+    -     
+28  +
+29  |     def __init__(self, nes_path: str = NES_PATH):
+30  |         self.nes_text = ""
+31  |         self._load_nes(nes_path)
+    -     
+32  +
+33  |     def _load_nes(self, nes_path: str):
+--------------------------------------------------------------------------------
+37  |             return
+    -         
+38  +
+39  |         with open(nes_path) as f:
+40  |             raw_text = f.read()
+    -         
+41  +
+42  |         # Extract only the substantive content (skip navigation/boilerplate)
+    -         lines = raw_text.split('\n')
+43  +         lines = raw_text.split("\n")
+44  |         content_started = False
+45  |         content_lines = []
+    -         
+46  +
+47  |         # Navigation/boilerplate patterns to skip
+48  |         skip_patterns = [
+    -             'skip to main', 'close', 'go to home', 'fair work ombuds',
+    -             'translate', 'login', 'register', 'my account', 'resources',
+    -             'log out', 'open search', 'popular searches', 'minimum wages',
+    -             'annual leave', 'long service leave', 'on this page',
+    -             'list of minimum', 'nes videos', 'who the nes', 'tools and',
+    -             'related information', 'minimum entitlements for employees',
+    -             'the national employment standards make up', 'other workplace',
+    -             'award', 'enterprise agreement', 'a document between',
+    -             'these also', 'employers have to give', 'fair work information',
+    -             'casual employment information', 'the fwis', 'the ceis',
+    -             'when they start', 'list of minimum nes entitlements',
+    -             'automatic translation', 'our automatic translation',
+    -             'select a language', 'professional translated',
+    -             'default language is', 'english', 'arabic', 'bengali',
+    -             'bosnian', 'bulgarian', 'chinese', 'croatian', 'czech',
+    -             'danish', 'dutch', 'farsi', 'french', 'german', 'greek',
+    -             'hebrew', 'hindi', 'hungarian', 'bahasa indonesia', 'italian',
+    -             'japanese', 'korean', 'latvian', 'lithuanian', 'polish',
+    -             'portuguese', 'romanian', 'russian', 'serbian', 'slovak',
+    -             'slovene', 'spanish', 'swedish', 'thai', 'turkish',
+    -             'ukrainian', 'vietnamese', 'language help',
+49  +             "skip to main",
+50  +             "close",
+51  +             "go to home",
+52  +             "fair work ombuds",
+53  +             "translate",
+54  +             "login",
+55  +             "register",
+56  +             "my account",
+57  +             "resources",
+58  +             "log out",
+59  +             "open search",
+60  +             "popular searches",
+61  +             "minimum wages",
+62  +             "annual leave",
+63  +             "long service leave",
+64  +             "on this page",
+65  +             "list of minimum",
+66  +             "nes videos",
+67  +             "who the nes",
+68  +             "tools and",
+69  +             "related information",
+70  +             "minimum entitlements for employees",
+71  +             "the national employment standards make up",
+72  +             "other workplace",
+73  +             "award",
+74  +             "enterprise agreement",
+75  +             "a document between",
+76  +             "these also",
+77  +             "employers have to give",
+78  +             "fair work information",
+79  +             "casual employment information",
+80  +             "the fwis",
+81  +             "the ceis",
+82  +             "when they start",
+83  +             "list of minimum nes entitlements",
+84  +             "automatic translation",
+85  +             "our automatic translation",
+86  +             "select a language",
+87  +             "professional translated",
+88  +             "default language is",
+89  +             "english",
+90  +             "arabic",
+91  +             "bengali",
+92  +             "bosnian",
+93  +             "bulgarian",
+94  +             "chinese",
+95  +             "croatian",
+96  +             "czech",
+97  +             "danish",
+98  +             "dutch",
+99  +             "farsi",
+100 +             "french",
+101 +             "german",
+102 +             "greek",
+103 +             "hebrew",
+104 +             "hindi",
+105 +             "hungarian",
+106 +             "bahasa indonesia",
+107 +             "italian",
+108 +             "japanese",
+109 +             "korean",
+110 +             "latvian",
+111 +             "lithuanian",
+112 +             "polish",
+113 +             "portuguese",
+114 +             "romanian",
+115 +             "russian",
+116 +             "serbian",
+117 +             "slovak",
+118 +             "slovene",
+119 +             "spanish",
+120 +             "swedish",
+121 +             "thai",
+122 +             "turkish",
+123 +             "ukrainian",
+124 +             "vietnamese",
+125 +             "language help",
+126 |         ]
+    -         
+127 +
+128 |         for line in lines:
+--------------------------------------------------------------------------------
+138 |                     content_lines.append(line.strip())
+    -         
+    -         self.nes_text = '\n'.join(content_lines)
+139 +
+140 +         self.nes_text = "\n".join(content_lines)
+141 |         print(f"CAG: Loaded NES ({len(self.nes_text)} chars)")
+    -     
+142 +
+143 |     def get_nes_context(self) -> str:
+144 |         """Get pre-loaded NES context."""
+145 |         return self.nes_text
+    -     
+146 +
+147 |     def is_cag_candidate(self, question: str) -> bool:
+148 |         """Check if question is a CAG candidate (NES or high-frequency topic)."""
+149 |         question_lower = question.lower()
+150 |         return any(kw in question_lower for kw in CAG_KEYWORDS)
+    -     
+151 +
+152 |     def get_context(self, question: str) -> str:
+153 |         """Get CAG context for a question."""
+154 |         context_parts = []
+    -         
+155 +
+156 |         # Always include NES if question is NES-related
+--------------------------------------------------------------------------------
+160 |                 context_parts.append(f"[National Employment Standards]\n{nes_ctx}")
+    -         
+161 +
+162 |         return "\n\n".join(context_parts)
+--------------------------------------------------------------------------------
+166 |     """Get or create CAG cache instance."""
+    -     if not hasattr(get_cag_cache, '_instance'):
+167 +     if not hasattr(get_cag_cache, "_instance"):
+168 |         get_cag_cache._instance = CAGCache()
+    |
+
+unformatted: File would be reformatted
+   --> src\config.py:1:1
+    |
+51  |     "break": ["meal break", "rest break", "break entitlement", "breaks"],
+    -     "leave": ["leave entitlement", "annual leave", "personal leave", "sick leave", "carer's leave", "long service leave", "parental leave"],
+52  +     "leave": [
+53  +         "leave entitlement",
+54  +         "annual leave",
+55  +         "personal leave",
+56  +         "sick leave",
+57  +         "carer's leave",
+58  +         "long service leave",
+59  +         "parental leave",
+60  +     ],
+61  |     "casual": ["casual employee", "casual loading", "casual rate", "casual conversion"],
+62  |     "notice": ["notice of termination", "notice period", "resignation", "termination"],
+    -     "allowance": ["allowance", "allowances", "payment", "travel allowance", "uniform allowance"],
+    -     "hours": ["hours of work", "maximum hours", "weekly hours", "ordinary hours", "span of hours"],
+63  +     "allowance": [
+64  +         "allowance",
+65  +         "allowances",
+66  +         "payment",
+67  +         "travel allowance",
+68  +         "uniform allowance",
+69  +     ],
+70  +     "hours": [
+71  +         "hours of work",
+72  +         "maximum hours",
+73  +         "weekly hours",
+74  +         "ordinary hours",
+75  +         "span of hours",
+76  +     ],
+77  |     "public holiday": ["public holiday", "public holidays", "holiday penalty"],
+--------------------------------------------------------------------------------
+85  |     "unfair dismissal": ["unfair dismissal", "dismissal", "termination of employment"],
+    -     "consultation": ["consultation", "consultation requirement", "redundancy consultation"],
+86  +     "consultation": [
+87  +         "consultation",
+88  +         "consultation requirement",
+89  +         "redundancy consultation",
+90  +     ],
+91  |     "record keeping": ["record", "time and wages", "pay slip", "record keeping"],
+--------------------------------------------------------------------------------
+95  | NES_KEYWORDS = [
+    -     "nes", "national employment standards",
+    -     "leave entitlement", "annual leave", "personal leave",
+    -     "parental leave", "notice of termination", "redundancy",
+    -     "public holiday", "maximum weekly hours", "flexible working",
+    -     "casual employment", "community service leave", "long service leave",
+96  +     "nes",
+97  +     "national employment standards",
+98  +     "leave entitlement",
+99  +     "annual leave",
+100 +     "personal leave",
+101 +     "parental leave",
+102 +     "notice of termination",
+103 +     "redundancy",
+104 +     "public holiday",
+105 +     "maximum weekly hours",
+106 +     "flexible working",
+107 +     "casual employment",
+108 +     "community service leave",
+109 +     "long service leave",
+110 |     "superannuation",
+    |
+
+unformatted: File would be reformatted
+ --> src\fastembeddings.py:1:1
+  |
+1 | """FastEmbed embeddings wrapper for LangChain."""
+2 +
+3 | from typing import List
+  |
+
+unformatted: File would be reformatted
+   --> src\filtered_retriever.py:1:1
+    |
+1   | """Filtered retriever for award-specific queries."""
+2   +
+3   | import re
+--------------------------------------------------------------------------------
+12  |     """Retriever that filters by award name, then by topic keywords."""
+    -     
+13  +
+14  |     docstore_path: str = ""
+15  |     all_docs: List[Document] = []
+    -     
+16  +
+17  |     class Config:
+18  |         arbitrary_types_allowed = True
+    -     
+19  +
+20  |     def _load_docs(self):
+21  |         """Load all documents from docstore."""
+22  |         if self.all_docs:
+23  |             return
+    -         
+24  +
+25  |         with open(self.docstore_path) as f:
+26  |             docstore = json.load(f)
+    -         
+    -         for doc_id, doc in docstore['docs'].items():
+    -             text = doc.get('text', '')
+    -             metadata = doc.get('metadata', {})
+27  +
+28  +         for doc_id, doc in docstore["docs"].items():
+29  +             text = doc.get("text", "")
+30  +             metadata = doc.get("metadata", {})
+31  |             self.all_docs.append(Document(page_content=text, metadata=metadata))
+    -     
+32  +
+33  |     def _get_relevant_documents(self, query: str) -> List[Document]:
+34  |         """Retrieve documents filtered by award name or general topic."""
+35  |         self._load_docs()
+    -         
+36  +
+37  |         # Extract award name from query
+38  |         award_name = self._extract_award_name(query)
+    -         
+39  +
+40  |         # Extract topic keywords
+41  |         topic_keywords = self._extract_topic_keywords(query)
+    -         
+42  +
+43  |         # If no award specified but has topic, use general retrieval
+44  |         if not award_name and topic_keywords:
+45  |             return self._general_topic_retrieval(query, topic_keywords)
+    -         
+46  +
+47  |         if not award_name:
+48  |             return []
+    -         
+49  +
+50  |         # Filter by award name
+51  |         award_docs = [
+    -             doc for doc in self.all_docs
+    -             if award_name.lower() in doc.metadata.get('award_name', '').lower()
+52  +             doc
+53  +             for doc in self.all_docs
+54  +             if award_name.lower() in doc.metadata.get("award_name", "").lower()
+55  |         ]
+    -         
+56  +
+57  |         # Filter by topic keywords
+--------------------------------------------------------------------------------
+63  |                 # Bonus for clause numbers
+    -                 if doc.metadata.get('clause_number'):
+64  +                 if doc.metadata.get("clause_number"):
+65  |                     score += 2
+66  |                 # Bonus for rate tables (dollar amounts, schedules, tables)
+    -                 if re.search(r'\$\d+\.\d{2}', content_lower):
+67  +                 if re.search(r"\$\d+\.\d{2}", content_lower):
+68  |                     score += 5  # Has specific dollar amounts
+    -                 if any(term in content_lower for term in ['table', 'schedule', 'minimum rates', 'hourly rates', 'summary of']):
+69  +                 if any(
+70  +                     term in content_lower
+71  +                     for term in [
+72  +                         "table",
+73  +                         "schedule",
+74  +                         "minimum rates",
+75  +                         "hourly rates",
+76  +                         "summary of",
+77  +                     ]
+78  +                 ):
+79  |                     score += 3  # Rate table section
+80  |                 if score > 0:
+81  |                     scored_docs.append((score, doc))
+    -             
+82  +
+83  |             scored_docs.sort(key=lambda x: x[0], reverse=True)
+    -             
+84  +
+85  |             if scored_docs:
+86  |                 return [doc for _, doc in scored_docs[:20]]
+    -         
+87  +
+88  |         return award_docs[:20]
+    -     
+    -     def _general_topic_retrieval(self, query: str, topic_keywords: List[str]) -> List[Document]:
+89  +
+90  +     def _general_topic_retrieval(
+91  +         self, query: str, topic_keywords: List[str]
+92  +     ) -> List[Document]:
+93  |         """Retrieve documents for general topics without specific award.
+    -         
+94  +
+95  |         Improved scoring:
+--------------------------------------------------------------------------------
+103 |             content_lower = doc.page_content.lower()
+    -             award_name = doc.metadata.get('award_name', '').lower()
+    -             
+104 +             award_name = doc.metadata.get("award_name", "").lower()
+105 +
+106 |             score = 0
+--------------------------------------------------------------------------------
+112 |                     score += 1  # Single word match
+    -             
+113 +
+114 |             # Bonus for clause numbers (more specific)
+    -             if doc.metadata.get('clause_number'):
+115 +             if doc.metadata.get("clause_number"):
+116 |                 score += 2
+    -             
+117 +
+118 |             # Bonus for specific numbers/percentages in content
+    -             if re.search(r'\$\d+\.\d{2}', content_lower):
+119 +             if re.search(r"\$\d+\.\d{2}", content_lower):
+120 |                 score += 5  # Has specific dollar amounts
+    -             elif re.search(r'\d+\s*%', content_lower):
+121 +             elif re.search(r"\d+\s*%", content_lower):
+122 |                 score += 2  # Has percentage rates
+    -             if any(term in content_lower for term in ['table', 'schedule', 'minimum rates', 'hourly rates', 'summary of']):
+123 +             if any(
+124 +                 term in content_lower
+125 +                 for term in [
+126 +                     "table",
+127 +                     "schedule",
+128 +                     "minimum rates",
+129 +                     "hourly rates",
+130 +                     "summary of",
+131 +                 ]
+132 +             ):
+133 |                 score += 3  # Rate table section
+    -             
+134 +
+135 |             # Boost for common awards (more likely to have general provisions)
+    -             if any(common in award_name for common in ['hospitality', 'retail', 'cleaning', 'clerks']):
+136 +             if any(
+137 +                 common in award_name
+138 +                 for common in ["hospitality", "retail", "cleaning", "clerks"]
+139 +             ):
+140 |                 score += 2
+    -             
+141 +
+142 |             if score > 0:
+143 |                 scored_docs.append((score, doc))
+    -         
+144 +
+145 |         scored_docs.sort(key=lambda x: x[0], reverse=True)
+    -         
+146 +
+147 |         # Return top docs from different awards for diversity
+148 |         seen_awards = set()
+149 |         diverse_docs = []
+150 |         for score, doc in scored_docs:
+    -             award = doc.metadata.get('award_name', '')
+151 +             award = doc.metadata.get("award_name", "")
+152 |             if award not in seen_awards or len(diverse_docs) < 5:
+--------------------------------------------------------------------------------
+156 |                 break
+    -         
+157 +
+158 |         return diverse_docs
+    -     
+159 +
+160 |     def _extract_award_name(self, query: str) -> Optional[str]:
+--------------------------------------------------------------------------------
+166 |         return None
+    -     
+167 +
+168 |     def _extract_topic_keywords(self, query: str) -> List[str]:
+    |
+
+unformatted: File would be reformatted
+  --> src\hybrid_retriever.py:1:1
+   |
+1  | """Hybrid retriever combining BM25 + Semantic search with RRF."""
+2  +
+3  | from typing import List
+--------------------------------------------------------------------------------
+10 |     """Hybrid retriever using BM25 + Semantic with RRF fusion."""
+   -     
+11 +
+12 |     bm25_retriever: BM25Retriever = None
+13 |     semantic_retriever: BaseRetriever = None
+14 |     k: int = 20  # Number of results to retrieve from each
+15 |     rrf_k: int = 60  # RRF constant
+   -     
+16 +
+17 |     class Config:
+18 |         arbitrary_types_allowed = True
+   -     
+   -     def _reciprocal_rank_fusion(self, ranked_lists: List[List[Document]]) -> List[Document]:
+19 +
+20 +     def _reciprocal_rank_fusion(
+21 +         self, ranked_lists: List[List[Document]]
+22 +     ) -> List[Document]:
+23 |         """Fuse multiple ranked lists using Reciprocal Rank Fusion."""
+24 |         doc_scores = {}
+25 |         doc_map = {}
+   -         
+26 +
+27 |         for ranked_list in ranked_lists:
+28 |             for rank, doc in enumerate(ranked_list):
+29 |                 # Create a unique key based on content hash
+30 |                 doc_key = hash(doc.page_content)
+   -                 
+31 +
+32 |                 if doc_key not in doc_scores:
+33 |                     doc_scores[doc_key] = 0.0
+34 |                     doc_map[doc_key] = doc
+   -                 
+35 +
+36 |                 # RRF score: 1 / (k + rank)
+37 |                 doc_scores[doc_key] += 1.0 / (self.rrf_k + rank + 1)
+   -         
+38 +
+39 |         # Sort by fusion score
+   -         sorted_keys = sorted(doc_scores.keys(), key=lambda k: doc_scores[k], reverse=True)
+   -         
+   -         return [doc_map[key] for key in sorted_keys[:self.k]]
+   -     
+40 +         sorted_keys = sorted(
+41 +             doc_scores.keys(), key=lambda k: doc_scores[k], reverse=True
+42 +         )
+43 +
+44 +         return [doc_map[key] for key in sorted_keys[: self.k]]
+45 +
+46 |     def _get_relevant_documents(self, query: str) -> List[Document]:
+47 |         """Retrieve documents using hybrid search."""
+48 |         results = []
+   -         
+49 +
+50 |         # BM25 search
+51 |         if self.bm25_retriever:
+52 |             bm25_results = self.bm25_retriever.invoke(query)
+   -             results.append(bm25_results[:self.k])
+   -         
+53 +             results.append(bm25_results[: self.k])
+54 +
+55 |         # Semantic search
+56 |         if self.semantic_retriever:
+57 |             semantic_results = self.semantic_retriever.invoke(query)
+   -             results.append(semantic_results[:self.k])
+   -         
+58 +             results.append(semantic_results[: self.k])
+59 +
+60 |         if not results:
+61 |             return []
+   -         
+62 +
+63 |         if len(results) == 1:
+   -             return results[0][:self.k]
+   -         
+64 +             return results[0][: self.k]
+65 +
+66 |         # Fuse using RRF
+   |
+
+unformatted: File would be reformatted
+   --> src\ingest.py:1:1
+    |
+1   | """PDF + NES ingestion pipeline for Fair Work Awards — optimized for 122+ PDFs."""
+2   +
+3   | import os
+--------------------------------------------------------------------------------
+11  | AWARD_URL_MAP = {
+    -     '1': 'salt-industry-award-2020',
+    -     '10': 'storage-services-and-wholesale-award-2020',
+    -     '11': 'sugar-industry-award-2020',
+    -     '12': 'supported-employment-services-award-2020',
+    -     '13': 'surveying-award-2020',
+    -     '14': 'telecommunications-services-award-2020',
+    -     '15': 'telstra-award-2015',
+    -     '17': 'timber-industry-award-2020',
+    -     '18': 'transport-cash-in-transit-award-2020',
+    -     '19': 'travelling-shows-award-2020',
+    -     '2': 'seafood-processing-award-2020',
+    -     '20': 'vehicle-repair-services-and-retail-award-2020',
+    -     '22': 'victorian-government-schools-award-2016',
+    -     '23': 'employees-award-2016',
+    -     '24': 'victorian-local-government-award-2015',
+    -     '25': 'victorian-public-service-award-2016',
+    -     '26': 'victorian-state-government-agencies-award-2015',
+    -     '27': 'minerals-award-2015',
+    -     '28': 'waste-management-award-2020',
+    -     '29': 'water-industry-award-2020',
+    -     '3': 'seagoing-industry-award-2020',
+    -     '30': 'wine-industry-award-2020',
+    -     '31': 'wool-storage-sampling-and-testing-award-2020',
+    -     '4': 'security-services-industry-award-2020',
+    -     '5': 'silviculture-award-2020',
+    -     '6': 'industry-award-2010',
+    -     '7': 'sporting-organisations-award-2020',
+    -     '9': 'stevedoring-industry-award-2020',
+    -     'MA000003': 'fast-food-industry-award-2020',
+    -     'MA000004': 'general-retail-industry-award-2020',
+    -     'MA000005': 'hair-and-beauty-industry-award-2020',
+    -     'MA000006': 'higher-education-industry-academic-staff-award-2020',
+    -     'MA000007': 'higher-education-industry-general-staff-award-2020',
+    -     'MA000008': 'horse-and-greyhound-training-award-2020',
+    -     'MA000009': 'hospitality-industry-general-award-2020',
+    -     'MA000026': 'graphic-arts-printing-and-publishing-award-2020',
+    -     'MA000027': 'health-professionals-and-support-services-award-2020',
+    -     'MA000028': 'horticulture-award-2020',
+    -     'MA000029': 'joinery-and-building-trades-award-2020',
+    -     'MA000061': 'gas-industry-award-2020',
+    -     'MA000062': 'hydrocarbons-industry-upstream-award-2020',
+    -     'MA000064': 'hydrocarbons-field-geologists-award-2020',
+    -     'MA000067': 'journalists-published-media-award-2020',
+    -     'MA000073': 'food-beverage-and-tobacco-manufacturing-award-2020',
+    -     'MA000081': 'live-performance-award-2020',
+    -     'MA000094': 'fitness-industry-award-2020',
+    -     'MA000099': 'labour-market-assistance-industry-award-2020',
+    -     'MA000101': 'gardening-and-landscaping-services-award-2020',
+    -     'MA000105': 'funeral-industry-award-2020',
+    -     'MA000111': 'fire-fighting-industry-award-2020',
+    -     'MA000112': 'local-government-industry-award-2020',
+    -     'MA000116': 'legal-services-award-2020',
+    -     'ma000001': 'black-coal-mining-industry-award-2020',
+    -     'ma000011': 'mining-industry-award-2020',
+    -     'ma000012': 'pharmacy-industry-award-2020',
+    -     'ma000013': 'racing-clubs-events-award-2020',
+    -     'ma000014': 'racing-industry-ground-maintenance-award-2020',
+    -     'ma000015': 'rail-industry-award-2020',
+    -     'ma000018': 'aged-care-award-2010',
+    -     'ma000019': 'banking-finance-and-insurance-award-2020',
+    -     'ma000020': 'building-and-construction-general-on-site-award-2020',
+    -     'ma000021': 'business-equipment-award-2020',
+    -     'ma000022': 'cleaning-services-award-2020',
+    -     'ma000023': 'contract-call-centres-award-2020',
+    -     'ma000024': 'cotton-ginning-award-2020',
+    -     'ma000030': 'market-and-social-research-award-2020',
+    -     'ma000031': 'medical-practitioners-award-2020',
+    -     'ma000032': 'mobile-crane-hiring-award-2020',
+    -     'ma000033': 'nursery-award-2020',
+    -     'ma000034': 'nurses-award-2020',
+    -     'ma000035': 'pastoral-award-2020',
+    -     'ma000036': 'plumbing-and-fire-sprinklers-award-2020',
+    -     'ma000038': 'road-transport-and-distribution-award-2020',
+    -     'ma000039': 'road-transport-long-distance-operations-award-2020',
+    -     'ma000045': 'coal-export-terminals-award-2020',
+    -     'ma000046': 'air-pilots-award-2020',
+    -     'ma000047': 'aircraft-cabin-crew-award-2020',
+    -     'ma000048': 'airline-operations-ground-staff-award-2020',
+    -     'ma000049': 'airport-employees-award-2020',
+    -     'ma000050': 'marine-towage-award-2020',
+    -     'ma000051': 'port-authorities-award-2020',
+    -     'ma000052': 'ports-harbours-and-enclosed-water-vessels-award-2020',
+    -     'ma000054': 'asphalt-industry-award-2020',
+    -     'ma000055': 'cement-lime-and-quarrying-award-2020',
+    -     'ma000056': 'concrete-products-award-2020',
+    -     'ma000057': 'premixed-concrete-award-2020',
+    -     'ma000058': 'registered-and-licensed-clubs-award-2020',
+    -     'ma000059': 'meat-industry-award-2020',
+    -     'ma000060': 'aluminium-industry-award-2020',
+    -     'ma000063-as-at-2020-04-12': 'passenger-vehicle-transportation-award-2010',
+    -     'ma000065': 'professional-employees-award-2020',
+    -     'ma000069': 'pharmaceutical-industry-award-2020',
+    -     'ma000070': 'cemetery-industry-award-2020',
+    -     'ma000072': 'oil-refining-and-manufacturing-award-2020',
+    -     'ma000074': 'poultry-processing-award-2020',
+    -     'ma000076': 'educational-services-schools-general-staff-award-2020',
+    -     'ma000077': 'educational-services-teachers-award-2020',
+    -     'ma000078': 'book-industry-award-2020',
+    -     'ma000079': 'architects-award-2020',
+    -     'ma000080': 'amusement-events-and-recreation-award-2020',
+    -     'ma000083': 'commercial-sales-award-2020',
+    -     'ma000085': 'dredging-industry-award-2020',
+    -     'ma000086': 'maritime-offshore-oil-and-gas-award-2020',
+    -     'ma000088': 'electrical-power-industry-award-2020',
+    -     'ma000092': 'alpine-resorts-award-2020',
+    -     'ma000093': 'marine-tourism-and-charter-vessels-award-2020',
+    -     'ma000096': 'dry-cleaning-and-laundry-industry-award-2020',
+    -     'ma000097': 'pest-control-industry-award-2020',
+    -     'ma000098': 'ambulance-and-patient-transport-industry-award-2020',
+    -     'ma000104': 'miscellaneous-award-2020',
+    -     'ma000106': 'real-estate-industry-award-2020',
+    -     'ma000108': 'professional-diving-industry-industrial-award-2020',
+    -     'ma000109': 'professional-diving-industry-recreational-award-2020',
+    -     'ma000110': 'corrections-and-detention-private-sector-award-2020',
+    -     'ma000114': 'aquaculture-industry-award-2020',
+    -     'ma000115': 'services-award-2020',
+    -     'ma000117': 'mannequins-and-models-award-2020',
+    -     'ma000118': 'animal-care-and-veterinary-services-award-2020',
+    -     'ma000119': 'restaurant-industry-award-2020',
+    -     'ma000120': 'childrens-services-award-2010',
+    -     'ma000153': 'australian-government-industry-award-2016',
+12  +     "1": "salt-industry-award-2020",
+13  +     "10": "storage-services-and-wholesale-award-2020",
+14  +     "11": "sugar-industry-award-2020",
+15  +     "12": "supported-employment-services-award-2020",
+16  +     "13": "surveying-award-2020",
+17  +     "14": "telecommunications-services-award-2020",
+18  +     "15": "telstra-award-2015",
+19  +     "17": "timber-industry-award-2020",
+20  +     "18": "transport-cash-in-transit-award-2020",
+21  +     "19": "travelling-shows-award-2020",
+22  +     "2": "seafood-processing-award-2020",
+23  +     "20": "vehicle-repair-services-and-retail-award-2020",
+24  +     "22": "victorian-government-schools-award-2016",
+25  +     "23": "employees-award-2016",
+26  +     "24": "victorian-local-government-award-2015",
+27  +     "25": "victorian-public-service-award-2016",
+28  +     "26": "victorian-state-government-agencies-award-2015",
+29  +     "27": "minerals-award-2015",
+30  +     "28": "waste-management-award-2020",
+31  +     "29": "water-industry-award-2020",
+32  +     "3": "seagoing-industry-award-2020",
+33  +     "30": "wine-industry-award-2020",
+34  +     "31": "wool-storage-sampling-and-testing-award-2020",
+35  +     "4": "security-services-industry-award-2020",
+36  +     "5": "silviculture-award-2020",
+37  +     "6": "industry-award-2010",
+38  +     "7": "sporting-organisations-award-2020",
+39  +     "9": "stevedoring-industry-award-2020",
+40  +     "MA000003": "fast-food-industry-award-2020",
+41  +     "MA000004": "general-retail-industry-award-2020",
+42  +     "MA000005": "hair-and-beauty-industry-award-2020",
+43  +     "MA000006": "higher-education-industry-academic-staff-award-2020",
+44  +     "MA000007": "higher-education-industry-general-staff-award-2020",
+45  +     "MA000008": "horse-and-greyhound-training-award-2020",
+46  +     "MA000009": "hospitality-industry-general-award-2020",
+47  +     "MA000026": "graphic-arts-printing-and-publishing-award-2020",
+48  +     "MA000027": "health-professionals-and-support-services-award-2020",
+49  +     "MA000028": "horticulture-award-2020",
+50  +     "MA000029": "joinery-and-building-trades-award-2020",
+51  +     "MA000061": "gas-industry-award-2020",
+52  +     "MA000062": "hydrocarbons-industry-upstream-award-2020",
+53  +     "MA000064": "hydrocarbons-field-geologists-award-2020",
+54  +     "MA000067": "journalists-published-media-award-2020",
+55  +     "MA000073": "food-beverage-and-tobacco-manufacturing-award-2020",
+56  +     "MA000081": "live-performance-award-2020",
+57  +     "MA000094": "fitness-industry-award-2020",
+58  +     "MA000099": "labour-market-assistance-industry-award-2020",
+59  +     "MA000101": "gardening-and-landscaping-services-award-2020",
+60  +     "MA000105": "funeral-industry-award-2020",
+61  +     "MA000111": "fire-fighting-industry-award-2020",
+62  +     "MA000112": "local-government-industry-award-2020",
+63  +     "MA000116": "legal-services-award-2020",
+64  +     "ma000001": "black-coal-mining-industry-award-2020",
+65  +     "ma000011": "mining-industry-award-2020",
+66  +     "ma000012": "pharmacy-industry-award-2020",
+67  +     "ma000013": "racing-clubs-events-award-2020",
+68  +     "ma000014": "racing-industry-ground-maintenance-award-2020",
+69  +     "ma000015": "rail-industry-award-2020",
+70  +     "ma000018": "aged-care-award-2010",
+71  +     "ma000019": "banking-finance-and-insurance-award-2020",
+72  +     "ma000020": "building-and-construction-general-on-site-award-2020",
+73  +     "ma000021": "business-equipment-award-2020",
+74  +     "ma000022": "cleaning-services-award-2020",
+75  +     "ma000023": "contract-call-centres-award-2020",
+76  +     "ma000024": "cotton-ginning-award-2020",
+77  +     "ma000030": "market-and-social-research-award-2020",
+78  +     "ma000031": "medical-practitioners-award-2020",
+79  +     "ma000032": "mobile-crane-hiring-award-2020",
+80  +     "ma000033": "nursery-award-2020",
+81  +     "ma000034": "nurses-award-2020",
+82  +     "ma000035": "pastoral-award-2020",
+83  +     "ma000036": "plumbing-and-fire-sprinklers-award-2020",
+84  +     "ma000038": "road-transport-and-distribution-award-2020",
+85  +     "ma000039": "road-transport-long-distance-operations-award-2020",
+86  +     "ma000045": "coal-export-terminals-award-2020",
+87  +     "ma000046": "air-pilots-award-2020",
+88  +     "ma000047": "aircraft-cabin-crew-award-2020",
+89  +     "ma000048": "airline-operations-ground-staff-award-2020",
+90  +     "ma000049": "airport-employees-award-2020",
+91  +     "ma000050": "marine-towage-award-2020",
+92  +     "ma000051": "port-authorities-award-2020",
+93  +     "ma000052": "ports-harbours-and-enclosed-water-vessels-award-2020",
+94  +     "ma000054": "asphalt-industry-award-2020",
+95  +     "ma000055": "cement-lime-and-quarrying-award-2020",
+96  +     "ma000056": "concrete-products-award-2020",
+97  +     "ma000057": "premixed-concrete-award-2020",
+98  +     "ma000058": "registered-and-licensed-clubs-award-2020",
+99  +     "ma000059": "meat-industry-award-2020",
+100 +     "ma000060": "aluminium-industry-award-2020",
+101 +     "ma000063-as-at-2020-04-12": "passenger-vehicle-transportation-award-2010",
+102 +     "ma000065": "professional-employees-award-2020",
+103 +     "ma000069": "pharmaceutical-industry-award-2020",
+104 +     "ma000070": "cemetery-industry-award-2020",
+105 +     "ma000072": "oil-refining-and-manufacturing-award-2020",
+106 +     "ma000074": "poultry-processing-award-2020",
+107 +     "ma000076": "educational-services-schools-general-staff-award-2020",
+108 +     "ma000077": "educational-services-teachers-award-2020",
+109 +     "ma000078": "book-industry-award-2020",
+110 +     "ma000079": "architects-award-2020",
+111 +     "ma000080": "amusement-events-and-recreation-award-2020",
+112 +     "ma000083": "commercial-sales-award-2020",
+113 +     "ma000085": "dredging-industry-award-2020",
+114 +     "ma000086": "maritime-offshore-oil-and-gas-award-2020",
+115 +     "ma000088": "electrical-power-industry-award-2020",
+116 +     "ma000092": "alpine-resorts-award-2020",
+117 +     "ma000093": "marine-tourism-and-charter-vessels-award-2020",
+118 +     "ma000096": "dry-cleaning-and-laundry-industry-award-2020",
+119 +     "ma000097": "pest-control-industry-award-2020",
+120 +     "ma000098": "ambulance-and-patient-transport-industry-award-2020",
+121 +     "ma000104": "miscellaneous-award-2020",
+122 +     "ma000106": "real-estate-industry-award-2020",
+123 +     "ma000108": "professional-diving-industry-industrial-award-2020",
+124 +     "ma000109": "professional-diving-industry-recreational-award-2020",
+125 +     "ma000110": "corrections-and-detention-private-sector-award-2020",
+126 +     "ma000114": "aquaculture-industry-award-2020",
+127 +     "ma000115": "services-award-2020",
+128 +     "ma000117": "mannequins-and-models-award-2020",
+129 +     "ma000118": "animal-care-and-veterinary-services-award-2020",
+130 +     "ma000119": "restaurant-industry-award-2020",
+131 +     "ma000120": "childrens-services-award-2010",
+132 +     "ma000153": "australian-government-industry-award-2016",
+133 | }
+134 |
+135 | # Numbered PDFs → award name from content
+136 | NUMBERED_AWARD_SLUGS = {
+    -     '1': 'salt-industry-award-2020',
+    -     '2': 'seafood-processing-award-2020',
+    -     '3': 'seagoing-industry-award-2020',
+    -     '4': 'security-services-industry-award-2020',
+    -     '5': 'silviculture-award-2020',
+    -     '6': 'industry-award-2010',
+    -     '7': 'sporting-organisations-award-2020',
+    -     '9': 'stevedoring-industry-award-2020',
+    -     '10': 'storage-services-and-wholesale-award-2020',
+    -     '11': 'sugar-industry-award-2020',
+    -     '12': 'supported-employment-services-award-2020',
+    -     '13': 'surveying-award-2020',
+    -     '14': 'telecommunications-services-award-2020',
+    -     '15': 'telstra-award-2015',
+    -     '17': 'timber-industry-award-2020',
+    -     '18': 'transport-cash-in-transit-award-2020',
+    -     '19': 'travelling-shows-award-2020',
+    -     '20': 'vehicle-repair-services-and-retail-award-2020',
+    -     '22': 'victorian-government-schools-award-2016',
+    -     '23': 'employees-award-2016',
+    -     '24': 'victorian-local-government-award-2015',
+    -     '25': 'victorian-public-service-award-2016',
+    -     '26': 'victorian-state-government-agencies-award-2015',
+    -     '27': 'minerals-award-2015',
+    -     '28': 'waste-management-award-2020',
+    -     '29': 'water-industry-award-2020',
+    -     '30': 'wine-industry-award-2020',
+    -     '31': 'wool-storage-sampling-and-testing-award-2020',
+137 +     "1": "salt-industry-award-2020",
+138 +     "2": "seafood-processing-award-2020",
+139 +     "3": "seagoing-industry-award-2020",
+140 +     "4": "security-services-industry-award-2020",
+141 +     "5": "silviculture-award-2020",
+142 +     "6": "industry-award-2010",
+143 +     "7": "sporting-organisations-award-2020",
+144 +     "9": "stevedoring-industry-award-2020",
+145 +     "10": "storage-services-and-wholesale-award-2020",
+146 +     "11": "sugar-industry-award-2020",
+147 +     "12": "supported-employment-services-award-2020",
+148 +     "13": "surveying-award-2020",
+149 +     "14": "telecommunications-services-award-2020",
+150 +     "15": "telstra-award-2015",
+151 +     "17": "timber-industry-award-2020",
+152 +     "18": "transport-cash-in-transit-award-2020",
+153 +     "19": "travelling-shows-award-2020",
+154 +     "20": "vehicle-repair-services-and-retail-award-2020",
+155 +     "22": "victorian-government-schools-award-2016",
+156 +     "23": "employees-award-2016",
+157 +     "24": "victorian-local-government-award-2015",
+158 +     "25": "victorian-public-service-award-2016",
+159 +     "26": "victorian-state-government-agencies-award-2015",
+160 +     "27": "minerals-award-2015",
+161 +     "28": "waste-management-award-2020",
+162 +     "29": "water-industry-award-2020",
+163 +     "30": "wine-industry-award-2020",
+164 +     "31": "wool-storage-sampling-and-testing-award-2020",
+165 | }
+--------------------------------------------------------------------------------
+171 |         first_page = pdf.pages[0].extract_text()
+    -         lines = first_page.split('\n')
+172 +         lines = first_page.split("\n")
+173 |         # First line is usually "MA000xxx", second line is the actual award name
+174 |         for line in lines[:5]:
+175 |             line = line.strip()
+    -             if len(line) > 5 and not line.startswith('MA') and not line.startswith('PR'):
+176 +             if (
+177 +                 len(line) > 5
+178 +                 and not line.startswith("MA")
+179 +                 and not line.startswith("PR")
+180 +             ):
+181 |                 return line
+--------------------------------------------------------------------------------
+186 |     """Map source filename to Fair Work URL slug."""
+    -     base = source_file.replace('.pdf', '')
+187 +     base = source_file.replace(".pdf", "")
+188 |
+--------------------------------------------------------------------------------
+217 |     part_pattern = re.compile(
+    -         r'^(Part \d+[A-Z]*—\s*.+|Schedule [A-Z]\s*[—–-]\s*.+|\d+[A-Z]*\.\s+.+)',
+    -         re.MULTILINE
+218 +         r"^(Part \d+[A-Z]*—\s*.+|Schedule [A-Z]\s*[—–-]\s*.+|\d+[A-Z]*\.\s+.+)",
+219 +         re.MULTILINE,
+220 |     )
+221 |
+    -     lines = full_text.split('\n')
+222 +     lines = full_text.split("\n")
+223 |     current_section = None
+--------------------------------------------------------------------------------
+233 |             if current_section and current_text:
+    -                 sections.append({
+    -                     'title': current_section,
+    -                     'text': '\n'.join(current_text),
+    -                     'award_name': award_name,
+    -                     'source_file': source_file,
+    -                 })
+234 +                 sections.append(
+235 +                     {
+236 +                         "title": current_section,
+237 +                         "text": "\n".join(current_text),
+238 +                         "award_name": award_name,
+239 +                         "source_file": source_file,
+240 +                     }
+241 +                 )
+242 |             current_section = line_stripped
+--------------------------------------------------------------------------------
+247 |     if current_section and current_text:
+    -         sections.append({
+    -             'title': current_section,
+    -             'text': '\n'.join(current_text),
+    -             'award_name': award_name,
+    -             'source_file': source_file,
+    -         })
+248 +         sections.append(
+249 +             {
+250 +                 "title": current_section,
+251 +                 "text": "\n".join(current_text),
+252 +                 "award_name": award_name,
+253 +                 "source_file": source_file,
+254 +             }
+255 +         )
+256 |
+257 |     if not sections:
+    -         sections.append({
+    -             'title': award_name,
+    -             'text': full_text,
+    -             'award_name': award_name,
+    -             'source_file': source_file,
+    -         })
+258 +         sections.append(
+259 +             {
+260 +                 "title": award_name,
+261 +                 "text": full_text,
+262 +                 "award_name": award_name,
+263 +                 "source_file": source_file,
+264 +             }
+265 +         )
+266 |
+--------------------------------------------------------------------------------
+271 |     """Extract clause number from section title."""
+    -     clause_match = re.match(r'^(\d+[A-Z]*)\.\s', section_title)
+272 +     clause_match = re.match(r"^(\d+[A-Z]*)\.\s", section_title)
+273 |     if clause_match:
+274 |         return clause_match.group(1)
+275 |
+    -     part_match = re.match(r'^Part (\d+[A-Z]*)', section_title)
+276 +     part_match = re.match(r"^Part (\d+[A-Z]*)", section_title)
+277 |     if part_match:
+278 |         return f"Part {part_match.group(1)}"
+279 |
+    -     schedule_match = re.match(r'^Schedule ([A-Z])', section_title)
+280 +     schedule_match = re.match(r"^Schedule ([A-Z])", section_title)
+281 |     if schedule_match:
+--------------------------------------------------------------------------------
+292 |     chunks = []
+    -     paragraphs = text.split('\n\n')
+293 +     paragraphs = text.split("\n\n")
+294 |     current_chunk = ""
+--------------------------------------------------------------------------------
+302 |             if len(para) > max_chunk_size:
+    -                 sentences = re.split(r'(?<=[.!?])\s+', para)
+303 +                 sentences = re.split(r"(?<=[.!?])\s+", para)
+304 |                 current_chunk = ""
+--------------------------------------------------------------------------------
+327 |     for section in sections:
+    -         clause_num = extract_clause_number(section['title'])
+    -         chunks = chunk_text(section['text'])
+328 +         clause_num = extract_clause_number(section["title"])
+329 +         chunks = chunk_text(section["text"])
+330 |
+331 |         for i, chunk in enumerate(chunks):
+332 |             metadata = {
+    -                 'award_name': section['award_name'],
+    -                 'clause_number': clause_num,
+    -                 'section_title': section['title'],
+    -                 'source_url': f"https://www.fairwork.gov.au/employment-conditions/awards/{slug}",
+    -                 'document_type': 'Award',
+    -                 'source_file': section['source_file'],
+    -                 'chunk_index': i,
+333 +                 "award_name": section["award_name"],
+334 +                 "clause_number": clause_num,
+335 +                 "section_title": section["title"],
+336 +                 "source_url": f"https://www.fairwork.gov.au/employment-conditions/awards/{slug}",
+337 +                 "document_type": "Award",
+338 +                 "source_file": section["source_file"],
+339 +                 "chunk_index": i,
+340 |             }
+--------------------------------------------------------------------------------
+351 |     documents = []
+    -     sections = re.split(r'\n=== (.+?) ===\n', text)
+352 +     sections = re.split(r"\n=== (.+?) ===\n", text)
+353 |
+--------------------------------------------------------------------------------
+362 |         for j, chunk in enumerate(chunks):
+    -             clause_refs = re.findall(r'clause[s]?\s+(\d+[A-Z]*(?:\.\d+)?)', chunk.lower())
+363 +             clause_refs = re.findall(
+364 +                 r"clause[s]?\s+(\d+[A-Z]*(?:\.\d+)?)", chunk.lower()
+365 +             )
+366 |
+367 |             metadata = {
+    -                 'award_name': 'National Employment Standards',
+    -                 'clause_number': ', '.join(clause_refs) if clause_refs else section_name,
+    -                 'section_title': section_name,
+    -                 'source_url': 'https://www.fairwork.gov.au/employment-conditions/national-employment-standards',
+    -                 'document_type': 'NES',
+    -                 'source_file': 'nes_combined.txt',
+    -                 'chunk_index': j,
+368 +                 "award_name": "National Employment Standards",
+369 +                 "clause_number": ", ".join(clause_refs)
+370 +                 if clause_refs
+371 +                 else section_name,
+372 +                 "section_title": section_name,
+373 +                 "source_url": "https://www.fairwork.gov.au/employment-conditions/national-employment-standards",
+374 +                 "document_type": "NES",
+375 +                 "source_file": "nes_combined.txt",
+376 +                 "chunk_index": j,
+377 |             }
+--------------------------------------------------------------------------------
+386 |
+    -     pdf_files = sorted([f for f in os.listdir(awards_dir) if f.endswith('.pdf')])
+387 +     pdf_files = sorted([f for f in os.listdir(awards_dir) if f.endswith(".pdf")])
+388 |     print(f"Processing {len(pdf_files)} PDFs...")
+--------------------------------------------------------------------------------
+396 |             if (idx + 1) % 10 == 0:
+    -                 print(f"  [{idx+1}/{len(pdf_files)}] {pdf_file}: {len(docs)} chunks (total: {len(all_docs)})")
+397 +                 print(
+398 +                     f"  [{idx + 1}/{len(pdf_files)}] {pdf_file}: {len(docs)} chunks (total: {len(all_docs)})"
+399 +                 )
+400 |         except Exception as e:
+--------------------------------------------------------------------------------
+417 |     import sys
+418 +
+419 |     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+--------------------------------------------------------------------------------
+428 |     for doc in docs:
+    -         dtype = doc.metadata['document_type']
+429 +         dtype = doc.metadata["document_type"]
+430 |         award_types[dtype] = award_types.get(dtype, 0) + 1
+    |
+
+unformatted: File would be reformatted
+   --> src\rag.py:1:1
+    |
+1   | """RAG chain with Groq LLM for Fair Work Awards & NES Q&A."""
+2   +
+3   | import os
+--------------------------------------------------------------------------------
+80  |     """Initialize Groq LLM with optional fallback.
+    -     
+81  +
+82  |     Args:
+--------------------------------------------------------------------------------
+101 |         metadata = doc.metadata
+    -         header = f"[Document {i+1}: {metadata['award_name']}"
+    -         if metadata.get('clause_number'):
+102 +         header = f"[Document {i + 1}: {metadata['award_name']}"
+103 +         if metadata.get("clause_number"):
+104 |             header += f" — {metadata['clause_number']}"
+105 |         header += f" ({metadata['document_type']})]"
+    -         source_url = metadata.get('source_url', '')
+    -         section = metadata.get('section_title', '')
+106 +         source_url = metadata.get("source_url", "")
+107 +         section = metadata.get("section_title", "")
+108 |         # Show more content for better answer quality
+    -         content = doc.page_content[:800] + "..." if len(doc.page_content) > 800 else doc.page_content
+109 +         content = (
+110 +             doc.page_content[:800] + "..."
+111 +             if len(doc.page_content) > 800
+112 +             else doc.page_content
+113 +         )
+114 |         formatted.append(
+    -             f"{header}\n"
+    -             f"Section: {section}\n"
+    -             f"Source: {source_url}\n"
+    -             f"{content}"
+115 +             f"{header}\nSection: {section}\nSource: {source_url}\n{content}"
+116 |         )
+--------------------------------------------------------------------------------
+129 |     """Create RAG chain with optional CAG context.
+    -     
+130 +
+131 |     Args:
+--------------------------------------------------------------------------------
+136 |     llm = get_llm()
+    -     
+137 +
+138 |     # Create semantic retriever
+--------------------------------------------------------------------------------
+142 |     )
+    -     
+143 +
+144 |     # Create filtered retriever for award-specific queries
+--------------------------------------------------------------------------------
+160 |     AWARD_KEYWORDS = AWARD_PATTERNS
+    -     
+161 +
+162 |     def detect_award_filter(question: str) -> Optional[str]:
+163 |         """Detect if question mentions a specific Award."""
+164 |         return detect_award(question)
+    -     
+165 +
+166 |     # Topic keywords for general questions (from shared config)
+167 |     TOPIC_KEYWORDS_MAP = TOPIC_KEYWORDS
+    -     
+168 +
+169 |     def detect_topic_filter(question: str) -> Optional[str]:
+170 |         """Detect if question is about a general topic."""
+171 |         return detect_topic(question)
+    -     
+172 +
+173 |     def build_context(question: str):
+174 |         """Build context from CAG cache, RAG retrieval, or both."""
+175 |         context_parts = []
+    -         
+176 +
+177 |         # Check if CAG cache is available and question is CAG candidate
+--------------------------------------------------------------------------------
+181 |                 context_parts.append(format_cag_context(cag_ctx))
+    -         
+182 +
+183 |         # Detect award filter or topic filter
+184 |         award_filter = detect_award_filter(question)
+185 |         topic_filter = detect_topic_filter(question)
+    -         
+186 +
+187 |         # Use filtered retriever for award-specific or general topic queries
+--------------------------------------------------------------------------------
+191 |             docs = hybrid_retriever.invoke(question)
+    -         
+192 +
+193 |         if docs:
+194 |             context_parts.append(format_docs(docs))
+    -         
+    -         return "\n\n".join(context_parts) if context_parts else "No relevant context found."
+195 |
+196 +         return (
+197 +             "\n\n".join(context_parts)
+198 +             if context_parts
+199 +             else "No relevant context found."
+200 +         )
+201 +
+202 |     rag_chain = (
+--------------------------------------------------------------------------------
+223 |             from langchain_core.output_parsers import StrOutputParser
+    -             
+224 +
+225 |             fallback_llm = get_llm(fallback=True)
+    -             
+226 +
+227 |             # Get context builder from original chain and rebuild with smaller k
+228 |             original_context_builder = rag_chain.first
+    -             if hasattr(original_context_builder, 'func'):
+229 +             if hasattr(original_context_builder, "func"):
+230 |                 # Rebuild with smaller k
+--------------------------------------------------------------------------------
+244 |                 )
+    -             
+245 +
+246 |             response = fallback_chain.invoke(question)
+--------------------------------------------------------------------------------
+252 |     import sys
+253 +
+254 |     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+--------------------------------------------------------------------------------
+271 |     for q in test_questions:
+    -         print(f"\n{'='*60}")
+272 +         print(f"\n{'=' * 60}")
+273 |         print(f"Q: {q}")
+    -         print(f"{'='*60}")
+274 +         print(f"{'=' * 60}")
+275 |         answer = ask_question(rag_chain, q)
+    |
+
+unformatted: File would be reformatted
+  --> src\router.py:1:1
+   |
+1  | """Query router for hybrid CAG+RAG architecture."""
+2  +
+3  | from enum import Enum
+--------------------------------------------------------------------------------
+9  | class RouteType(Enum):
+   -     CAG = "cag"           # Cache hit - use pre-loaded context only
+   -     RAG = "rag"           # Retrieval - use vector search only
+   -     COMBINED = "combined" # Both cache and retrieval needed
+10 +     CAG = "cag"  # Cache hit - use pre-loaded context only
+11 +     RAG = "rag"  # Retrieval - use vector search only
+12 +     COMBINED = "combined"  # Both cache and retrieval needed
+13 |
+--------------------------------------------------------------------------------
+26 |     nes_detected = has_nes_keywords(question)
+   -     
+27 +
+28 |     # Check for Award-specific content
+29 |     award_name = detect_award(question)
+   -     
+30 +
+31 |     # Decision logic
+   |
+
+unformatted: File would be reformatted
+   --> src\vectorstore.py:1:1
+    |
+1   | """TurboVec vector store management for Fair Work Awards."""
+2   +
+3   | import json
+--------------------------------------------------------------------------------
+43  |     start_batch = start_idx // batch_size
+    -     for batch_no, batch_start in enumerate(range(start_idx, len(docs), batch_size), start=start_batch + 1):
+    -         batch = docs[batch_start:batch_start + batch_size]
+44  +     for batch_no, batch_start in enumerate(
+45  +         range(start_idx, len(docs), batch_size), start=start_batch + 1
+46  +     ):
+47  +         batch = docs[batch_start : batch_start + batch_size]
+48  |         store.add_documents(batch)
+--------------------------------------------------------------------------------
+83  |
+    - def search_store(store: TurboQuantVectorStore, query: str, k: int = 5, 
+    -                  award_filter: str = None) -> list:
+84  + def search_store(
+85  +     store: TurboQuantVectorStore, query: str, k: int = 5, award_filter: str = None
+86  + ) -> list:
+87  |     """Search the vector store."""
+--------------------------------------------------------------------------------
+94  |     import sys
+95  +
+96  |     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+--------------------------------------------------------------------------------
+120 |         for i, doc in enumerate(results):
+    -             print(f"  {i+1}. [{doc.metadata['document_type']}] {doc.metadata['award_name']}")
+121 +             print(
+122 +                 f"  {i + 1}. [{doc.metadata['document_type']}] {doc.metadata['award_name']}"
+123 +             )
+124 |             print(f"     Clause: {doc.metadata.get('clause_number', 'N/A')}")
+    |
+
+17 files would be reformatted, 1 file already formatted

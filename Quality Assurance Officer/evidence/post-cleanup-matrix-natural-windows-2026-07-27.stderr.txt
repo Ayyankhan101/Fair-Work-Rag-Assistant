@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "C:\Users\HP\Documents\GitHub\fair-work-rag-assistant\Quality Assurance Officer\tools\offline_request_matrix.py", line 813, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "C:\Users\HP\Documents\GitHub\fair-work-rag-assistant\Quality Assurance Officer\tools\offline_request_matrix.py", line 803, in main
+    evidence = run_matrix()
+               ^^^^^^^^^^^^
+  File "C:\Users\HP\Documents\GitHub\fair-work-rag-assistant\Quality Assurance Officer\tools\offline_request_matrix.py", line 579, in run_matrix
+    cag_cache = CAGCache(str(DATA_ROOT / "data" / "nes" / "nes_combined.txt"))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\HP\Documents\GitHub\fair-work-rag-assistant\src\cag.py", line 23, in __init__
+    self._load_nes(nes_path)
+  File "C:\Users\HP\Documents\GitHub\fair-work-rag-assistant\src\cag.py", line 32, in _load_nes
+    raw_text = f.read()
+               ^^^^^^^^
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python312\Lib\encodings\cp1252.py", line 23, in decode
+    return codecs.charmap_decode(input,self.errors,decoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeDecodeError: 'charmap' codec can't decode byte 0x8d in position 1009: character maps to <undefined>

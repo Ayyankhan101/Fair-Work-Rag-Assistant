@@ -1,0 +1,111 @@
+{
+  "schema_version": "1.0",
+  "scope": {
+    "candidate": "current dirty QA working tree",
+    "provider_request": false,
+    "real_components": [
+      "create_rag_chain",
+      "docstore retrieval",
+      "prompt renderer",
+      "ask_question fallback selector"
+    ],
+    "fake_components": [
+      "primary provider exception",
+      "fallback capture model"
+    ]
+  },
+  "summary": {
+    "cases": 6,
+    "fallback_attempts": 3,
+    "exceptions_propagated": 3,
+    "single_human_fallback_prompts": 3,
+    "repeated_question_prompts": 3,
+    "nested_mapping_prompts": 3
+  },
+  "results": [
+    {
+      "id": "429",
+      "injected_error": "HTTP 429 rate_limit",
+      "fallback_attempted": true,
+      "output": "QA_FALLBACK_CAPTURE",
+      "raised": null,
+      "fallback_prompt": {
+        "message_types": [
+          "HumanMessage"
+        ],
+        "characters": 8236,
+        "question_occurrences": 2,
+        "contains_nested_mapping": true
+      }
+    },
+    {
+      "id": "413",
+      "injected_error": "HTTP 413 request too large",
+      "fallback_attempted": true,
+      "output": "QA_FALLBACK_CAPTURE",
+      "raised": null,
+      "fallback_prompt": {
+        "message_types": [
+          "HumanMessage"
+        ],
+        "characters": 8236,
+        "question_occurrences": 2,
+        "contains_nested_mapping": true
+      }
+    },
+    {
+      "id": "rate_limit",
+      "injected_error": "provider rate_limit exceeded",
+      "fallback_attempted": true,
+      "output": "QA_FALLBACK_CAPTURE",
+      "raised": null,
+      "fallback_prompt": {
+        "message_types": [
+          "HumanMessage"
+        ],
+        "characters": 8236,
+        "question_occurrences": 2,
+        "contains_nested_mapping": true
+      }
+    },
+    {
+      "id": "timeout",
+      "injected_error": "request timed out",
+      "fallback_attempted": false,
+      "output": null,
+      "raised": "RuntimeError: request timed out",
+      "fallback_prompt": {
+        "message_types": [],
+        "characters": 0,
+        "question_occurrences": 0,
+        "contains_nested_mapping": false
+      }
+    },
+    {
+      "id": "500",
+      "injected_error": "HTTP 500 internal server error",
+      "fallback_attempted": false,
+      "output": null,
+      "raised": "RuntimeError: HTTP 500 internal server error",
+      "fallback_prompt": {
+        "message_types": [],
+        "characters": 0,
+        "question_occurrences": 0,
+        "contains_nested_mapping": false
+      }
+    },
+    {
+      "id": "401",
+      "injected_error": "HTTP 401 unauthorized",
+      "fallback_attempted": false,
+      "output": null,
+      "raised": "RuntimeError: HTTP 401 unauthorized",
+      "fallback_prompt": {
+        "message_types": [],
+        "characters": 0,
+        "question_occurrences": 0,
+        "contains_nested_mapping": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+WARNING: NES file not found: file-that-does-not-exist.txt
+CAG: Loaded NES (67 chars)

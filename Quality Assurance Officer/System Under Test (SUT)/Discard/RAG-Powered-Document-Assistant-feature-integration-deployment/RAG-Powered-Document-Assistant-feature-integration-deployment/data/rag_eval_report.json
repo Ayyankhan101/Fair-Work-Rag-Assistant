@@ -1,0 +1,8 @@
+{
+  "top_k": 5,
+  "num_questions": 10,
+  "retrieval_hit_rate": 0.8,
+  "answer_f1_mean": 0.04868184231701769,
+  "citation_precision_mean": 0.0,
+  "hallucination_rate": 49.5
+}

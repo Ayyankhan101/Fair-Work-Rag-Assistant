@@ -1,0 +1,1663 @@
+I001 [*] Import block is un-sorted or un-formatted
+  --> build_store.py:11:1
+   |
+ 9 |   sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
+10 |
+11 | / from ingest import ingest_all
+12 | | from fastembeddings import FastEmbedEmbeddings
+13 | | from turbovec.langchain import TurboQuantVectorStore
+   | |____________________________________________________^
+14 |
+15 |   start = time.time()
+   |
+help: Organize imports
+   |
+10 |
+   - from ingest import ingest_all
+   - from fastembeddings import FastEmbedEmbeddings
+11 | from turbovec.langchain import TurboQuantVectorStore
+12 |
+13 + from fastembeddings import FastEmbedEmbeddings
+14 + from ingest import ingest_all
+15 +
+16 | start = time.time()
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> scripts\eval_hard.py:12:1
+   |
+10 |   sys.path.insert(0, str(ROOT / "src"))
+11 |
+12 | / from rag import create_rag_chain, ask_question
+13 | | from vectorstore import load_vectorstore
+   | |________________________________________^
+   |
+help: Organize imports
+   |
+11 |
+   - from rag import create_rag_chain, ask_question
+12 + from rag import ask_question, create_rag_chain
+13 | from vectorstore import load_vectorstore
+   -
+14 |
+   |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:236:9
+    |
+234 |           kw_lower = kw.lower()
+235 |           # Direct match
+236 | /         if kw_lower in answer_lower:
+237 | |             keywords_found += 1
+238 | |         # Synonym matching for common variations
+239 | |         elif kw_lower == "casual loading" and ("casual" in answer_lower and "loading" in answer_lower):
+240 | |             keywords_found += 1
+    | |_______________________________^
+241 |           elif kw_lower == "hourly rate" and ("hourly" in answer_lower or "rate" in answer_lower):
+242 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+235 |         # Direct match
+    -         if kw_lower in answer_lower:
+    -             keywords_found += 1
+    -         # Synonym matching for common variations
+    -         elif kw_lower == "casual loading" and ("casual" in answer_lower and "loading" in answer_lower):
+236 +         if kw_lower in answer_lower or kw_lower == "casual loading" and ("casual" in answer_lower and "loading" in answer_lower):
+237 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:239:9
+    |
+237 |               keywords_found += 1
+238 |           # Synonym matching for common variations
+239 | /         elif kw_lower == "casual loading" and ("casual" in answer_lower and "loading" in answer_lower):
+240 | |             keywords_found += 1
+241 | |         elif kw_lower == "hourly rate" and ("hourly" in answer_lower or "rate" in answer_lower):
+242 | |             keywords_found += 1
+    | |_______________________________^
+243 |           elif kw_lower == "notice period" and ("notice" in answer_lower or "termination" in answer_lower):
+244 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+238 |         # Synonym matching for common variations
+    -         elif kw_lower == "casual loading" and ("casual" in answer_lower and "loading" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "hourly rate" and ("hourly" in answer_lower or "rate" in answer_lower):
+239 +         elif kw_lower == "casual loading" and ("casual" in answer_lower and "loading" in answer_lower) or kw_lower == "hourly rate" and ("hourly" in answer_lower or "rate" in answer_lower):
+240 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:241:9
+    |
+239 |           elif kw_lower == "casual loading" and ("casual" in answer_lower and "loading" in answer_lower):
+240 |               keywords_found += 1
+241 | /         elif kw_lower == "hourly rate" and ("hourly" in answer_lower or "rate" in answer_lower):
+242 | |             keywords_found += 1
+243 | |         elif kw_lower == "notice period" and ("notice" in answer_lower or "termination" in answer_lower):
+244 | |             keywords_found += 1
+    | |_______________________________^
+245 |           elif kw_lower == "meal break" and ("meal" in answer_lower or "break" in answer_lower):
+246 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+240 |             keywords_found += 1
+    -         elif kw_lower == "hourly rate" and ("hourly" in answer_lower or "rate" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "notice period" and ("notice" in answer_lower or "termination" in answer_lower):
+241 +         elif kw_lower == "hourly rate" and ("hourly" in answer_lower or "rate" in answer_lower) or kw_lower == "notice period" and ("notice" in answer_lower or "termination" in answer_lower):
+242 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:243:9
+    |
+241 |           elif kw_lower == "hourly rate" and ("hourly" in answer_lower or "rate" in answer_lower):
+242 |               keywords_found += 1
+243 | /         elif kw_lower == "notice period" and ("notice" in answer_lower or "termination" in answer_lower):
+244 | |             keywords_found += 1
+245 | |         elif kw_lower == "meal break" and ("meal" in answer_lower or "break" in answer_lower):
+246 | |             keywords_found += 1
+    | |_______________________________^
+247 |           elif kw_lower == "rest break" and ("rest" in answer_lower or "break" in answer_lower):
+248 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+242 |             keywords_found += 1
+    -         elif kw_lower == "notice period" and ("notice" in answer_lower or "termination" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "meal break" and ("meal" in answer_lower or "break" in answer_lower):
+243 +         elif kw_lower == "notice period" and ("notice" in answer_lower or "termination" in answer_lower) or kw_lower == "meal break" and ("meal" in answer_lower or "break" in answer_lower):
+244 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:245:9
+    |
+243 |           elif kw_lower == "notice period" and ("notice" in answer_lower or "termination" in answer_lower):
+244 |               keywords_found += 1
+245 | /         elif kw_lower == "meal break" and ("meal" in answer_lower or "break" in answer_lower):
+246 | |             keywords_found += 1
+247 | |         elif kw_lower == "rest break" and ("rest" in answer_lower or "break" in answer_lower):
+248 | |             keywords_found += 1
+    | |_______________________________^
+249 |           elif kw_lower == "penalty" and ("penalty" in answer_lower or "penalties" in answer_lower):
+250 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+244 |             keywords_found += 1
+    -         elif kw_lower == "meal break" and ("meal" in answer_lower or "break" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "rest break" and ("rest" in answer_lower or "break" in answer_lower):
+245 +         elif kw_lower == "meal break" and ("meal" in answer_lower or "break" in answer_lower) or kw_lower == "rest break" and ("rest" in answer_lower or "break" in answer_lower):
+246 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:247:9
+    |
+245 |           elif kw_lower == "meal break" and ("meal" in answer_lower or "break" in answer_lower):
+246 |               keywords_found += 1
+247 | /         elif kw_lower == "rest break" and ("rest" in answer_lower or "break" in answer_lower):
+248 | |             keywords_found += 1
+249 | |         elif kw_lower == "penalty" and ("penalty" in answer_lower or "penalties" in answer_lower):
+250 | |             keywords_found += 1
+    | |_______________________________^
+251 |           elif kw_lower == "overtime" and ("overtime" in answer_lower):
+252 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+246 |             keywords_found += 1
+    -         elif kw_lower == "rest break" and ("rest" in answer_lower or "break" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "penalty" and ("penalty" in answer_lower or "penalties" in answer_lower):
+247 +         elif kw_lower == "rest break" and ("rest" in answer_lower or "break" in answer_lower) or kw_lower == "penalty" and ("penalty" in answer_lower or "penalties" in answer_lower):
+248 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:249:9
+    |
+247 |           elif kw_lower == "rest break" and ("rest" in answer_lower or "break" in answer_lower):
+248 |               keywords_found += 1
+249 | /         elif kw_lower == "penalty" and ("penalty" in answer_lower or "penalties" in answer_lower):
+250 | |             keywords_found += 1
+251 | |         elif kw_lower == "overtime" and ("overtime" in answer_lower):
+252 | |             keywords_found += 1
+    | |_______________________________^
+253 |           elif kw_lower == "leave" and ("leave" in answer_lower):
+254 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+248 |             keywords_found += 1
+    -         elif kw_lower == "penalty" and ("penalty" in answer_lower or "penalties" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "overtime" and ("overtime" in answer_lower):
+249 +         elif kw_lower == "penalty" and ("penalty" in answer_lower or "penalties" in answer_lower) or kw_lower == "overtime" and ("overtime" in answer_lower):
+250 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:251:9
+    |
+249 |           elif kw_lower == "penalty" and ("penalty" in answer_lower or "penalties" in answer_lower):
+250 |               keywords_found += 1
+251 | /         elif kw_lower == "overtime" and ("overtime" in answer_lower):
+252 | |             keywords_found += 1
+253 | |         elif kw_lower == "leave" and ("leave" in answer_lower):
+254 | |             keywords_found += 1
+    | |_______________________________^
+255 |           elif kw_lower == "hours" and ("hour" in answer_lower):
+256 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+250 |             keywords_found += 1
+    -         elif kw_lower == "overtime" and ("overtime" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "leave" and ("leave" in answer_lower):
+251 +         elif kw_lower == "overtime" and ("overtime" in answer_lower) or kw_lower == "leave" and ("leave" in answer_lower):
+252 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:253:9
+    |
+251 |           elif kw_lower == "overtime" and ("overtime" in answer_lower):
+252 |               keywords_found += 1
+253 | /         elif kw_lower == "leave" and ("leave" in answer_lower):
+254 | |             keywords_found += 1
+255 | |         elif kw_lower == "hours" and ("hour" in answer_lower):
+256 | |             keywords_found += 1
+    | |_______________________________^
+257 |           elif kw_lower == "junior" and ("junior" in answer_lower or "under 18" in answer_lower):
+258 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+252 |             keywords_found += 1
+    -         elif kw_lower == "leave" and ("leave" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "hours" and ("hour" in answer_lower):
+253 +         elif kw_lower == "leave" and ("leave" in answer_lower) or kw_lower == "hours" and ("hour" in answer_lower):
+254 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:255:9
+    |
+253 |           elif kw_lower == "leave" and ("leave" in answer_lower):
+254 |               keywords_found += 1
+255 | /         elif kw_lower == "hours" and ("hour" in answer_lower):
+256 | |             keywords_found += 1
+257 | |         elif kw_lower == "junior" and ("junior" in answer_lower or "under 18" in answer_lower):
+258 | |             keywords_found += 1
+    | |_______________________________^
+259 |           elif kw_lower == "apprentice" and ("apprentice" in answer_lower or "trainee" in answer_lower):
+260 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+254 |             keywords_found += 1
+    -         elif kw_lower == "hours" and ("hour" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "junior" and ("junior" in answer_lower or "under 18" in answer_lower):
+255 +         elif kw_lower == "hours" and ("hour" in answer_lower) or kw_lower == "junior" and ("junior" in answer_lower or "under 18" in answer_lower):
+256 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:257:9
+    |
+255 |           elif kw_lower == "hours" and ("hour" in answer_lower):
+256 |               keywords_found += 1
+257 | /         elif kw_lower == "junior" and ("junior" in answer_lower or "under 18" in answer_lower):
+258 | |             keywords_found += 1
+259 | |         elif kw_lower == "apprentice" and ("apprentice" in answer_lower or "trainee" in answer_lower):
+260 | |             keywords_found += 1
+    | |_______________________________^
+261 |           elif kw_lower == "12 months" and ("12 months" in answer_lower or "52 weeks" in answer_lower):
+262 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+256 |             keywords_found += 1
+    -         elif kw_lower == "junior" and ("junior" in answer_lower or "under 18" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "apprentice" and ("apprentice" in answer_lower or "trainee" in answer_lower):
+257 +         elif kw_lower == "junior" and ("junior" in answer_lower or "under 18" in answer_lower) or kw_lower == "apprentice" and ("apprentice" in answer_lower or "trainee" in answer_lower):
+258 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:259:9
+    |
+257 |           elif kw_lower == "junior" and ("junior" in answer_lower or "under 18" in answer_lower):
+258 |               keywords_found += 1
+259 | /         elif kw_lower == "apprentice" and ("apprentice" in answer_lower or "trainee" in answer_lower):
+260 | |             keywords_found += 1
+261 | |         elif kw_lower == "12 months" and ("12 months" in answer_lower or "52 weeks" in answer_lower):
+262 | |             keywords_found += 1
+    | |_______________________________^
+263 |           elif kw_lower == "20 days" and ("20 days" in answer_lower or "4 weeks" in answer_lower):
+264 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+258 |             keywords_found += 1
+    -         elif kw_lower == "apprentice" and ("apprentice" in answer_lower or "trainee" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "12 months" and ("12 months" in answer_lower or "52 weeks" in answer_lower):
+259 +         elif kw_lower == "apprentice" and ("apprentice" in answer_lower or "trainee" in answer_lower) or kw_lower == "12 months" and ("12 months" in answer_lower or "52 weeks" in answer_lower):
+260 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:261:9
+    |
+259 |   …     elif kw_lower == "apprentice" and ("apprentice" in answer_lower or "trainee" in answer_lower):
+260 |   …         keywords_found += 1
+261 | / …     elif kw_lower == "12 months" and ("12 months" in answer_lower or "52 weeks" in answer_lower):
+262 | | …         keywords_found += 1
+263 | | …     elif kw_lower == "20 days" and ("20 days" in answer_lower or "4 weeks" in answer_lower):
+264 | | …         keywords_found += 1
+    | |_____________________________^
+265 |   …     elif kw_lower == "minimum engagement" and ("minimum" in answer_lower and ("engagement" in answer_lower or "engaged" in answer_l…
+266 |   …         keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+260 |             keywords_found += 1
+    -         elif kw_lower == "12 months" and ("12 months" in answer_lower or "52 weeks" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "20 days" and ("20 days" in answer_lower or "4 weeks" in answer_lower):
+261 +         elif kw_lower == "12 months" and ("12 months" in answer_lower or "52 weeks" in answer_lower) or kw_lower == "20 days" and ("20 days" in answer_lower or "4 weeks" in answer_lower):
+262 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:263:9
+    |
+261 |   …     elif kw_lower == "12 months" and ("12 months" in answer_lower or "52 weeks" in answer_lower):
+262 |   …         keywords_found += 1
+263 | / …     elif kw_lower == "20 days" and ("20 days" in answer_lower or "4 weeks" in answer_lower):
+264 | | …         keywords_found += 1
+265 | | …     elif kw_lower == "minimum engagement" and ("minimum" in answer_lower and ("engagement" in answer_lower or "engaged" in answer_l…
+266 | | …         keywords_found += 1
+    | |_____________________________^
+267 |   …     elif kw_lower == "rate" and ("rate" in answer_lower or "%" in answer_lower):
+268 |   …         keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+262 |             keywords_found += 1
+    -         elif kw_lower == "20 days" and ("20 days" in answer_lower or "4 weeks" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "minimum engagement" and ("minimum" in answer_lower and ("engagement" in answer_lower or "engaged" in answer_lower)):
+263 +         elif kw_lower == "20 days" and ("20 days" in answer_lower or "4 weeks" in answer_lower) or kw_lower == "minimum engagement" and ("minimum" in answer_lower and ("engagement" in answer_lower or "engaged" in answer_lower)):
+264 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:265:9
+    |
+263 |   …     elif kw_lower == "20 days" and ("20 days" in answer_lower or "4 weeks" in answer_lower):
+264 |   …         keywords_found += 1
+265 | / …     elif kw_lower == "minimum engagement" and ("minimum" in answer_lower and ("engagement" in answer_lower or "engaged" in answer_l…
+266 | | …         keywords_found += 1
+267 | | …     elif kw_lower == "rate" and ("rate" in answer_lower or "%" in answer_lower):
+268 | | …         keywords_found += 1
+    | |_____________________________^
+269 |   …     elif kw_lower == "3 hours" and ("3 hours" in answer_lower or "3 consecutive hours" in answer_lower):
+270 |   …         keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+264 |             keywords_found += 1
+    -         elif kw_lower == "minimum engagement" and ("minimum" in answer_lower and ("engagement" in answer_lower or "engaged" in answer_lower)):
+    -             keywords_found += 1
+    -         elif kw_lower == "rate" and ("rate" in answer_lower or "%" in answer_lower):
+265 +         elif kw_lower == "minimum engagement" and ("minimum" in answer_lower and ("engagement" in answer_lower or "engaged" in answer_lower)) or kw_lower == "rate" and ("rate" in answer_lower or "%" in answer_lower):
+266 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:267:9
+    |
+265 |   …     elif kw_lower == "minimum engagement" and ("minimum" in answer_lower and ("engagement" in answer_lower or "engaged" in answer_l…
+266 |   …         keywords_found += 1
+267 | / …     elif kw_lower == "rate" and ("rate" in answer_lower or "%" in answer_lower):
+268 | | …         keywords_found += 1
+269 | | …     elif kw_lower == "3 hours" and ("3 hours" in answer_lower or "3 consecutive hours" in answer_lower):
+270 | | …         keywords_found += 1
+    | |_____________________________^
+271 |   …     elif kw_lower == "consecutive days" and ("consecutive" in answer_lower and "day" in answer_lower):
+272 |   …         keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+266 |             keywords_found += 1
+    -         elif kw_lower == "rate" and ("rate" in answer_lower or "%" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "3 hours" and ("3 hours" in answer_lower or "3 consecutive hours" in answer_lower):
+267 +         elif kw_lower == "rate" and ("rate" in answer_lower or "%" in answer_lower) or kw_lower == "3 hours" and ("3 hours" in answer_lower or "3 consecutive hours" in answer_lower):
+268 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:269:9
+    |
+267 |           elif kw_lower == "rate" and ("rate" in answer_lower or "%" in answer_lower):
+268 |               keywords_found += 1
+269 | /         elif kw_lower == "3 hours" and ("3 hours" in answer_lower or "3 consecutive hours" in answer_lower):
+270 | |             keywords_found += 1
+271 | |         elif kw_lower == "consecutive days" and ("consecutive" in answer_lower and "day" in answer_lower):
+272 | |             keywords_found += 1
+    | |_______________________________^
+273 |           elif kw_lower == "7 days" and ("7 days" in answer_lower or "seven days" in answer_lower):
+274 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+268 |             keywords_found += 1
+    -         elif kw_lower == "3 hours" and ("3 hours" in answer_lower or "3 consecutive hours" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "consecutive days" and ("consecutive" in answer_lower and "day" in answer_lower):
+269 +         elif kw_lower == "3 hours" and ("3 hours" in answer_lower or "3 consecutive hours" in answer_lower) or kw_lower == "consecutive days" and ("consecutive" in answer_lower and "day" in answer_lower):
+270 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:271:9
+    |
+269 |           elif kw_lower == "3 hours" and ("3 hours" in answer_lower or "3 consecutive hours" in answer_lower):
+270 |               keywords_found += 1
+271 | /         elif kw_lower == "consecutive days" and ("consecutive" in answer_lower and "day" in answer_lower):
+272 | |             keywords_found += 1
+273 | |         elif kw_lower == "7 days" and ("7 days" in answer_lower or "seven days" in answer_lower):
+274 | |             keywords_found += 1
+    | |_______________________________^
+275 |           elif kw_lower == "day off" and ("day off" in answer_lower or "days off" in answer_lower):
+276 |               keywords_found += 1
+    |
+help: Combine `if` branches
+    |
+270 |             keywords_found += 1
+    -         elif kw_lower == "consecutive days" and ("consecutive" in answer_lower and "day" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "7 days" and ("7 days" in answer_lower or "seven days" in answer_lower):
+271 +         elif kw_lower == "consecutive days" and ("consecutive" in answer_lower and "day" in answer_lower) or kw_lower == "7 days" and ("7 days" in answer_lower or "seven days" in answer_lower):
+272 |             keywords_found += 1
+    |
+
+SIM114 [*] Combine `if` branches using logical `or` operator
+   --> scripts\eval_hard.py:273:9
+    |
+271 |           elif kw_lower == "consecutive days" and ("consecutive" in answer_lower and "day" in answer_lower):
+272 |               keywords_found += 1
+273 | /         elif kw_lower == "7 days" and ("7 days" in answer_lower or "seven days" in answer_lower):
+274 | |             keywords_found += 1
+275 | |         elif kw_lower == "day off" and ("day off" in answer_lower or "days off" in answer_lower):
+276 | |             keywords_found += 1
+    | |_______________________________^
+277 |       
+278 |       keyword_score = (keywords_found / len(keywords)) * 40 if keywords else 40
+    |
+help: Combine `if` branches
+    |
+272 |             keywords_found += 1
+    -         elif kw_lower == "7 days" and ("7 days" in answer_lower or "seven days" in answer_lower):
+    -             keywords_found += 1
+    -         elif kw_lower == "day off" and ("day off" in answer_lower or "days off" in answer_lower):
+273 +         elif kw_lower == "7 days" and ("7 days" in answer_lower or "seven days" in answer_lower) or kw_lower == "day off" and ("day off" in answer_lower or "days off" in answer_lower):
+274 |             keywords_found += 1
+    |
+
+BLE001 Do not catch blind exception: `Exception`
+   --> scripts\eval_hard.py:351:16
+    |
+349 |         try:
+350 |             answer = ask_question(rag_chain, q["question"])
+351 |         except Exception as e:
+    |                ^^^^^^^^^
+352 |             answer = f"Error: {e}"
+    |
+
+F541 [*] f-string without any placeholders
+   --> scripts\eval_hard.py:402:11
+    |
+401 |     print(f"\n{'='*60}")
+402 |     print(f"EVAL SUMMARY")
+    |           ^^^^^^^^^^^^^^^
+403 |     print(f"{'='*60}")
+404 |     print(f"Total Questions: {summary['total_questions']}")
+    |
+help: Remove extraneous `f` prefix
+    |
+401 |     print(f"\n{'='*60}")
+    -     print(f"EVAL SUMMARY")
+402 +     print("EVAL SUMMARY")
+403 |     print(f"{'='*60}")
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> scripts\eval_prd_questions.py:11:1
+   |
+ 9 |   sys.path.insert(0, str(ROOT / "src"))
+10 |
+11 | / from rag import create_rag_chain, ask_question
+12 | | from vectorstore import load_vectorstore
+   | |________________________________________^
+   |
+help: Organize imports
+   |
+10 |
+   - from rag import create_rag_chain, ask_question
+11 + from rag import ask_question, create_rag_chain
+12 | from vectorstore import load_vectorstore
+   -
+13 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> scripts\rename_pdfs.py:3:1
+  |
+1 |   #!/usr/bin/env python3
+2 |   """Rename PDFs with proper award names for better context."""
+3 | / import os
+4 | | import sys
+5 | | import re
+6 | | from pathlib import Path
+  | |________________________^
+7 |
+8 |   sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
+  |
+help: Organize imports
+  |
+3 | import os
+4 + import re
+5 | import sys
+  - import re
+6 | from pathlib import Path
+  |
+
+BLE001 Do not catch blind exception: `Exception`
+  --> scripts\rename_pdfs.py:68:16
+   |
+66 |                 else:
+67 |                     skipped += 1
+68 |         except Exception as e:
+   |                ^^^^^^^^^
+69 |             errors += 1
+70 |             print(f"  ERROR: {pdf_path.name}: {e}")
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> scripts\smoke_test_rag.py:10:1
+   |
+ 8 |   sys.path.insert(0, str(ROOT / "src"))
+ 9 |
+10 | / from rag import create_rag_chain, ask_question
+11 | | from vectorstore import load_vectorstore
+   | |________________________________________^
+   |
+help: Organize imports
+   |
+9  |
+   - from rag import create_rag_chain, ask_question
+10 + from rag import ask_question, create_rag_chain
+11 | from vectorstore import load_vectorstore
+   -
+12 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> scripts\smoke_test_retrieval.py:9:1
+  |
+7 | sys.path.insert(0, str(ROOT / "src"))
+8 |
+9 | from vectorstore import load_vectorstore, search_store
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+help: Organize imports
+   |
+10 |
+   -
+11 | TEST_QUERIES = [
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\app.py:2:1
+  |
+1 |   """Gradio web interface for Fair Work Awards & NES Q&A."""
+2 | / import os
+3 | | import sys
+4 | | import gradio as gr
+5 | | from dotenv import load_dotenv
+  | |______________________________^
+6 |
+7 |   sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+  |
+help: Organize imports
+  |
+3 | import sys
+4 +
+5 | import gradio as gr
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\app.py:9:1
+   |
+ 7 |   sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+ 8 |
+ 9 | / from vectorstore import load_vectorstore, build_vectorstore
+10 | | from rag import create_rag_chain, ask_question
+11 | | from cag import get_cag_cache
+12 | | from router import route_question, RouteType
+   | |____________________________________________^
+   |
+help: Organize imports
+   |
+8  |
+   - from vectorstore import load_vectorstore, build_vectorstore
+   - from rag import create_rag_chain, ask_question
+9  | from cag import get_cag_cache
+   - from router import route_question, RouteType
+   -
+10 + from rag import ask_question, create_rag_chain
+11 + from router import RouteType, route_question
+12 + from vectorstore import build_vectorstore, load_vectorstore
+13 |
+   |
+
+F401 [*] `router.RouteType` imported but unused
+  --> src\app.py:12:36
+   |
+10 | from rag import create_rag_chain, ask_question
+11 | from cag import get_cag_cache
+12 | from router import route_question, RouteType
+   |                                    ^^^^^^^^^
+   |
+help: Remove unused import: `router.RouteType`
+   |
+11 | from cag import get_cag_cache
+   - from router import route_question, RouteType
+12 + from router import route_question
+13 |
+   |
+
+BLE001 Do not catch blind exception: `Exception`
+  --> src\app.py:54:12
+   |
+52 |         route_info = f"[Route: {decision.route.value.upper()}]"
+53 |         return f"{route_info}\n\n{response}"
+54 |     except Exception as e:
+   |            ^^^^^^^^^
+55 |         return f"Error: {str(e)}"
+   |
+
+RUF010 [*] Use explicit conversion flag
+  --> src\app.py:55:26
+   |
+53 |         return f"{route_info}\n\n{response}"
+54 |     except Exception as e:
+55 |         return f"Error: {str(e)}"
+   |                          ^^^^^^
+   |
+help: Replace with conversion flag
+   |
+54 |     except Exception as e:
+   -         return f"Error: {str(e)}"
+55 +         return f"Error: {e!s}"
+56 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\bm25_retriever.py:2:1
+  |
+1 |   """BM25 retriever for hybrid search."""
+2 | / import json
+3 | | from rank_bm25 import BM25Okapi
+4 | | from langchain_core.retrievers import BaseRetriever
+5 | | from langchain_core.documents import Document
+6 | | from typing import List
+7 | | import os
+  | |_________^
+  |
+help: Organize imports
+   |
+2  | import json
+   - from rank_bm25 import BM25Okapi
+   - from langchain_core.retrievers import BaseRetriever
+   - from langchain_core.documents import Document
+3  + import os
+4  | from typing import List
+   - import os
+5  |
+6  + from langchain_core.documents import Document
+7  + from langchain_core.retrievers import BaseRetriever
+8  + from rank_bm25 import BM25Okapi
+9  +
+10 |
+   |
+
+UP035 `typing.List` is deprecated, use `list` instead
+ --> src\bm25_retriever.py:6:1
+  |
+4 | from langchain_core.retrievers import BaseRetriever
+5 | from langchain_core.documents import Document
+6 | from typing import List
+  | ^^^^^^^^^^^^^^^^^^^^^^^
+7 | import os
+  |
+
+F401 [*] `os` imported but unused
+ --> src\bm25_retriever.py:7:8
+  |
+5 | from langchain_core.documents import Document
+6 | from typing import List
+7 | import os
+  |        ^^
+  |
+help: Remove unused import: `os`
+  |
+6 | from typing import List
+  - import os
+7 |
+  |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\bm25_retriever.py:14:11
+   |
+13 |     bm25: BM25Okapi = None
+14 |     docs: List[Document] = []
+   |           ^^^^
+15 |     tokenized_corpus: List[List[str]] = []
+   |
+help: Replace with `list`
+   |
+13 |     bm25: BM25Okapi = None
+   -     docs: List[Document] = []
+14 +     docs: list[Document] = []
+15 |     tokenized_corpus: List[List[str]] = []
+   |
+
+RUF012 Mutable default value for class attribute
+  --> src\bm25_retriever.py:14:28
+   |
+13 |     bm25: BM25Okapi = None
+14 |     docs: List[Document] = []
+   |                            ^^
+15 |     tokenized_corpus: List[List[str]] = []
+   |
+help: Consider initializing in `__init__` or annotating with `typing.ClassVar`
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\bm25_retriever.py:15:23
+   |
+13 |     bm25: BM25Okapi = None
+14 |     docs: List[Document] = []
+15 |     tokenized_corpus: List[List[str]] = []
+   |                       ^^^^
+16 |     
+17 |     class Config:
+   |
+help: Replace with `list`
+   |
+14 |     docs: List[Document] = []
+   -     tokenized_corpus: List[List[str]] = []
+15 +     tokenized_corpus: list[List[str]] = []
+16 |     
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\bm25_retriever.py:15:28
+   |
+13 |     bm25: BM25Okapi = None
+14 |     docs: List[Document] = []
+15 |     tokenized_corpus: List[List[str]] = []
+   |                            ^^^^
+16 |     
+17 |     class Config:
+   |
+help: Replace with `list`
+   |
+14 |     docs: List[Document] = []
+   -     tokenized_corpus: List[List[str]] = []
+15 +     tokenized_corpus: List[list[str]] = []
+16 |     
+   |
+
+RUF012 Mutable default value for class attribute
+  --> src\bm25_retriever.py:15:41
+   |
+13 |     bm25: BM25Okapi = None
+14 |     docs: List[Document] = []
+15 |     tokenized_corpus: List[List[str]] = []
+   |                                         ^^
+16 |     
+17 |     class Config:
+   |
+help: Consider initializing in `__init__` or annotating with `typing.ClassVar`
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\bm25_retriever.py:20:39
+   |
+18 |         arbitrary_types_allowed = True
+19 |     
+20 |     def _tokenize(self, text: str) -> List[str]:
+   |                                       ^^^^
+21 |         """Simple whitespace + lowercase tokenization."""
+22 |         return text.lower().split()
+   |
+help: Replace with `list`
+   |
+19 |     
+   -     def _tokenize(self, text: str) -> List[str]:
+20 +     def _tokenize(self, text: str) -> list[str]:
+21 |         """Simple whitespace + lowercase tokenization."""
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\bm25_retriever.py:24:39
+   |
+22 |         return text.lower().split()
+23 |     
+24 |     def _build_index(self, documents: List[Document]):
+   |                                       ^^^^
+25 |         """Build BM25 index from documents."""
+26 |         self.docs = documents
+   |
+help: Replace with `list`
+   |
+23 |     
+   -     def _build_index(self, documents: List[Document]):
+24 +     def _build_index(self, documents: list[Document]):
+25 |         """Build BM25 index from documents."""
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\bm25_retriever.py:30:54
+   |
+28 |         self.bm25 = BM25Okapi(self.tokenized_corpus)
+29 |     
+30 |     def _get_relevant_documents(self, query: str) -> List[Document]:
+   |                                                      ^^^^
+31 |         """Retrieve top-k documents using BM25."""
+32 |         if self.bm25 is None:
+   |
+help: Replace with `list`
+   |
+29 |     
+   -     def _get_relevant_documents(self, query: str) -> List[Document]:
+30 +     def _get_relevant_documents(self, query: str) -> list[Document]:
+31 |         """Retrieve top-k documents using BM25."""
+   |
+
+PERF102 When using only the values of a dict use the `values()` method
+  --> src\bm25_retriever.py:51:24
+   |
+50 |     docs = []
+51 |     for doc_id, doc in docstore['docs'].items():
+   |                        ^^^^^^^^^^^^^^^^^^^^^^
+52 |         text = doc.get('text', '')
+53 |         metadata = doc.get('metadata', {})
+   |
+help: Replace `.items()` with `.values()`
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\cag.py:2:1
+  |
+1 |   """Cache-Augmented Generation (CAG) context cache for NES and high-frequency Award clauses."""
+2 | / import os
+3 | | from config import NES_KEYWORDS, TOPIC_KEYWORDS
+  | |_______________________________________________^
+  |
+help: Organize imports
+  |
+2 | import os
+3 +
+4 | from config import NES_KEYWORDS, TOPIC_KEYWORDS
+  -
+5 |
+  |
+
+F401 [*] `config.TOPIC_KEYWORDS` imported but unused
+ --> src\cag.py:3:34
+  |
+1 | """Cache-Augmented Generation (CAG) context cache for NES and high-frequency Award clauses."""
+2 | import os
+3 | from config import NES_KEYWORDS, TOPIC_KEYWORDS
+  |                                  ^^^^^^^^^^^^^^
+  |
+help: Remove unused import: `config.TOPIC_KEYWORDS`
+  |
+2 | import os
+  - from config import NES_KEYWORDS, TOPIC_KEYWORDS
+3 + from config import NES_KEYWORDS
+4 |
+  |
+
+UP035 `typing.List` is deprecated, use `list` instead
+ --> src\fastembeddings.py:2:1
+  |
+1 | """FastEmbed embeddings wrapper for LangChain."""
+2 | from typing import List
+  | ^^^^^^^^^^^^^^^^^^^^^^^
+3 | from langchain_core.embeddings import Embeddings
+4 | from fastembed import TextEmbedding
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\fastembeddings.py:2:1
+  |
+1 |   """FastEmbed embeddings wrapper for LangChain."""
+2 | / from typing import List
+3 | | from langchain_core.embeddings import Embeddings
+4 | | from fastembed import TextEmbedding
+  | |___________________________________^
+  |
+help: Organize imports
+  |
+2 | from typing import List
+  - from langchain_core.embeddings import Embeddings
+3 +
+4 | from fastembed import TextEmbedding
+5 + from langchain_core.embeddings import Embeddings
+6 |
+  |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\fastembeddings.py:13:38
+   |
+11 |         self.model = TextEmbedding(model_name=model_name)
+12 |
+13 |     def embed_documents(self, texts: List[str]) -> List[List[float]]:
+   |                                      ^^^^
+14 |         return [vec.tolist() for vec in self.model.embed(texts)]
+   |
+help: Replace with `list`
+   |
+12 |
+   -     def embed_documents(self, texts: List[str]) -> List[List[float]]:
+13 +     def embed_documents(self, texts: list[str]) -> List[List[float]]:
+14 |         return [vec.tolist() for vec in self.model.embed(texts)]
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\fastembeddings.py:13:52
+   |
+11 |         self.model = TextEmbedding(model_name=model_name)
+12 |
+13 |     def embed_documents(self, texts: List[str]) -> List[List[float]]:
+   |                                                    ^^^^
+14 |         return [vec.tolist() for vec in self.model.embed(texts)]
+   |
+help: Replace with `list`
+   |
+12 |
+   -     def embed_documents(self, texts: List[str]) -> List[List[float]]:
+13 +     def embed_documents(self, texts: List[str]) -> list[List[float]]:
+14 |         return [vec.tolist() for vec in self.model.embed(texts)]
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\fastembeddings.py:13:57
+   |
+11 |         self.model = TextEmbedding(model_name=model_name)
+12 |
+13 |     def embed_documents(self, texts: List[str]) -> List[List[float]]:
+   |                                                         ^^^^
+14 |         return [vec.tolist() for vec in self.model.embed(texts)]
+   |
+help: Replace with `list`
+   |
+12 |
+   -     def embed_documents(self, texts: List[str]) -> List[List[float]]:
+13 +     def embed_documents(self, texts: List[str]) -> List[list[float]]:
+14 |         return [vec.tolist() for vec in self.model.embed(texts)]
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\fastembeddings.py:16:41
+   |
+14 |         return [vec.tolist() for vec in self.model.embed(texts)]
+15 |
+16 |     def embed_query(self, text: str) -> List[float]:
+   |                                         ^^^^
+17 |         return next(iter(self.model.embed([text]))).tolist()
+   |
+help: Replace with `list`
+   |
+15 |
+   -     def embed_query(self, text: str) -> List[float]:
+16 +     def embed_query(self, text: str) -> list[float]:
+17 |         return next(iter(self.model.embed([text]))).tolist()
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\filtered_retriever.py:2:1
+  |
+1 |   """Filtered retriever for award-specific queries."""
+2 | / import re
+3 | | import json
+4 | | from typing import List, Optional
+5 | | from langchain_core.retrievers import BaseRetriever
+6 | | from langchain_core.documents import Document
+7 | | from config import AWARD_PATTERNS, TOPIC_KEYWORDS
+  | |_________________________________________________^
+  |
+help: Organize imports
+  |
+1 | """Filtered retriever for award-specific queries."""
+2 + import json
+3 | import re
+  - import json
+4 | from typing import List, Optional
+5 +
+6 + from langchain_core.documents import Document
+7 | from langchain_core.retrievers import BaseRetriever
+  - from langchain_core.documents import Document
+8 +
+9 | from config import AWARD_PATTERNS, TOPIC_KEYWORDS
+  |
+
+UP035 `typing.List` is deprecated, use `list` instead
+ --> src\filtered_retriever.py:4:1
+  |
+2 | import re
+3 | import json
+4 | from typing import List, Optional
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+5 | from langchain_core.retrievers import BaseRetriever
+6 | from langchain_core.documents import Document
+  |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\filtered_retriever.py:14:15
+   |
+13 |     docstore_path: str = ""
+14 |     all_docs: List[Document] = []
+   |               ^^^^
+15 |     
+16 |     class Config:
+   |
+help: Replace with `list`
+   |
+13 |     docstore_path: str = ""
+   -     all_docs: List[Document] = []
+14 +     all_docs: list[Document] = []
+15 |     
+   |
+
+RUF012 Mutable default value for class attribute
+  --> src\filtered_retriever.py:14:32
+   |
+13 |     docstore_path: str = ""
+14 |     all_docs: List[Document] = []
+   |                                ^^
+15 |     
+16 |     class Config:
+   |
+help: Consider initializing in `__init__` or annotating with `typing.ClassVar`
+
+PERF102 When using only the values of a dict use the `values()` method
+  --> src\filtered_retriever.py:27:28
+   |
+25 |             docstore = json.load(f)
+26 |         
+27 |         for doc_id, doc in docstore['docs'].items():
+   |                            ^^^^^^^^^^^^^^^^^^^^^^
+28 |             text = doc.get('text', '')
+29 |             metadata = doc.get('metadata', {})
+   |
+help: Replace `.items()` with `.values()`
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\filtered_retriever.py:32:54
+   |
+30 |             self.all_docs.append(Document(page_content=text, metadata=metadata))
+31 |     
+32 |     def _get_relevant_documents(self, query: str) -> List[Document]:
+   |                                                      ^^^^
+33 |         """Retrieve documents filtered by award name or general topic."""
+34 |         self._load_docs()
+   |
+help: Replace with `list`
+   |
+31 |     
+   -     def _get_relevant_documents(self, query: str) -> List[Document]:
+32 +     def _get_relevant_documents(self, query: str) -> list[Document]:
+33 |         """Retrieve documents filtered by award name or general topic."""
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\filtered_retriever.py:79:68
+   |
+77 |         return award_docs[:20]
+78 |     
+79 |     def _general_topic_retrieval(self, query: str, topic_keywords: List[str]) -> List[Document]:
+   |                                                                    ^^^^
+80 |         """Retrieve documents for general topics without specific award.
+   |
+help: Replace with `list`
+   |
+78 |     
+   -     def _general_topic_retrieval(self, query: str, topic_keywords: List[str]) -> List[Document]:
+79 +     def _general_topic_retrieval(self, query: str, topic_keywords: list[str]) -> List[Document]:
+80 |         """Retrieve documents for general topics without specific award.
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\filtered_retriever.py:79:82
+   |
+77 |         return award_docs[:20]
+78 |     
+79 |     def _general_topic_retrieval(self, query: str, topic_keywords: List[str]) -> List[Document]:
+   |                                                                                  ^^^^
+80 |         """Retrieve documents for general topics without specific award.
+   |
+help: Replace with `list`
+   |
+78 |     
+   -     def _general_topic_retrieval(self, query: str, topic_keywords: List[str]) -> List[Document]:
+79 +     def _general_topic_retrieval(self, query: str, topic_keywords: List[str]) -> list[Document]:
+80 |         """Retrieve documents for general topics without specific award.
+   |
+
+UP045 [*] Use `X | None` for type annotations
+   --> src\filtered_retriever.py:135:50
+    |
+133 |         return diverse_docs
+134 |     
+135 |     def _extract_award_name(self, query: str) -> Optional[str]:
+    |                                                  ^^^^^^^^^^^^^
+136 |         """Extract award name from query."""
+137 |         q = query.lower()
+    |
+help: Convert to `X | None`
+    |
+134 |     
+    -     def _extract_award_name(self, query: str) -> Optional[str]:
+135 +     def _extract_award_name(self, query: str) -> str | None:
+136 |         """Extract award name from query."""
+    |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+   --> src\filtered_retriever.py:143:54
+    |
+141 |         return None
+142 |     
+143 |     def _extract_topic_keywords(self, query: str) -> List[str]:
+    |                                                      ^^^^
+144 |         """Extract topic keywords from query."""
+145 |         q = query.lower()
+    |
+help: Replace with `list`
+    |
+142 |     
+    -     def _extract_topic_keywords(self, query: str) -> List[str]:
+143 +     def _extract_topic_keywords(self, query: str) -> list[str]:
+144 |         """Extract topic keywords from query."""
+    |
+
+UP035 `typing.List` is deprecated, use `list` instead
+ --> src\hybrid_retriever.py:2:1
+  |
+1 | """Hybrid retriever combining BM25 + Semantic search with RRF."""
+2 | from typing import List
+  | ^^^^^^^^^^^^^^^^^^^^^^^
+3 | from langchain_core.retrievers import BaseRetriever
+4 | from langchain_core.documents import Document
+  |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\hybrid_retriever.py:2:1
+  |
+1 |   """Hybrid retriever combining BM25 + Semantic search with RRF."""
+2 | / from typing import List
+3 | | from langchain_core.retrievers import BaseRetriever
+4 | | from langchain_core.documents import Document
+5 | | from bm25_retriever import BM25Retriever
+  | |________________________________________^
+  |
+help: Organize imports
+  |
+2 | from typing import List
+3 +
+4 + from langchain_core.documents import Document
+5 | from langchain_core.retrievers import BaseRetriever
+  - from langchain_core.documents import Document
+6 +
+7 | from bm25_retriever import BM25Retriever
+  |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\hybrid_retriever.py:19:53
+   |
+17 |         arbitrary_types_allowed = True
+18 |     
+19 |     def _reciprocal_rank_fusion(self, ranked_lists: List[List[Document]]) -> List[Document]:
+   |                                                     ^^^^
+20 |         """Fuse multiple ranked lists using Reciprocal Rank Fusion."""
+21 |         doc_scores = {}
+   |
+help: Replace with `list`
+   |
+18 |     
+   -     def _reciprocal_rank_fusion(self, ranked_lists: List[List[Document]]) -> List[Document]:
+19 +     def _reciprocal_rank_fusion(self, ranked_lists: list[List[Document]]) -> List[Document]:
+20 |         """Fuse multiple ranked lists using Reciprocal Rank Fusion."""
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\hybrid_retriever.py:19:58
+   |
+17 |         arbitrary_types_allowed = True
+18 |     
+19 |     def _reciprocal_rank_fusion(self, ranked_lists: List[List[Document]]) -> List[Document]:
+   |                                                          ^^^^
+20 |         """Fuse multiple ranked lists using Reciprocal Rank Fusion."""
+21 |         doc_scores = {}
+   |
+help: Replace with `list`
+   |
+18 |     
+   -     def _reciprocal_rank_fusion(self, ranked_lists: List[List[Document]]) -> List[Document]:
+19 +     def _reciprocal_rank_fusion(self, ranked_lists: List[list[Document]]) -> List[Document]:
+20 |         """Fuse multiple ranked lists using Reciprocal Rank Fusion."""
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\hybrid_retriever.py:19:78
+   |
+17 |         arbitrary_types_allowed = True
+18 |     
+19 |     def _reciprocal_rank_fusion(self, ranked_lists: List[List[Document]]) -> List[Document]:
+   |                                                                              ^^^^
+20 |         """Fuse multiple ranked lists using Reciprocal Rank Fusion."""
+21 |         doc_scores = {}
+   |
+help: Replace with `list`
+   |
+18 |     
+   -     def _reciprocal_rank_fusion(self, ranked_lists: List[List[Document]]) -> List[Document]:
+19 +     def _reciprocal_rank_fusion(self, ranked_lists: List[List[Document]]) -> list[Document]:
+20 |         """Fuse multiple ranked lists using Reciprocal Rank Fusion."""
+   |
+
+UP006 [*] Use `list` instead of `List` for type annotation
+  --> src\hybrid_retriever.py:41:54
+   |
+39 |         return [doc_map[key] for key in sorted_keys[:self.k]]
+40 |     
+41 |     def _get_relevant_documents(self, query: str) -> List[Document]:
+   |                                                      ^^^^
+42 |         """Retrieve documents using hybrid search."""
+43 |         results = []
+   |
+help: Replace with `list`
+   |
+40 |     
+   -     def _get_relevant_documents(self, query: str) -> List[Document]:
+41 +     def _get_relevant_documents(self, query: str) -> list[Document]:
+42 |         """Retrieve documents using hybrid search."""
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\ingest.py:2:1
+  |
+1 |   """PDF + NES ingestion pipeline for Fair Work Awards — optimized for 122+ PDFs."""
+2 | / import os
+3 | | import re
+4 | | import json
+5 | | import pdfplumber
+6 | | from concurrent.futures import ProcessPoolExecutor, as_completed
+7 | | from langchain_core.documents import Document
+  | |_____________________________________________^
+  |
+help: Organize imports
+  |
+1 | """PDF + NES ingestion pipeline for Fair Work Awards — optimized for 122+ PDFs."""
+2 + import json
+3 | import os
+4 | import re
+  - import json
+5 + from concurrent.futures import ProcessPoolExecutor, as_completed
+6 +
+7 | import pdfplumber
+  - from concurrent.futures import ProcessPoolExecutor, as_completed
+8 | from langchain_core.documents import Document
+  -
+9 |
+  |
+
+F401 [*] `json` imported but unused
+ --> src\ingest.py:4:8
+  |
+2 | import os
+3 | import re
+4 | import json
+  |        ^^^^
+5 | import pdfplumber
+6 | from concurrent.futures import ProcessPoolExecutor, as_completed
+  |
+help: Remove unused import: `json`
+  |
+3 | import re
+  - import json
+4 | import pdfplumber
+  |
+
+F401 [*] `concurrent.futures.ProcessPoolExecutor` imported but unused
+ --> src\ingest.py:6:32
+  |
+4 | import json
+5 | import pdfplumber
+6 | from concurrent.futures import ProcessPoolExecutor, as_completed
+  |                                ^^^^^^^^^^^^^^^^^^^
+7 | from langchain_core.documents import Document
+  |
+help: Remove unused import
+  |
+5 | import pdfplumber
+  - from concurrent.futures import ProcessPoolExecutor, as_completed
+6 | from langchain_core.documents import Document
+  |
+
+F401 [*] `concurrent.futures.as_completed` imported but unused
+ --> src\ingest.py:6:53
+  |
+4 | import json
+5 | import pdfplumber
+6 | from concurrent.futures import ProcessPoolExecutor, as_completed
+  |                                                     ^^^^^^^^^^^^
+7 | from langchain_core.documents import Document
+  |
+help: Remove unused import
+  |
+5 | import pdfplumber
+  - from concurrent.futures import ProcessPoolExecutor, as_completed
+6 | from langchain_core.documents import Document
+  |
+
+BLE001 Do not catch blind exception: `Exception`
+   --> src\ingest.py:383:16
+    |
+381 |             if (idx + 1) % 10 == 0:
+382 |                 print(f"  [{idx+1}/{len(pdf_files)}] {pdf_file}: {len(docs)} chunks (total: {len(all_docs)})")
+383 |         except Exception as e:
+    |                ^^^^^^^^^
+384 |             print(f"  ERROR {pdf_file}: {e}")
+    |
+
+F541 [*] f-string without any placeholders
+   --> src\ingest.py:390:15
+    |
+388 |     # Process NES
+389 |     if os.path.exists(nes_path):
+390 |         print(f"Processing NES...")
+    |               ^^^^^^^^^^^^^^^^^^^^
+391 |         nes_docs = nes_text_to_documents(nes_path)
+392 |         all_docs.extend(nes_docs)
+    |
+help: Remove extraneous `f` prefix
+    |
+389 |     if os.path.exists(nes_path):
+    -         print(f"Processing NES...")
+390 +         print("Processing NES...")
+391 |         nes_docs = nes_text_to_documents(nes_path)
+    |
+
+F541 [*] f-string without any placeholders
+   --> src\ingest.py:417:15
+    |
+415 |     # Show sample
+416 |     if docs:
+417 |         print(f"\nSample chunk:")
+    |               ^^^^^^^^^^^^^^^^^^
+418 |         print(f"  Award: {docs[0].metadata['award_name']}")
+419 |         print(f"  Clause: {docs[0].metadata['clause_number']}")
+    |
+help: Remove extraneous `f` prefix
+    |
+416 |     if docs:
+    -         print(f"\nSample chunk:")
+417 +         print("\nSample chunk:")
+418 |         print(f"  Award: {docs[0].metadata['award_name']}")
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src\rag.py:2:1
+   |
+ 1 |   """RAG chain with Groq LLM for Fair Work Awards & NES Q&A."""
+ 2 | / import os
+ 3 | | from typing import Optional
+ 4 | | from dotenv import load_dotenv
+ 5 | | from langchain_groq import ChatGroq
+ 6 | | from langchain_core.prompts import ChatPromptTemplate
+ 7 | | from langchain_core.output_parsers import StrOutputParser
+ 8 | | from langchain_core.runnables import RunnablePassthrough
+ 9 | | from vectorstore import load_vectorstore
+10 | | from bm25_retriever import build_bm25_retriever_from_docstore
+11 | | from hybrid_retriever import HybridRetriever
+12 | | from filtered_retriever import AwardFilteredRetriever
+13 | | from config import AWARD_PATTERNS, TOPIC_KEYWORDS, detect_award, detect_topic
+   | |_____________________________________________________________________________^
+   |
+help: Organize imports
+   |
+3  | from typing import Optional
+4  +
+5  | from dotenv import load_dotenv
+   - from langchain_groq import ChatGroq
+6  + from langchain_core.output_parsers import StrOutputParser
+7  | from langchain_core.prompts import ChatPromptTemplate
+   - from langchain_core.output_parsers import StrOutputParser
+8  | from langchain_core.runnables import RunnablePassthrough
+   - from vectorstore import load_vectorstore
+9  + from langchain_groq import ChatGroq
+10 +
+11 | from bm25_retriever import build_bm25_retriever_from_docstore
+12 + from config import AWARD_PATTERNS, TOPIC_KEYWORDS, detect_award, detect_topic
+13 + from filtered_retriever import AwardFilteredRetriever
+14 | from hybrid_retriever import HybridRetriever
+   - from filtered_retriever import AwardFilteredRetriever
+   - from config import AWARD_PATTERNS, TOPIC_KEYWORDS, detect_award, detect_topic
+   -
+15 + from vectorstore import load_vectorstore
+16 |
+   |
+
+F841 Local variable `AWARD_KEYWORDS` is assigned to but never used
+   --> src\rag.py:158:5
+    |
+157 |     # Award name mapping for filtering (from shared config)
+158 |     AWARD_KEYWORDS = AWARD_PATTERNS
+    |     ^^^^^^^^^^^^^^
+159 |     
+160 |     def detect_award_filter(question: str) -> Optional[str]:
+    |
+help: Remove assignment to unused variable `AWARD_KEYWORDS`
+
+UP045 [*] Use `X | None` for type annotations
+   --> src\rag.py:160:47
+    |
+158 |     AWARD_KEYWORDS = AWARD_PATTERNS
+159 |     
+160 |     def detect_award_filter(question: str) -> Optional[str]:
+    |                                               ^^^^^^^^^^^^^
+161 |         """Detect if question mentions a specific Award."""
+162 |         return detect_award(question)
+    |
+help: Convert to `X | None`
+    |
+159 |     
+    -     def detect_award_filter(question: str) -> Optional[str]:
+160 +     def detect_award_filter(question: str) -> str | None:
+161 |         """Detect if question mentions a specific Award."""
+    |
+
+F841 Local variable `TOPIC_KEYWORDS_MAP` is assigned to but never used
+   --> src\rag.py:165:5
+    |
+164 |     # Topic keywords for general questions (from shared config)
+165 |     TOPIC_KEYWORDS_MAP = TOPIC_KEYWORDS
+    |     ^^^^^^^^^^^^^^^^^^
+166 |     
+167 |     def detect_topic_filter(question: str) -> Optional[str]:
+    |
+help: Remove assignment to unused variable `TOPIC_KEYWORDS_MAP`
+
+UP045 [*] Use `X | None` for type annotations
+   --> src\rag.py:167:47
+    |
+165 |     TOPIC_KEYWORDS_MAP = TOPIC_KEYWORDS
+166 |     
+167 |     def detect_topic_filter(question: str) -> Optional[str]:
+    |                                               ^^^^^^^^^^^^^
+168 |         """Detect if question is about a general topic."""
+169 |         return detect_topic(question)
+    |
+help: Convert to `X | None`
+    |
+166 |     
+    -     def detect_topic_filter(question: str) -> Optional[str]:
+167 +     def detect_topic_filter(question: str) -> str | None:
+168 |         """Detect if question is about a general topic."""
+    |
+
+F541 [*] f-string without any placeholders
+   --> src\rag.py:213:19
+    |
+211 |     except Exception as e:
+212 |         if "429" in str(e) or "rate_limit" in str(e) or "413" in str(e):
+213 |             print(f"Rate limit hit, retrying with fallback model (smaller context)...")
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+214 |             # Rebuild chain with fallback model and smaller k
+215 |             from langchain_groq import ChatGroq
+    |
+help: Remove extraneous `f` prefix
+    |
+212 |         if "429" in str(e) or "rate_limit" in str(e) or "413" in str(e):
+    -             print(f"Rate limit hit, retrying with fallback model (smaller context)...")
+213 +             print("Rate limit hit, retrying with fallback model (smaller context)...")
+214 |             # Rebuild chain with fallback model and smaller k
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+   --> src\rag.py:215:13
+    |
+213 |               print(f"Rate limit hit, retrying with fallback model (smaller context)...")
+214 |               # Rebuild chain with fallback model and smaller k
+215 | /             from langchain_groq import ChatGroq
+216 | |             from langchain_core.prompts import ChatPromptTemplate
+217 | |             from langchain_core.output_parsers import StrOutputParser
+    | |_____________________________________________________________________^
+218 |               
+219 |               fallback_llm = get_llm(fallback=True)
+    |
+help: Organize imports
+    |
+214 |             # Rebuild chain with fallback model and smaller k
+215 +             from langchain_core.output_parsers import StrOutputParser
+216 +             from langchain_core.prompts import ChatPromptTemplate
+217 |             from langchain_groq import ChatGroq
+    -             from langchain_core.prompts import ChatPromptTemplate
+    -             from langchain_core.output_parsers import StrOutputParser
+218 |             
+    |
+
+F401 [*] `langchain_groq.ChatGroq` imported but unused
+   --> src\rag.py:215:40
+    |
+213 |             print(f"Rate limit hit, retrying with fallback model (smaller context)...")
+214 |             # Rebuild chain with fallback model and smaller k
+215 |             from langchain_groq import ChatGroq
+    |                                        ^^^^^^^^
+216 |             from langchain_core.prompts import ChatPromptTemplate
+217 |             from langchain_core.output_parsers import StrOutputParser
+    |
+help: Remove unused import: `langchain_groq.ChatGroq`
+    |
+214 |             # Rebuild chain with fallback model and smaller k
+    -             from langchain_groq import ChatGroq
+215 |             from langchain_core.prompts import ChatPromptTemplate
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\router.py:2:1
+  |
+1 |   """Query router for hybrid CAG+RAG architecture."""
+2 | / from enum import Enum
+3 | | from dataclasses import dataclass
+4 | | from typing import Optional
+5 | | from config import AWARD_PATTERNS, NES_KEYWORDS, has_nes_keywords, detect_award
+  | |_______________________________________________________________________________^
+  |
+help: Organize imports
+  |
+1 | """Query router for hybrid CAG+RAG architecture."""
+2 + from dataclasses import dataclass
+3 | from enum import Enum
+  - from dataclasses import dataclass
+4 | from typing import Optional
+  - from config import AWARD_PATTERNS, NES_KEYWORDS, has_nes_keywords, detect_award
+5 |
+6 + from config import AWARD_PATTERNS, NES_KEYWORDS, detect_award, has_nes_keywords
+7 +
+8 |
+  |
+
+F401 [*] `config.AWARD_PATTERNS` imported but unused
+ --> src\router.py:5:20
+  |
+3 | from dataclasses import dataclass
+4 | from typing import Optional
+5 | from config import AWARD_PATTERNS, NES_KEYWORDS, has_nes_keywords, detect_award
+  |                    ^^^^^^^^^^^^^^
+  |
+help: Remove unused import
+  |
+4 | from typing import Optional
+  - from config import AWARD_PATTERNS, NES_KEYWORDS, has_nes_keywords, detect_award
+5 + from config import has_nes_keywords, detect_award
+6 |
+  |
+
+F401 [*] `config.NES_KEYWORDS` imported but unused
+ --> src\router.py:5:36
+  |
+3 | from dataclasses import dataclass
+4 | from typing import Optional
+5 | from config import AWARD_PATTERNS, NES_KEYWORDS, has_nes_keywords, detect_award
+  |                                    ^^^^^^^^^^^^
+  |
+help: Remove unused import
+  |
+4 | from typing import Optional
+  - from config import AWARD_PATTERNS, NES_KEYWORDS, has_nes_keywords, detect_award
+5 + from config import has_nes_keywords, detect_award
+6 |
+  |
+
+UP045 [*] Use `X | None` for type annotations
+  --> src\router.py:19:19
+   |
+17 |     confidence: float
+18 |     reasoning: str
+19 |     award_filter: Optional[str] = None  # For RAG: filter to specific Award
+   |                   ^^^^^^^^^^^^^
+   |
+help: Convert to `X | None`
+   |
+18 |     reasoning: str
+   -     award_filter: Optional[str] = None  # For RAG: filter to specific Award
+19 +     award_filter: str | None = None  # For RAG: filter to specific Award
+20 |
+   |
+
+I001 [*] Import block is un-sorted or un-formatted
+ --> src\vectorstore.py:2:1
+  |
+1 |   """TurboVec vector store management for Fair Work Awards."""
+2 | / import json
+3 | | import os
+4 | | from pathlib import Path
+5 | | from fastembeddings import FastEmbedEmbeddings
+6 | | from turbovec.langchain import TurboQuantVectorStore
+7 | | from ingest import ingest_all
+  | |_____________________________^
+  |
+help: Organize imports
+  |
+4 | from pathlib import Path
+5 +
+6 + from turbovec.langchain import TurboQuantVectorStore
+7 +
+8 | from fastembeddings import FastEmbedEmbeddings
+  - from turbovec.langchain import TurboQuantVectorStore
+9 | from ingest import ingest_all
+  |
+
+RUF013 PEP 484 prohibits implicit `Optional`
+  --> src\vectorstore.py:82:32
+   |
+81 | def search_store(store: TurboQuantVectorStore, query: str, k: int = 5, 
+82 |                  award_filter: str = None) -> list:
+   |                                ^^^
+83 |     """Search the vector store."""
+84 |     if award_filter:
+   |
+help: Convert to `T | None`
+
+Found 90 errors.
+[*] 74 fixable with the `--fix` option (5 hidden fixes can be enabled with the `--unsafe-fixes` option).
