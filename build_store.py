@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build vector store from all award PDFs + NES."""
+"""Build vector store from markdown files (fast) or PDFs (slow)."""
 import os
 import pickle
 import sys
@@ -8,7 +8,6 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "src"))
 
-from ingest import ingest_all
 from fastembeddings import FastEmbedEmbeddings
 from turbovec.langchain import TurboQuantVectorStore
 
@@ -19,13 +18,27 @@ CHECKPOINT_PATH = STORE_DIR / "build_checkpoint.json"
 BATCH_SIZE = int(os.getenv("VECTORSTORE_BATCH_SIZE", "32"))
 CHECKPOINT_EVERY_BATCHES = int(os.getenv("VECTORSTORE_CHECKPOINT_EVERY", "5"))
 
+# Use markdown if available, otherwise PDFs
+MD_DIR = Path("data/md_awards")
+USE_MD = MD_DIR.exists() and len(list(MD_DIR.glob("*.md"))) > 100
+
 if CACHE_PATH.exists():
     print("Step 1: Loading cached docs...", flush=True)
     with CACHE_PATH.open("rb") as f:
         docs = pickle.load(f)
     print(f"  Loaded {len(docs)} cached chunks in {time.time()-start:.0f}s", flush=True)
+elif USE_MD:
+    print("Step 1: Ingesting from markdown (fast)...", flush=True)
+    from scripts.ingest_markdown import ingest_from_md
+    docs = ingest_from_md(str(MD_DIR))
+    CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with CACHE_PATH.open("wb") as f:
+        pickle.dump(docs, f, protocol=pickle.HIGHEST_PROTOCOL)
+    print(f"  Ingested {len(docs)} chunks in {time.time()-start:.0f}s", flush=True)
+    print(f"  Cached docs to {CACHE_PATH}", flush=True)
 else:
-    print("Step 1: Ingesting PDFs + NES...", flush=True)
+    print("Step 1: Ingesting from PDFs (slow)...", flush=True)
+    from ingest import ingest_all
     docs = ingest_all("data/awards", "data/nes/nes_combined.txt")
     CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CACHE_PATH.open("wb") as f:
@@ -44,7 +57,6 @@ if (STORE_DIR / "index.tvim").exists() and (STORE_DIR / "docstore.json").exists(
     store = TurboQuantVectorStore.load(str(STORE_DIR), embedding=emb)
     if CHECKPOINT_PATH.exists():
         import json
-
         checkpoint = json.loads(CHECKPOINT_PATH.read_text())
         start_idx = int(checkpoint.get("next_doc_idx", 0))
     else:
@@ -67,7 +79,6 @@ for batch_no, batch_start in enumerate(range(start_idx, len(docs), BATCH_SIZE), 
     )
     if batch_no % CHECKPOINT_EVERY_BATCHES == 0 or next_idx == len(docs):
         import json
-
         store.dump(str(STORE_DIR))
         CHECKPOINT_PATH.write_text(
             json.dumps(
