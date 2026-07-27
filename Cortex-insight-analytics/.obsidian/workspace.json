@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "efed0a0af760d6c4",
+        "id": "2a575cc914a9b9a8",
         "type": "tabs",
         "children": [
           {
-            "id": "ca895c9ff1bf0a1b",
+            "id": "046b55747974fe0e",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -194,7 +194,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 572.5
+    "width": 603.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -216,10 +216,10 @@
       "publish:Publish changes...": false
     }
   },
-  "active": "d9f679fcc22291f6",
+  "active": "2c04afcea93438f2",
   "lastOpenFiles": [
-    "Key Files.md",
     "Project Overview.md",
+    "Key Files.md",
     "Improvement Progress.md",
     "RAG Chain.md",
     "Dashboard.md",

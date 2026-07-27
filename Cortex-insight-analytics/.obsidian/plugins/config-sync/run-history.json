@@ -1,5 +1,33 @@
 [
   {
+    "at": 1785169212149,
+    "kind": "capture",
+    "remote": null,
+    "status": "ok",
+    "changed": 1,
+    "issues": 0,
+    "desc": "1 item captured",
+    "results": [
+      {
+        "group": "graph",
+        "status": "ok",
+        "filesWritten": [
+          "config-sync/store/configdir/graph.json"
+        ],
+        "filesDeleted": [],
+        "messages": [],
+        "needsAppReload": false,
+        "changes": {
+          "added": [],
+          "updated": [
+            "graph.json"
+          ],
+          "deleted": []
+        }
+      }
+    ]
+  },
+  {
     "at": 1785075849427,
     "kind": "capture",
     "remote": null,
