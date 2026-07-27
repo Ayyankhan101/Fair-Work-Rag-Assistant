@@ -8,7 +8,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "046b55747974fe0e",
+            "id": "8efded04916386e6",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -194,7 +194,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 603.5
+    "width": 560.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -216,7 +216,7 @@
       "publish:Publish changes...": false
     }
   },
-  "active": "2c04afcea93438f2",
+  "active": "8efded04916386e6",
   "lastOpenFiles": [
     "Project Overview.md",
     "Key Files.md",

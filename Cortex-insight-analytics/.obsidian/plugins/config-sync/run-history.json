@@ -1,5 +1,18 @@
 [
   {
+    "at": 1785172758150,
+    "kind": "delete-leftover",
+    "remote": null,
+    "status": "ok",
+    "changed": 1,
+    "issues": 0,
+    "desc": "Deleted 1 leftover store file",
+    "results": [],
+    "deletedFiles": [
+      "configdir/workspace.json"
+    ]
+  },
+  {
     "at": 1785169212149,
     "kind": "capture",
     "remote": null,

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fair Work RAG Assistant - Infrastructure Proposal</title>
+    <style>
+        @page { size: A4; margin: 12mm; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; line-height: 1.3; color: #333; font-size: 9pt; }
+        
+        .cover {
+            height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 50%, #1565c0 100%);
+            color: white; text-align: center; page-break-after: always;
+        }
+        .cover h1 { font-size: 2.2em; margin-bottom: 0.3em; font-weight: 400; }
+        .cover h2 { font-size: 1.3em; font-weight: 300; margin-bottom: 1em; opacity: 0.95; }
+        .cover .subtitle { font-size: 1em; opacity: 0.9; margin-top: 1em; }
+        .cover .date { margin-top: 1.5em; font-size: 0.85em; opacity: 0.8; }
+        
+        .container { max-width: 185mm; margin: 0 auto; }
+        h1 { color: #1a237e; font-size: 1.15em; margin: 0.5em 0 0.3em 0; border-bottom: 2px solid #0d47a1; padding-bottom: 0.15em; page-break-after: avoid; }
+        h2 { color: #0d47a1; font-size: 1em; margin: 0.4em 0 0.2em 0; page-break-after: avoid; }
+        h3 { color: #1565c0; font-size: 0.95em; margin: 0.3em 0 0.15em 0; }
+        p { margin-bottom: 0.4em; }
+        
+        table { width: 100%; border-collapse: collapse; margin: 0.3em 0; font-size: 8.5pt; page-break-inside: avoid; }
+        th, td { border: 1px solid #ddd; padding: 3px 6px; text-align: left; }
+        th { background: #0d47a1; color: white; font-weight: 600; }
+        tr:nth-child(even) { background: #f5f5f5; }
+        tr { page-break-inside: avoid; }
+        
+        .highlight { background: #e3f2fd; border-left: 3px solid #0d47a1; padding: 5px 10px; margin: 0.4em 0; page-break-inside: avoid; }
+        .recommendation { background: #e8f5e9; border-left: 3px solid #2e7d32; padding: 5px 10px; margin: 0.4em 0; page-break-inside: avoid; }
+        .cost-box { background: #f3e5f5; border: 2px solid #7b1fa2; padding: 8px; margin: 0.4em 0; page-break-inside: avoid; }
+        .cost-box h3 { color: #7b1fa2; margin-top: 0; }
+        .total-cost { font-size: 1.1em; font-weight: bold; color: #1a237e; text-align: center; margin: 0.2em 0; }
+        
+        ul { margin: 0.2em 0 0.2em 1.2em; }
+        li { margin-bottom: 0.15em; }
+        .page-break { page-break-before: always; }
+        .footer { margin-top: 0.8em; padding-top: 0.4em; border-top: 1px solid #ddd; font-size: 0.75em; color: #666; text-align: center; }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="cover">
+    <h1>Fair Work RAG Assistant</h1>
+    <h2>Infrastructure & Model Subscription Proposal</h2>
+    <div class="subtitle">GPU Compute, Embedding Models, and LLM Services for Production Deployment</div>
+    <div class="date">Prepared: July 2026 | Version: 1.0 | Classification: Client Confidential</div>
+</div>
+
+<div class="container page-break">
+
+<h1>1. Executive Summary</h1>
+<p>This proposal outlines infrastructure requirements for the Fair Work Awards & NES Knowledge Assistant — a RAG-powered LLM system covering 130 Modern Awards and the National Employment Standards.</p>
+
+<div class="highlight">
+<strong>Key Requirements:</strong>
+<ul>
+    <li><strong>Embedding Model:</strong> Local ONNX inference (CPU, no GPU required)</li>
+    <li><strong>Vector Database:</strong> TurboVec quantized storage (4-bit, CPU)</li>
+    <li><strong>LLM Inference:</strong> Groq API (serverless, pay-per-token)</li>
+    <li><strong>Reranker:</strong> Cohere rerank-english-v3.0 (optional, +67% accuracy)</li>
+</ul>
+</div>
+
+<h1>2. Architecture Overview</h1>
+<table>
+    <tr><th>Component</th><th>Technology</th><th>Deployment</th><th>GPU Required</th></tr>
+    <tr><td><strong>Embeddings</strong></td><td>BAAI/bge-base-en-v1.5 (768-dim)</td><td>Local ONNX Runtime</td><td>No (CPU)</td></tr>
+    <tr><td><strong>Vector DB</strong></td><td>TurboVec (4-bit quantized)</td><td>Local file-based</td><td>No (CPU)</td></tr>
+    <tr><td><strong>LLM (Primary)</strong></td><td>Llama 3.3 70B Versatile</td><td>Groq API (serverless)</td><td>No (API)</td></tr>
+    <tr><td><strong>LLM (Fallback)</strong></td><td>Llama 3.1 8B Instant</td><td>Groq API (serverless)</td><td>No (API)</td></tr>
+    <tr><td><strong>Reranker</strong></td><td>Cohere rerank-english-v3.0</td><td>Optional API</td><td>No (API)</td></tr>
+</table>
+
+<div class="recommendation"><strong>Cost Advantage:</strong> CPU-only inference for embeddings and vector search. LLM handled by Groq's serverless API — no GPU instances required.</div>
+
+<h1>3. GPU & Compute Options</h1>
+
+<h2>Option A: API-Only (Recommended)</h2>
+<table>
+    <tr><th>Component</th><th>Provider</th><th>Pricing</th><th>Monthly*</th></tr>
+    <tr><td><strong>LLM Inference</strong></td><td>Anthropic Claude Sonnet 4.6</td><td>$3.00/M input · $15.00/M output</td><td>$300–$1,500</td></tr>
+    <tr><td><strong>LLM Inference (Alt)</strong></td><td>OpenAI GPT-5.4</td><td>$2.50/M input · $15.00/M output</td><td>$250–$1,000</td></tr>
+    <tr><td><strong>Embeddings</strong></td><td>Local (ONNX)</td><td>Free (CPU)</td><td>$0</td></tr>
+    <tr><td><strong>Vector DB</strong></td><td>Local (TurboVec)</td><td>Free</td><td>$0</td></tr>
+    <tr><td><strong>Reranker</strong></td><td>Cohere rerank-v4.0</td><td>~$0.001/search unit</td><td>$10–$50</td></tr>
+    <tr><td><strong>Server</strong></td><td>Linux VPS</td><td>4 vCPU, 8GB RAM</td><td>$40–$80</td></tr>
+</table>
+<p style="font-size: 7.5pt; color: #666;">*Based on 1,000–5,000 queries/day. Prices as of July 2026.</p>
+
+<div class="cost-box">
+    <h3>Option A: Total Monthly Cost</h3>
+    <div class="total-cost">$350 – $1,630/month</div>
+    <p style="text-align: center; margin: 0; font-size: 8.5pt;">No GPU required. Serverless scaling. Pay-per-use.</p>
+</div>
+
+<h2>Option B: Self-Hosted LLM (If Required)</h2>
+<table>
+    <tr><th>GPU</th><th>VRAM</th><th>Model</th><th>Monthly Cost</th></tr>
+    <tr><td>NVIDIA T4</td><td>16 GB</td><td>Llama 3.1 8B (quantized)</td><td>$500–$800</td></tr>
+    <tr><td>NVIDIA A10G</td><td>24 GB</td><td>Llama 3.1 70B (4-bit)</td><td>$1,500–$2,500</td></tr>
+    <tr><td>NVIDIA A100</td><td>40/80 GB</td><td>Llama 3.3 70B (full)</td><td>$3,000–$6,000</td></tr>
+</table>
+
+</div>
+
+<div class="container page-break">
+
+<h1>4. Embedding Model Options</h1>
+<table>
+    <tr><th>Model</th><th>Dimensions</th><th>Cost</th><th>Notes</th></tr>
+    <tr><td><strong>BAAI/bge-base-en-v1.5</strong> ✓</td><td>768</td><td>Free (local)</td><td>Recommended — MTEB 64.23, ONNX</td></tr>
+    <tr><td>Cohere embed-english-v3.0</td><td>1024</td><td>$0.10/M tokens</td><td>Higher accuracy, cloud-based</td></tr>
+    <tr><td>OpenAI text-embedding-3-small</td><td>1536</td><td>$0.02/M tokens</td><td>Good for general use</td></tr>
+    <tr><td>Sentence Transformers all-MiniLM-L6-v2</td><td>384</td><td>Free (local)</td><td>Smaller, faster, lower accuracy</td></tr>
+</table>
+
+<h1>5. LLM Model Options</h1>
+<table>
+    <tr><th>Provider</th><th>Model</th><th>Input</th><th>Output</th><th>Notes</th></tr>
+    <tr><td><strong>Anthropic</strong> ✓</td><td>Claude Sonnet 4.6</td><td>$3.00/M</td><td>$15.00/M</td><td>Best for legal text, recommended</td></tr>
+    <tr><td><strong>OpenAI</strong> ✓</td><td>GPT-5.4</td><td>$2.50/M</td><td>$15.00/M</td><td>Latest flagship model</td></tr>
+    <tr><td>OpenAI</td><td>GPT-5.4-mini</td><td>$0.75/M</td><td>$4.50/M</td><td>Cost-effective fallback</td></tr>
+    <tr><td>Anthropic</td><td>Claude Haiku 4.5</td><td>$1.00/M</td><td>$5.00/M</td><td>Fast, budget option</td></tr>
+    <tr><td>OpenAI</td><td>GPT-5.4-nano</td><td>$0.20/M</td><td>$1.25/M</td><td>Cheapest option</td></tr>
+</table>
+<p style="font-size: 7.5pt; color: #666;">Prices as of July 2026. GPT-4o legacy pricing may vary.</p>
+
+<h1>6. Cost Analysis by Volume</h1>
+<div class="two-col">
+    <div class="cost-box">
+        <h3>Small (100 queries/day)</h3>
+        <table>
+            <tr><td>LLM API (Claude/GPT-5.4)</td><td>$30</td></tr>
+            <tr><td>Embeddings + Vector DB</td><td>$0</td></tr>
+            <tr><td>Cohere Reranker</td><td>$3</td></tr>
+            <tr><td>VPS</td><td>$20</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>$53/mo</strong></td></tr>
+        </table>
+    </div>
+    <div class="cost-box">
+        <h3>Medium (1,000 queries/day)</h3>
+        <table>
+            <tr><td>LLM API (Claude/GPT-5.4)</td><td>$300</td></tr>
+            <tr><td>Embeddings + Vector DB</td><td>$0</td></tr>
+            <tr><td>Cohere Reranker</td><td>$30</td></tr>
+            <tr><td>VPS</td><td>$40</td></tr>
+            <tr><td><strong>Total</strong></td><td><strong>$370/mo</strong></td></tr>
+        </table>
+    </div>
+</div>
+
+<h1>7. Recommendation</h1>
+<div class="recommendation">
+<table>
+    <tr><th>Component</th><th>Recommendation</th><th>Reason</th></tr>
+    <tr><td><strong>LLM</strong></td><td>Anthropic Claude Sonnet 4.6</td><td>Best for legal text accuracy and compliance</td></tr>
+    <tr><td><strong>LLM (Alt)</strong></td><td>OpenAI GPT-5.4</td><td>Latest flagship, strong alternative</td></tr>
+    <tr><td><strong>Embeddings</strong></td><td>BAAI/bge-base-en-v1.5 (local)</td><td>Free, accurate, no API dependency</td></tr>
+    <tr><td><strong>Vector DB</strong></td><td>TurboVec (local)</td><td>Free, quantized, fast</td></tr>
+    <tr><td><strong>Reranker</strong></td><td>Cohere rerank-v4.0</td><td>+67% retrieval accuracy</td></tr>
+    <tr><td><strong>Server</strong></td><td>4 vCPU, 8GB RAM VPS</td><td>Handles embeddings + vector search</td></tr>
+</table>
+</div>
+
+<h2>Key Benefits</h2>
+<div class="two-col">
+    <div><ul>
+        <li><strong>No GPU Required:</strong> Saves $500–$5,000/month</li>
+        <li><strong>Pay-Per-Use:</strong> Only pay for LLM tokens consumed</li>
+        <li><strong>Fast Inference:</strong> Sub-second responses via Groq</li>
+    </ul></div>
+    <div><ul>
+        <li><strong>Local Embeddings:</strong> Zero API costs, no latency</li>
+        <li><strong>Quantized Storage:</strong> 33K documents in ~50MB</li>
+        <li><strong>Scalable:</strong> Easy to upgrade as volume grows</li>
+    </ul></div>
+</div>
+
+<h2>Implementation Timeline</h2>
+<table>
+    <tr><th>Phase</th><th>Duration</th><th>Deliverables</th></tr>
+    <tr><td><strong>Phase 1</strong></td><td>Week 1</td><td>Infrastructure setup, API keys, environment config</td></tr>
+    <tr><td><strong>Phase 2</strong></td><td>Week 2</td><td>Vectorstore rebuild, embedding model deployment</td></tr>
+    <tr><td><strong>Phase 3</strong></td><td>Week 3</td><td>LLM integration, prompt optimization, testing</td></tr>
+    <tr><td><strong>Phase 4</strong></td><td>Week 4</td><td>UI deployment, evaluation, performance tuning</td></tr>
+</table>
+
+<div class="footer">
+    <strong>Fair Work RAG Assistant</strong> — Infrastructure Proposal | Confidential — July 2026 | Contact: Ayyan Khan
+</div>
+
+</div>
+
+</body>
+</html>
