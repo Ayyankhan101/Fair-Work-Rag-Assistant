@@ -3,7 +3,7 @@
 > RAG-powered LLM assistant for Australian employment law — 130 Modern Awards + National Employment Standards
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Groq](https://img.shields.io/badge/LLM-Groq-orange.svg)](https://groq.com/)
+[![LLM-Claude](https://img.shields.io/badge/LLM-Claude_4.6-7B5EA7.svg)](https://anthropic.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
