@@ -24,3 +24,7 @@ Thumbs.db
 
 # Logs
 *.log
+data/md_awards/
+
+# Node
+.opencode/node_modules/
