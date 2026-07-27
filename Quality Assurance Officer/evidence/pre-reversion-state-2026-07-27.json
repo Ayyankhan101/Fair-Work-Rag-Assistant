@@ -1,0 +1,69 @@
+{
+  "record_type": "qa_branch_pre_reversion_state",
+  "recorded_at": "2026-07-27T15:46:28.9095739+05:00",
+  "branch": "QA",
+  "qa_head": "fb9028a8978393968788038492c7d17af02ed42b",
+  "develop_head_at_audit": "dd3bd45d58f430b6f88a927d7eee6ce1a815098d",
+  "qa_develop_merge_base": "3e91e9e16c7417269242d7ef2f6f04bb6a49efff",
+  "baseline_policy": "The merge base is the protected inherited product baseline. Current develop is four commits ahead and was not merged or copied into QA.",
+  "divergence": {
+    "qa_only_commits": 1,
+    "develop_only_commits": 4
+  },
+  "readme_objects": {
+    "merge_base_original": "2954b27f375aaa7ec884a4d13841236b12777d76",
+    "qa_head": "d23c67ec09c5210d5ae474a02f74ad0c19908741",
+    "pre_reversion_worktree": "9b14f2984b04e67fabdfddb434fd4074d7a62a74"
+  },
+  "pre_reversion_changes": {
+    "unstaged_tracked_files": 20,
+    "unstaged_insertions": 994,
+    "unstaged_deletions": 918,
+    "staged_added_files": 1,
+    "staged_file": "qa/scripts/audit_repository.py",
+    "committed_qa_change_from_merge_base": [
+      "README.md"
+    ]
+  },
+  "recovery_artifacts": [
+    {
+      "path": "Quality Assurance Officer/evidence/pre-reversion-unstaged-product-diff-2026-07-27.patch",
+      "bytes": 122841,
+      "sha256": "8DB087EB9A20D5CEBFDDB057F0EB1AED9286F61940A38D90BF88C743B6C61A12",
+      "scope": "All tracked unstaged changes outside the Quality Assurance Officer folder"
+    },
+    {
+      "path": "Quality Assurance Officer/evidence/pre-reversion-staged-diff-2026-07-27.patch",
+      "bytes": 7785,
+      "sha256": "3B49D5B8AF73133D823BF9D0DC275206DE49628FC2B53116A2F1E72CC669A489",
+      "scope": "The staged repository-audit script"
+    },
+    {
+      "path": "Quality Assurance Officer/evidence/qa-commit-versus-fork-point-2026-07-27.patch",
+      "bytes": 384,
+      "sha256": "B8B7529C8A65814549861876DBFF52129C5FBDDD1814D9955DDB741D444558C5",
+      "scope": "The committed QA README banner compared with the merge base"
+    }
+  ],
+  "qa_source_hashes_before_relocation": {
+    "qa/scripts/audit_repository.py": "379A6D396D05D6C872120646567142082E8D83CEE562116131B5F51BCCC9F360",
+    "qa/scripts/check_documentation_style.py": "760EDCD0BE57100097EACBC2263D9F9C091F11898449718407AD788A1B623307",
+    "tests/__init__.py": "E02AC2713825B0E7EE0FF3C95E268536900EBC88CD9CE1FC746B8C5A579B4768",
+    "tests/test_cag.py": "AC78E2C625E55BA885D18BB87865A7630A174D0AAA4DC0AB756549A2D4E4F06C",
+    "tests/test_config_router.py": "E977858269D901573337EA82B600B1166A5DAA643C3AA57019A4A9A6C8524F47",
+    "tests/test_prompt_safety.py": "B8371CDF9F456E52D10F8A74AE439462EDA3FA5DDD8CA30033E715A1169C0FA4"
+  },
+  "develop_changes_not_imported": [
+    ".gitignore",
+    "build_store.py",
+    "scripts/convert_pdfs_to_markdown.py",
+    "scripts/ingest_markdown.py",
+    "src/ingest.py",
+    "src/rag.py"
+  ],
+  "limitations": [
+    "Untracked QA source files are preserved by relocation and hashes rather than by the tracked Git patch.",
+    "Generated Python bytecode is non-source evidence and is moved out of the repository during cleanup.",
+    "This record does not claim that the current develop head is the QA branch baseline."
+  ]
+}

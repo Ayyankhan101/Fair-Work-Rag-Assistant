@@ -1,0 +1,127 @@
+{
+  "record_type": "qa_branch_post_cleanup_state",
+  "recorded_at": "2026-07-27T16:02:58.1063232+05:00",
+  "branch": "QA",
+  "qa_head": "fb9028a8978393968788038492c7d17af02ed42b",
+  "develop_head_at_verification": "dd3bd45d58f430b6f88a927d7eee6ce1a815098d",
+  "protected_merge_base": "3e91e9e16c7417269242d7ef2f6f04bb6a49efff",
+  "verification": {
+    "changed_paths_outside_qa_folder_vs_merge_base": [],
+    "changed_paths_outside_qa_folder_vs_qa_head": [
+      "README.md"
+    ],
+    "readme_worktree_object": "2954b27f375aaa7ec884a4d13841236b12777d76",
+    "readme_merge_base_object": "2954b27f375aaa7ec884a4d13841236b12777d76",
+    "readme_matches_original": true,
+    "staged_paths": [],
+    "root_tests_directory_exists": false,
+    "root_qa_directory_exists": false,
+    "ignored_generated_paths_outside_qa_folder": []
+  },
+  "latest_execution": {
+    "python_ast_parse": {
+      "passed": 29,
+      "total": 29
+    },
+    "unit_methods": {
+      "passed": 2,
+      "total": 16,
+      "runner_failure_records": 14,
+      "runner_errors": 4,
+      "exit_code": 1
+    },
+    "declared_dependency_import": {
+      "passed": false,
+      "exit_code": 1,
+      "failure": "ModuleNotFoundError: No module named 'rank_bm25'"
+    },
+    "natural_windows_request_matrix": {
+      "passed": false,
+      "requests_reached": 0,
+      "exit_code": 1,
+      "failure": "UnicodeDecodeError while reading the NES text"
+    },
+    "forced_utf8_diagnostic_matrix": {
+      "qualifying_release_evidence": false,
+      "cases": 60,
+      "diagnostic_passes": 31,
+      "diagnostic_failures": 29,
+      "route": "58/60",
+      "award_detection": "25/38",
+      "topic_detection": "39/47",
+      "expected_award_in_context": "22/36",
+      "clarification": "0/9",
+      "chain_execution_with_capture_model": "60/60"
+    },
+    "repository_audit": {
+      "release_blocked": true,
+      "missing_official_award_ids": [
+        "MA000095",
+        "MA000121"
+      ],
+      "duplicate_text_groups": 388,
+      "duplicate_extra_chunks": 1251
+    },
+    "product_ruff": {
+      "version": "0.16.0",
+      "check_exit_code": 1,
+      "findings": 90,
+      "format_exit_code": 1,
+      "files_requiring_format": 17,
+      "files_checked_for_format": 18
+    },
+    "qa_ruff": {
+      "check_exit_code": 0,
+      "format_exit_code": 0,
+      "files_checked": 11
+    },
+    "qa_documentation_style": {
+      "exit_code": 0,
+      "markdown_files": 47
+    },
+    "live_provider_test": {
+      "executed": false,
+      "reason": "No approved Groq, Gemini, Google, OpenRouter, or OpenAI key and no approved spend"
+    }
+  },
+  "qa_source_sha256": {
+    "Quality Assurance Officer/tests/__init__.py": "E02AC2713825B0E7EE0FF3C95E268536900EBC88CD9CE1FC746B8C5A579B4768",
+    "Quality Assurance Officer/tests/test_cag.py": "082C3928B0B1AFD7CD4F572DC7B08395EA074BA3D22375F641A7555D143EDBB6",
+    "Quality Assurance Officer/tests/test_config_router.py": "AA4A7B24071A8AA34596154C9D818A7F9DEA8DCFA4EF27ACB5B2657147AC092E",
+    "Quality Assurance Officer/tests/test_prompt_safety.py": "BD557063D357BD69E14BA7E6DD8A8607D392840B1A6117C29984549C20A58F4C",
+    "Quality Assurance Officer/tools/audit_repository.py": "379A6D396D05D6C872120646567142082E8D83CEE562116131B5F51BCCC9F360",
+    "Quality Assurance Officer/tools/check_documentation_style.py": "4E633A2603A433B920D8B8520B6ADCCF5C74871005ACF22E28E17663A4D51A24",
+    "Quality Assurance Officer/tools/failure_path_probe.py": "0232B8FBA903E4FF13DB2D066FA39E8CA6D14F730AAC62843FC0C6A2AC81AD67",
+    "Quality Assurance Officer/tools/historical_claim_support_probe.py": "4AFAC91487D9A5D71634E918A7AC8A63386282CDB6454E4D4A34BAF8136D3784",
+    "Quality Assurance Officer/tools/offline_request_matrix.py": "89FB85D8F9879DB4C9A9C11EB91B17E54979F3A81BCBD63EA7A49F55D9B97C2C",
+    "Quality Assurance Officer/tools/semantic_retrieval_probe.py": "84F9C73692D6B2AEB2EB3B13BD401FCD04EEA605C567B1DAD03FAB6ED424BF97",
+    "Quality Assurance Officer/tools/server_load_probe.py": "684AA8496D092E978CC757A36E66F20FF36D472C5E5C6E0A7855A449C257FB39"
+  },
+  "key_evidence_sha256": {
+    "pre-reversion-state-2026-07-27.json": "FA847C0040AA235D73F5A8DAF421F109CC463862DF7A80C4A3E77DE853251A17",
+    "pre-reversion-unstaged-product-diff-2026-07-27.patch": "8DB087EB9A20D5CEBFDDB057F0EB1AED9286F61940A38D90BF88C743B6C61A12",
+    "pre-reversion-staged-diff-2026-07-27.patch": "3B49D5B8AF73133D823BF9D0DC275206DE49628FC2B53116A2F1E72CC669A489",
+    "qa-commit-versus-fork-point-2026-07-27.patch": "B8B7529C8A65814549861876DBFF52129C5FBDDD1814D9955DDB741D444558C5",
+    "post-cleanup-unit-tests-2026-07-27.stderr.txt": "C7107E0311C06656ACEB62039D28B8E28BE1DEC9C74AC3358680DC078F7C46D6",
+    "post-cleanup-matrix-baseline-dependencies-2026-07-27.stderr.txt": "A9738A1FC6C917A3F6931A8C04D4AC6B662076E50269F3A6626D3333245E7648",
+    "post-cleanup-matrix-natural-windows-2026-07-27.stderr.txt": "BF9D465B2FBEE093788CB32B6907F9E4BCB9001EBF770F4B7344E68958DF1261",
+    "offline-request-matrix-post-cleanup-baseline-forced-utf8-2026-07-27.json": "E2CFFE2ED68D079362BB4E30DE56B7B24878197E19F6C242A6328D3EB705810C",
+    "post-cleanup-repository-audit-2026-07-27.json": "C72203AA21EECEE310DFA4207C704C3137DB6B5FE8FE8E804C9BABEAB722C296",
+    "post-cleanup-ruff-check-2026-07-27.stdout.txt": "9FD9B2A95D7693490E2653FFA7DA9D18DA1DC4B5165787230F358417E49EF61A",
+    "post-cleanup-ruff-format-2026-07-27.stdout.txt": "546E70A1A24BD556EAA66724A6911D8248DF05A29A8C9471B5CAA26C583C1786"
+  },
+  "temporary_holding_directories": [
+    "C:\\Users\\HP\\AppData\\Local\\Temp\\fwra-root-tests-pycache-pre-reversion-2026-07-27",
+    "C:\\Users\\HP\\AppData\\Local\\Temp\\fwra-root-qa-scripts-pycache-pre-reversion-2026-07-27",
+    "C:\\Users\\HP\\AppData\\Local\\Temp\\fwra-qa-tests-pycache-post-cleanup-2026-07-27",
+    "C:\\Users\\HP\\AppData\\Local\\Temp\\fwra-root-pycache-post-cleanup-2026-07-27",
+    "C:\\Users\\HP\\AppData\\Local\\Temp\\fwra-scripts-pycache-post-cleanup-2026-07-27",
+    "C:\\Users\\HP\\AppData\\Local\\Temp\\fwra-src-pycache-post-cleanup-2026-07-27",
+    "C:\\Users\\HP\\AppData\\Local\\Temp\\fwra-root-ruff-cache-post-cleanup-2026-07-27"
+  ],
+  "release": {
+    "decision": "blocked",
+    "open_defects": 70,
+    "accepted_candidate_exists": false
+  }
+}

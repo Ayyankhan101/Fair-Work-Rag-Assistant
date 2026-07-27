@@ -1,0 +1,52 @@
+[
+  {
+    "question": "What is Retrieval Augmented Generation (RAG)?",
+    "answer": "RAG combines a language model with a retrieval mechanism that fetches relevant documents from an external corpus before generating an answer, grounding the model's output in factual sources.",
+    "sources": ["2305.06983.pdf", "2312.10997.pdf"]
+  },
+  {
+    "question": "What architecture does the Transformer model use?",
+    "answer": "The Transformer uses an encoder-decoder architecture with self-attention mechanisms, replacing recurrence and convolutions entirely. It relies on multi-head attention to process input sequences in parallel.",
+    "sources": ["1706.03762.pdf"]
+  },
+  {
+    "question": "How does BERT differ from GPT-3?",
+    "answer": "BERT uses a bidirectional encoder (masked language modeling) for understanding tasks, while GPT-3 uses a unidirectional decoder (autoregressive language modeling) for text generation. BERT is fine-tuned; GPT-3 uses few-shot prompting.",
+    "sources": ["1810.04805.pdf", "2005.14165.pdf"]
+  },
+  {
+    "question": "What is the key innovation in the attention mechanism paper?",
+    "answer": "Scaled Dot-Product Attention and Multi-Head Attention. The model computes attention weights by multiplying queries and keys, scaling by sqrt(d_k), and applies softmax. Multiple attention heads run in parallel for richer representations.",
+    "sources": ["1706.03762.pdf"]
+  },
+  {
+    "question": "How does InstructGPT align model behavior with human intent?",
+    "answer": "InstructGPT uses Reinforcement Learning from Human Feedback (RLHF): (1) supervised fine-tuning on human-written demonstrations, (2) training a reward model on human preference rankings, (3) optimizing the policy with PPO against the reward model.",
+    "sources": ["2203.02155.pdf"]
+  },
+  {
+    "question": "What is Direct Preference Optimization (DPO)?",
+    "answer": "DPO is an alternative to RLHF that directly optimizes the language model on human preference data without training a separate reward model. It parameterizes the reward function in terms of the policy and optimizes a binary cross-entropy objective.",
+    "sources": ["2307.04964.pdf"]
+  },
+  {
+    "question": "How does GPT-4's performance compare to GPT-3 on professional exams?",
+    "answer": "GPT-4 scores at or above the 90th percentile on the bar exam, SAT math, and GRE quantitative, while GPT-3.5 scores significantly lower. GPT-4 passes the Uniform Bar Exam at a score of ~260/400.",
+    "sources": ["2303.08774.pdf"]
+  },
+  {
+    "question": "What is the LLaMA 2 context window size?",
+    "answer": "LLaMA 2 supports context windows of 4096 tokens, double the 2048-token context of the original LLaMA models.",
+    "sources": ["2305.10403.pdf"]
+  },
+  {
+    "question": "What is the purpose of the Toolformer model?",
+    "answer": "Toolformer learns to use external tools (calculator, calendar, search engine, etc.) by deciding when and which tool to call during text generation. It inserts API call results directly into the generated text.",
+    "sources": ["2302.04761.pdf"]
+  },
+  {
+    "question": "How does the HELM benchmark evaluate language models?",
+    "answer": "HELM (Holistic Evaluation of Language Models) evaluates models across 42+ scenarios spanning 7 metrics (accuracy, calibration, robustness, fairness, bias, toxicity, efficiency) with standardized prompting and multiple trials per evaluation.",
+    "sources": ["2305.18290.pdf"]
+  }
+]

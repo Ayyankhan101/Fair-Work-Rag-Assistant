@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "run_date": "2026-07-27",
+  "evidence_type": "aggregate_reconstruction",
+  "authority": {
+    "award_list_url": "https://www.fairwork.gov.au/employment-conditions/awards/list-of-awards",
+    "award_page_pattern": "https://awards.fairwork.gov.au/{AWARD_ID}.html"
+  },
+  "request": {
+    "official_ids": 122,
+    "unique_ids": 122,
+    "workers": 6,
+    "retries": 0,
+    "elapsed_seconds": 236.3
+  },
+  "response": {
+    "http_200": 122,
+    "text_html": 122,
+    "expected_id_in_body": 122,
+    "nonempty_award_heading": 122,
+    "consolidation_statement": 122,
+    "replacement_character_pages": 0,
+    "total_bytes": 179885839,
+    "minimum_bytes": 849065,
+    "maximum_bytes": 3250100
+  },
+  "consolidation_text": {
+    "1 July 2026": 105,
+    "1 July 202 6": 15,
+    "14 July 2026": 1,
+    "29 June 2026": 1
+  },
+  "oracle_correction": {
+    "invalid_assertion": "Award ID must appear inside the Award title heading",
+    "reason": "The official page presents the Award ID separately from the title heading.",
+    "invalid_failure_labels": 122,
+    "product_defects_created_from_invalid_labels": 0
+  },
+  "retention": {
+    "raw_responses_preserved": false,
+    "per_page_hashes_preserved": false,
+    "per_page_result_table_preserved": false
+  },
+  "phase_3_accepted": false,
+  "acceptance_blockers": [
+    "Raw 122-Award corpus is absent from the repository.",
+    "No per-source checksum manifest exists.",
+    "The NES source is contaminated and unversioned.",
+    "No legal-source reviewer has approved the corpus."
+  ]
+}

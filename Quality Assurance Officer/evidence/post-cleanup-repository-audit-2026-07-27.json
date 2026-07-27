@@ -1,0 +1,89 @@
+{
+  "commit_sha": "fb9028a8978393968788038492c7d17af02ed42b",
+  "branch": "QA",
+  "corpus": {
+    "doc_count": 16692,
+    "document_types": {
+      "Award": 16665,
+      "NES": 27
+    },
+    "unique_award_names": 129,
+    "unique_source_files": 131,
+    "expected_official_award_ids": 122,
+    "indexed_award_ids": 128,
+    "missing_official_award_ids": [
+      "MA000095",
+      "MA000121"
+    ],
+    "outside_scope_award_ids": [
+      "MA000123",
+      "MA000132",
+      "MA000134",
+      "MA000135",
+      "MA000136",
+      "MA000150",
+      "MA000152",
+      "MA000155"
+    ],
+    "missing_metadata": {},
+    "empty_metadata": {},
+    "empty_text_chunks": 0,
+    "duplicate_text_groups": 388,
+    "duplicate_extra_chunks": 1251
+  },
+  "evaluation": {
+    "summary": {
+      "total_questions": 25,
+      "format_pass": 24,
+      "content_pass": 23,
+      "overall_accuracy": 87.54666666666668,
+      "total_score": 2188.666666666667,
+      "max_score": 2500
+    },
+    "missing_provenance": [
+      "commit_sha",
+      "corpus_version",
+      "model",
+      "prompt_version",
+      "run_at"
+    ]
+  },
+  "failures": [
+    {
+      "id": "CORPUS-001",
+      "severity": "S1",
+      "message": "Missing official Award IDs: MA000095, MA000121"
+    },
+    {
+      "id": "CORPUS-004",
+      "severity": "S2",
+      "message": "1251 extra chunks occur in 388 exact-text duplicate groups"
+    },
+    {
+      "id": "CORPUS-NAME-MA000002",
+      "severity": "S1",
+      "message": "MA000002 is not indexed with an Award name containing 'Clerks'. Actual: ['Workplace Relations Act 1996']"
+    },
+    {
+      "id": "CORPUS-NAME-MA000095",
+      "severity": "S1",
+      "message": "MA000095 is not indexed with an Award name containing 'Car Parking'. Actual: []"
+    },
+    {
+      "id": "CORPUS-NAME-MA000121",
+      "severity": "S1",
+      "message": "MA000121 is not indexed with an Award name containing 'State Government Agencies'. Actual: []"
+    },
+    {
+      "id": "EVAL-001",
+      "severity": "S1",
+      "message": "Hard-eval provenance is missing: commit_sha, corpus_version, model, prompt_version, run_at"
+    },
+    {
+      "id": "REPRO-001",
+      "severity": "S1",
+      "message": "data/awards is absent; the persisted store is not reproducible"
+    }
+  ],
+  "release_blocked": true
+}

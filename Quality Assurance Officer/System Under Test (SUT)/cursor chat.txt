@@ -1,0 +1,90 @@
+let begin planning a super quality asssurance
+
+Using brainstorming to shape the QA plan before we touch implementation.
+
+I've looked at your workspace. Here's what we're working with:
+
+Your setup
+
+Quality Assurance Officer repo — QA wrapper around a System Under Test (SUT)
+SUT: fair-work-rag-assistant — RAG assistant for 130 Modern Awards + NES from Fair Work awards list
+Existing eval: 25 hard questions at ~87.5% pass rate — not full per-document coverage
+Data: ~16,692 indexed chunks from award PDFs
+Scope note: This spans several independent areas (document discovery/crawl, ingestion QA, retrieval QA, answer accuracy, UI, load/stress). We'll design it in phases rather than one monolithic spec.
+
+Proposed QA lifecycle (before → during → after)
+Phase	What we verify
+Before
+Every award PDF exists, is readable, matches source URL, metadata is correct
+During
+Ingestion, chunking, embedding, vectorstore integrity per document
+After
+Retrieval recall, answer accuracy, citations, 5-component output format
+Ongoing
+Regression when awards update, drift detection, re-ingest validation
+Proposed difficulty tiers
+Tier	Label	Example
+1
+Super easy
+"Does award X exist in the index?"
+2
+Easy
+"What award covers hospitality?"
+3
+Medium
+"Level 3 hourly rate for Cleaning Services Award?"
+4
+Hard
+Cross-clause reasoning, penalty rate edge cases
+5
+Super hard
+Multi-award comparison, ambiguous employer scenarios
+6
+Impossible
+Questions requiring legal judgment beyond the documents
+7
+Server melters
+Concurrent queries, rate-limit storms, large context stress
+First question — this sets the whole plan:
+
+What is the primary QA target?
+
+A) The fair-work-rag-assistant app (ingestion → retrieval → answers) against all 130+ awards
+B) The fairwork.gov.au website itself (links, PDFs, page integrity)
+C) Both — source site validation plus RAG pipeline validation
+
+Which one? (A / B / C)
+
+A for now / whatever is in the repo currently
+
+Good — Option A it is: QA the fair-work-rag-assistant in the repo, not the live Fair Work website.
+
+Here's what's already in place:
+
+Asset	Purpose
+scripts/eval_hard.py
+25 questions, content scoring (~87.5%)
+scripts/eval_prd_questions.py
+12 basic questions
+scripts/smoke_test_*.py
+Quick retrieval/RAG smoke tests
+data/award_audit.json
+PDF → award name mapping audit
+.github/workflows/
+CI lint, eval, audit workflows
+.opencode/quality-plan.md
+Accuracy improvement plan (>97% target)
+Gap: No per-award coverage — 25 hand-picked questions don't prove all 130 awards are ingested, retrievable, and answerable.
+
+Next question (this drives how big the test suite gets):
+
+What is your primary success metric for Phase 1?
+
+A) Coverage-first — every award PDF indexed, retrievable, and smoke-testable (130/130 pass)
+B) Accuracy-first — deepen answer quality on hard questions (target >97% on eval suite)
+C) Both equally — full per-award coverage plus accuracy tiers (super easy → super hard)
+D) Pipeline-first — before/during/after checks (ingest → vectorstore → retrieval → answer) before expanding question banks
+
+Which one? (A / B / C / D)
+
+plan a plan to to full quality assurance while doing all documentation as detail as possible and attack and look deeply at everything thing at target 

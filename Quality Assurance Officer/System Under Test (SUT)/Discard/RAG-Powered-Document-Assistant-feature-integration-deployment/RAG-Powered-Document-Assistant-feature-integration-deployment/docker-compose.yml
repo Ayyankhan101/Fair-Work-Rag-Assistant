@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  rag-app:
+    build: .
+    container_name: rag-powered-document-assistant
+
+    ports:
+      - "8501:8501"
+
+    volumes:
+      - .:/app
+
+    restart: unless-stopped

@@ -1,0 +1,152 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-07-27T14:35:08.7490130+05:00",
+  "repository": "fair-work-rag-assistant",
+  "write_boundary": "Quality Assurance Officer only",
+  "test_points": {
+    "qa": {
+      "branch": "QA",
+      "commit": "fb9028a8978393968788038492c7d17af02ed42b",
+      "worktree": "dirty"
+    },
+    "develop": {
+      "branch": "develop",
+      "commit": "dd3bd45d58f430b6f88a927d7eee6ce1a815098d",
+      "inspection": "temporary git archive"
+    },
+    "qa_vs_develop": {
+      "qa_only_commits": 1,
+      "develop_only_commits": 4,
+      "changed_paths": [
+        ".gitignore",
+        "README.md",
+        "build_store.py",
+        "scripts/convert_pdfs_to_markdown.py",
+        "scripts/ingest_markdown.py",
+        "src/ingest.py",
+        "src/rag.py"
+      ]
+    }
+  },
+  "checks": {
+    "bandit": {
+      "version": "1.8.6",
+      "python_loc": 2043,
+      "errors": 0,
+      "findings": [
+        {
+          "test_id": "B403",
+          "severity": "LOW",
+          "confidence": "HIGH",
+          "path": "build_store.py",
+          "line": 5
+        },
+        {
+          "test_id": "B301",
+          "severity": "MEDIUM",
+          "confidence": "HIGH",
+          "path": "build_store.py",
+          "line": 27
+        }
+      ],
+      "result": "failed"
+    },
+    "zizmor": {
+      "version": "1.28.0",
+      "persona": "auditor",
+      "offline": true,
+      "top_level_findings": 36,
+      "counts": {
+        "anonymous-definition": 5,
+        "artipacked": 4,
+        "concurrency-limits": 4,
+        "excessive-permissions": 9,
+        "secrets-outside-env": 1,
+        "template-injection": 1,
+        "unpinned-uses": 12
+      },
+      "result": "failed"
+    },
+    "detect_secrets": {
+      "full_repository": "timeout after 60 seconds",
+      "tracked_files": "timeout after 60 seconds",
+      "active_text": {
+        "files": 32,
+        "findings": 0,
+        "result": "limited pass"
+      }
+    },
+    "git_object_signature_scan": {
+      "objects_enumerated": 197,
+      "blobs_scanned": 122,
+      "non_blob_objects": 75,
+      "large_blobs_skipped": 0,
+      "findings": 0,
+      "pattern_families": [
+        "AWS",
+        "GitHub",
+        "OpenAI",
+        "Groq",
+        "Google",
+        "Slack",
+        "private-key headers"
+      ],
+      "result": "limited pass"
+    },
+    "pip_audit_refresh": {
+      "attempts": 2,
+      "result": "both attempts timed out after 60 seconds"
+    },
+    "license_review": {
+      "tool_environment_rows": 198,
+      "tool_environment_unknown_rows": 4,
+      "tool_environment_is_application_sbom": false,
+      "root_license_file_present": false,
+      "readme_claims_mit_and_links_license": true,
+      "result": "failed"
+    },
+    "develop_static": {
+      "python_files_compiled": 33,
+      "compile_failures": 0,
+      "ruff_check": "passed",
+      "ruff_format_check": "passed"
+    },
+    "develop_markdown_fixture": {
+      "sections": 1,
+      "preamble_retained": false,
+      "subclause_15_1": "",
+      "major_clause_15": "15",
+      "oversized_chunk_count": 1,
+      "configured_max_chars": 1500,
+      "observed_max_chars": 1601,
+      "result": "failed"
+    }
+  },
+  "process_evidence": {
+    "repository_commits": 19,
+    "commit_date_range": [
+      "2026-07-26T19:40:22+05:00",
+      "2026-07-27T07:25:48+05:00"
+    ],
+    "commit_authors": 2,
+    "conventional_tracked_test_suite_at_qa_head": false,
+    "single_codeowner": true,
+    "opencode_status_claims_complete": true,
+    "opencode_recorded_content_accuracy": "10/12",
+    "opencode_target": ">97%",
+    "opencode_acceptance_math_valid": false,
+    "skipped_reranking_marked_complete": true,
+    "immutable_candidate_evidence": false,
+    "independent_release_signoff_evidence": false
+  },
+  "overall_result": "failed",
+  "release_decision": "blocked",
+  "limitations": [
+    "No penetration test or production environment was available.",
+    "No GitHub administrative branch-ruleset view was inspected.",
+    "No complete entropy secret scan finished.",
+    "No fresh dependency vulnerability audit finished.",
+    "No provider request or deployment occurred.",
+    "Missing repository records do not prove that no external process occurred."
+  ]
+}

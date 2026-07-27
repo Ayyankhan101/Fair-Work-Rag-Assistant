@@ -1,0 +1,58 @@
+{
+  "total_chunks": 2744,
+  "chunk_size": 1000,
+  "chunk_overlap": 200,
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "sources": {
+    "1706.03762.pdf": 52,
+    "1810.04805.pdf": 83,
+    "2005.11401.pdf": 92,
+    "2005.14165.pdf": 317,
+    "2203.02155.pdf": 246,
+    "2301.12597.pdf": 65,
+    "2302.04761.pdf": 96,
+    "2302.13971.pdf": 118,
+    "2303.08774.pdf": 388,
+    "2303.17560.pdf": 79,
+    "2305.06983.pdf": 121,
+    "2305.10403.pdf": 343,
+    "2305.16291.pdf": 168,
+    "2305.18290.pdf": 123,
+    "2306.00317.pdf": 113,
+    "2307.04964.pdf": 127,
+    "2309.01431.pdf": 69,
+    "2312.10997.pdf": 144
+  },
+  "chunks": [
+    {
+      "chunk_id": "chunk_8e7ab02c7cb8",
+      "source": "1706.03762.pdf",
+      "arxiv_id": "1706.03762",
+      "preview": "Provided proper attribution is provided, Google hereby grants permission to\nreproduce the tables and figures in this paper solely for use in journalistic or\nscholarly works.\nAttention Is All You Need\n..."
+    },
+    {
+      "chunk_id": "chunk_2e5e576b798e",
+      "source": "1706.03762.pdf",
+      "arxiv_id": "1706.03762",
+      "preview": "mechanism. We propose a new simple network architecture, the Transformer,\nbased solely on attention mechanisms, dispensing with recurrence and convolutions\nentirely. Experiments on two machine transla..."
+    },
+    {
+      "chunk_id": "chunk_7a000c90c98e",
+      "source": "1706.03762.pdf",
+      "arxiv_id": "1706.03762",
+      "preview": "best models from the literature. We show that the Transformer generalizes well to\nother tasks by applying it successfully to English constituency parsing both with\nlarge and limited training data.\n\u2217Eq..."
+    },
+    {
+      "chunk_id": "chunk_ced90636364b",
+      "source": "1706.03762.pdf",
+      "arxiv_id": "1706.03762",
+      "preview": "efficient inference and visualizations. Lukasz and Aidan spent countless long days designing various parts of and\nimplementing tensor2tensor, replacing our earlier codebase, greatly improving results ..."
+    },
+    {
+      "chunk_id": "chunk_be9d1ca5814d",
+      "source": "1706.03762.pdf",
+      "arxiv_id": "1706.03762",
+      "preview": "1 Introduction\nRecurrent neural networks, long short-term memory [13] and gated recurrent [7] neural networks\nin particular, have been firmly established as state of the art approaches in sequence mod..."
+    }
+  ]
+}
