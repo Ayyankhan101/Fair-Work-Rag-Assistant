@@ -10,6 +10,7 @@ from vectorstore import load_vectorstore
 from bm25_retriever import build_bm25_retriever_from_docstore
 from hybrid_retriever import HybridRetriever
 from filtered_retriever import AwardFilteredRetriever
+from reranker import rerank_documents
 from config import AWARD_PATTERNS, TOPIC_KEYWORDS, detect_award, detect_topic
 
 
@@ -221,6 +222,10 @@ def create_rag_chain(vectorstore, cag_cache=None, docstore_path=None):
             docs = filtered_retriever.invoke(question)
         else:
             docs = hybrid_retriever.invoke(question)
+        
+        # Rerank documents for better relevance
+        if docs and len(docs) > 10:
+            docs = rerank_documents(question, docs, top_n=10, use_cohere=True)
         
         if docs:
             context_parts.append(format_docs(docs))

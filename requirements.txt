@@ -9,3 +9,4 @@ beautifulsoup4
 lxml
 numpy
 rank_bm25
+cohere

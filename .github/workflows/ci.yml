@@ -17,9 +17,9 @@ jobs:
       - name: Install dependencies
         run: pip install ruff
       - name: Lint with ruff
-        run: ruff check src/ scripts/
+        run: ruff check src/ scripts/ build_store.py
       - name: Format check
-        run: ruff format --check src/ scripts/
+        run: ruff format --check src/ scripts/ build_store.py
 
   test-imports:
     runs-on: ubuntu-latest
@@ -32,8 +32,9 @@ jobs:
         run: pip install -r requirements.txt
       - name: Test imports
         run: |
-          python -c "from src.config import detect_award, detect_topic"
-          python -c "from src.rag import build_rag_chain"
-          python -c "from src.cag import build_cag_chain"
-          python -c "from src.router import route_query"
-          echo "All imports OK ✅"
+          python -c "from src.config import detect_award, detect_topic, AWARD_PATTERNS"
+          python -c "from src.rag import create_rag_chain, ask_question, needs_clarification"
+          python -c "from src.cag import CAGCache"
+          python -c "from src.router import route_question, detect_negation"
+          python -c "from src.filtered_retriever import AwardFilteredRetriever"
+          echo "All imports OK"

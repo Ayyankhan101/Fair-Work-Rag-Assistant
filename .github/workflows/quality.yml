@@ -1,0 +1,39 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branches: [develop]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install uv
+        run: pip install uv
+      
+      - name: Install dependencies
+        run: uv pip install -r requirements.txt bandit
+      
+      - name: Ruff check
+        run: uvx ruff check src/ scripts/ build_store.py
+      
+      - name: Ruff format
+        run: uvx ruff format --check src/ scripts/ build_store.py
+      
+      - name: Bandit security scan
+        run: bandit -r src/ -f json -o bandit-report.json
+        continue-on-error: true
+      
+      - name: Upload bandit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bandit-report
+          path: bandit-report.json
