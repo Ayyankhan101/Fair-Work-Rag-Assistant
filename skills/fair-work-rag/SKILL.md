@@ -1,6 +1,6 @@
 ---
 name: fair-work-rag
-description: Build, optimize, and troubleshoot RAG-powered LLM assistants for Australian employment law (Fair Work Awards + NES). Use when working with Groq LLM, TurboVec vector store, fastembed embeddings, Gradio UI, or hybrid CAG+RAG architecture. Covers rate limit handling, context optimization, retrieval tuning, and evaluation.
+description: Build, optimize, and troubleshoot RAG-powered LLM assistants for Australian employment law (Fair Work Awards + NES). Use when working with Claude/GPT-5.4 LLM, TurboVec vector store, fastembed embeddings, Cohere reranker, Gradio UI, or hybrid CAG+RAG architecture. Covers retrieval tuning, evaluation, and deployment.
 ---
 
 # Fair Work RAG Assistant Skill
@@ -9,75 +9,120 @@ description: Build, optimize, and troubleshoot RAG-powered LLM assistants for Au
 
 ```bash
 # Run eval (from project root)
-venv/bin/python3 scripts/eval_prd_questions.py
-
-# Run hard eval (25 questions with content scoring)
 venv/bin/python3 scripts/eval_hard.py
 
-# Build vector store (resumable)
+# Build vectorstore (resumable)
 venv/bin/python3 build_store.py
 
-# Check rate limit
-venv/bin/python3 -c "from groq import Groq; import os; from dotenv import load_dotenv; load_dotenv(); c=Groq(api_key=os.getenv('GROQ_API_KEY')); print('OK')"
+# Convert PDFs to markdown
+venv/bin/python3 scripts/convert_pdfs_to_markdown.py
+
+# Ingest markdown to vectorstore
+venv/bin/python3 scripts/ingest_markdown.py
+
+# Start Gradio UI
+venv/bin/python3 src/app.py
 ```
 
 ## Architecture
 
 Hybrid CAG+RAG system:
 - **CAG**: Pre-loads NES (~28K chars) for NES-specific questions
-- **RAG**: Vector search for Award-specific questions
-- **Router**: Classifies questions as CAG/RAG/Combined
+- **RAG**: Vector search + BM25 + Reranker for Award-specific questions
+- **Router**: Classifies questions as CAG/RAG/Combined (with negation handling)
 
-Key files:
-- `src/config.py` — Shared config (award patterns, topic keywords, NES keywords)
-- `src/rag.py` — RAG chain with Groq LLM (improved prompt, rate-table rules)
-- `src/cag.py` — CAG context cache
-- `src/router.py` — Query router
-- `src/filtered_retriever.py` — Award-specific retrieval with rate-table scoring
-- `src/hybrid_retriever.py` — BM25+Semantic with RRF
-- `src/ingest.py` — PDF ingestion pipeline (130 PDFs + NES)
-- `src/vectorstore.py` — TurboVec build/load/search
+### Key Files
 
-## Rate Limit Handling
+| File | Purpose |
+|------|---------|
+| `src/config.py` | Shared config (119 award patterns, topic keywords, NES keywords) |
+| `src/rag.py` | RAG chain with LLM + reranker integration |
+| `src/cag.py` | CAG context cache for NES |
+| `src/router.py` | Query router (with negation handling) |
+| `src/filtered_retriever.py` | Award-specific retrieval (fuzzy matching, dedup) |
+| `src/hybrid_retriever.py` | BM25 + Semantic with RRF fusion |
+| `src/reranker.py` | Cohere reranker (optional) |
+| `src/fastembeddings.py` | LangChain wrapper for fastembed ONNX |
+| `src/vectorstore.py` | TurboVec build/load/search |
+| `src/ingest.py` | PDF ingestion with contextual prefixes |
+| `src/app.py` | Gradio chat interface |
+| `build_store.py` | Auto-detects MD vs PDF, resumable |
 
-Groq TPD limit (100k tokens/day) blocks eval. Strategies:
+## LLM Configuration
 
-1. **Auto-fallback**: `ask_question()` auto-switches to 8b-instant on 429
-2. **Reduce context**: k=10, truncated docs, max_tokens=1024
-3. **Add delays**: 1s between questions for TPM limits
-4. **Wait for reset**: Daily reset ~05:00 AM PKT
-
-Model switching in `src/rag.py`:
+### Primary: Anthropic Claude Sonnet 4.6
 ```python
-model="llama-3.3-70b-versatile"  # Production
-model="llama-3.1-8b-instant"     # Rate limit fallback
+# src/rag.py
+model="claude-sonnet-4-6-20250514"
 ```
 
-## Context Optimization
+### Alternative: OpenAI GPT-5.4
+```python
+model="gpt-5.4"
+```
 
-| Parameter | Default | Optimized | Impact |
-|-----------|---------|-----------|--------|
-| k (retriever) | 20 | 10 | Balanced context |
-| max_tokens | 1024 | 1024 | Full responses |
-| doc truncation | None | 800 chars | More context per doc |
-| max_chars | 2000 | 4000 | More documents in context |
+### Budget: Groq Llama 3.3 70B
+```python
+model="llama-3.3-70b-versatile"
+```
+
+### Auto-Fallback
+```python
+# get_llm(fallback=True) switches to cheaper model on rate limit
+from src.rag import get_llm
+llm = get_llm(fallback=True)
+```
+
+## Embedding Model
+
+**BAAI/bge-base-en-v1.5** (768-dim, ONNX, CPU-only)
+- Local inference, no API costs
+- ~100ms per document
+- Loaded via `src/fastembeddings.py`
+
+## Vector Store
+
+**TurboVec** (4-bit quantized, file-based)
+- 33,239 chunks from 131 markdown files
+- ~50MB index size
+- Supports similarity search (NOT MMR)
+
+## Reranker (Optional)
+
+**Cohere rerank-english-v3.0**
+- +67% retrieval accuracy
+- Requires `COHERE_API_KEY` in `.env`
+- Graceful fallback if not configured
+
+## Contextual Retrieval
+
+Each chunk is prefixed with `[Award Name - Section]` for better retrieval:
+```
+[Clerks Award 2020 - Part 1: Application and Definitions]
+This award covers all employees...
+```
+
+Implemented in:
+- `scripts/convert_pdfs_to_markdown.py` — PDF → Markdown
+- `scripts/ingest_markdown.py` — Fast ingestion with prefixes
+- `src/ingest.py` — PDF ingestion with prefixes
 
 ## Evaluation
+
+### Hard Eval (25 questions, content scoring)
+```bash
+venv/bin/python3 scripts/eval_hard.py
+# Results: data/hard_eval_results.json
+# Scoring: Keywords 40% + Pattern 30% + Quality 30%
+```
 
 ### Basic Eval (12 questions)
 ```bash
 venv/bin/python3 scripts/eval_prd_questions.py
-# Results saved to data/prd_eval_results.json
+# Results: data/prd_eval_results.json
 ```
 
-### Hard Eval (25 questions with content scoring)
-```bash
-venv/bin/python3 scripts/eval_hard.py
-# Results saved to data/hard_eval_results.json
-# Scoring: Keywords 40% + Pattern 30% + Quality 30%
-```
-
-### 5-Component Format
+### 5-Component Answer Format
 ```
 **Answer:** [Direct answer with specific numbers]
 **Award/NES Reference:** [Exact Award name]
@@ -86,16 +131,38 @@ venv/bin/python3 scripts/eval_hard.py
 **Note:** [Required disclaimer]
 ```
 
+## Accuracy Fixes (from QA)
+
+| Fix | Description |
+|-----|-------------|
+| DEF-033 | System/user role separation, no forced answers |
+| DEF-062 | 119 award aliases mapped (was 40) |
+| DEF-063 | `needs_clarification()` for ambiguous queries |
+| DEF-064 | Negation handling ("not retail" → excludes Retail) |
+| DEF-066 | Fuzzy matching, k=30, deduplication |
+| DEF-049/050 | Smart award name extraction from content |
+| DEF-070 | BM25 retriever added |
+
+## Retrieval Settings
+
+| Parameter | Value | Notes |
+|-----------|-------|-------|
+| k (hybrid) | 10 | Balanced context |
+| k (filtered) | 30 | Award-specific with dedup |
+| max_tokens | 1024 | Full responses |
+| doc truncation | 800 chars | More context per doc |
+| max_chars | 4000 | More documents in context |
+| reranker | Cohere v3.0 | Optional, +67% accuracy |
+
 ## Award Mapping
 
-40+ award patterns in `src/config.py` (single source of truth):
-- Cleaning, Hospitality, Clerks, Retail, Fast Food, Restaurant
+119 award patterns in `src/config.py`:
+- Clerks 2010, Children's 2010, Aged Care 2010
+- Hospitality, Retail, Fast Food, Restaurant
+- Cleaning, Health Professionals, Nurses
+- Marine, Mining, Road Transport, Rail
 - Professional Employees, Architects, Hair and Beauty
-- Marine, Sporting, Animal Care, Aquaculture, Cotton
-- Black Coal, Aluminium, Steel, Waste, Nursing, Health
-- And many more...
-
-Used by: rag.py, filtered_retriever.py, router.py, cag.py
+- And 100+ more...
 
 ## Topic Keywords
 
@@ -104,6 +171,38 @@ Used by: rag.py, filtered_retriever.py, router.py, cag.py
 - hours, public holiday, weekend, roster, junior, apprentice
 - wages, redundancy, transfer, unfair dismissal, consultation
 
+## Git Workflow
+
+```bash
+# Auto PR script
+./scripts/auto-pr.sh "feat: add new feature"
+
+# Manual PR
+git checkout -b feature/my-change
+git add . && git commit -m "feat: my change"
+git push origin feature/my-change
+gh pr create --base develop
+```
+
+**⚠️ NEVER touch `main` branch unless told.**
+
 ## Troubleshooting
 
-See `references/troubleshooting.md` for common errors and fixes.
+| Issue | Solution |
+|-------|----------|
+| Rate limit (429) | Use `get_llm(fallback=True)` for auto-switch |
+| Empty retrieval | Check vectorstore exists: `ls data/vectorstore/` |
+| Wrong award | Check `src/config.py` for 119 award patterns |
+| Slow queries | Reduce k, use faster model |
+| Reranker error | Set `COHERE_API_KEY` in `.env` or remove |
+
+## Deployment
+
+```bash
+# Production VPS (4 vCPU, 8GB RAM)
+# 1. Clone repo
+# 2. Install deps: pip install -r requirements.txt
+# 3. Set API keys in .env
+# 4. Build vectorstore: python build_store.py
+# 5. Start: python src/app.py
+```
