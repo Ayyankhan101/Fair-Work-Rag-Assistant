@@ -91,7 +91,11 @@ def get_llm(fallback=False) -> ChatGroq:
 
 
 def format_docs(docs, max_chars=4000) -> str:
-    """Format retrieved documents into context string with optional truncation."""
+    """Format retrieved documents into context string with optional truncation.
+    
+    Strips contextual retrieval prefix before displaying to user.
+    """
+    import re
     formatted = []
     total_chars = 0
     for i, doc in enumerate(docs):
@@ -104,8 +108,13 @@ def format_docs(docs, max_chars=4000) -> str:
         header += f" ({metadata['document_type']})]"
         source_url = metadata.get('source_url', '')
         section = metadata.get('section_title', '')
+        
+        # Strip contextual retrieval prefix: "[Award Name - Section] "
+        content = doc.page_content
+        content = re.sub(r'^\[.+?\]\s*', '', content)
+        
         # Show more content for better answer quality
-        content = doc.page_content[:800] + "..." if len(doc.page_content) > 800 else doc.page_content
+        content = content[:800] + "..." if len(content) > 800 else content
         formatted.append(
             f"{header}\n"
             f"Section: {section}\n"

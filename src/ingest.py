@@ -308,7 +308,11 @@ def chunk_text(text: str, max_chunk_size: int = 1500) -> list[str]:
 
 
 def pdf_to_documents(pdf_path: str) -> list[Document]:
-    """Convert a PDF to LangChain Documents with metadata."""
+    """Convert a PDF to LangChain Documents with metadata.
+    
+    Contextual Retrieval: Prepend award + section context to each chunk
+    before embedding for better retrieval accuracy.
+    """
     sections = parse_pdf_structure(pdf_path)
     documents = []
     slug = get_award_slug(os.path.basename(pdf_path))
@@ -327,13 +331,22 @@ def pdf_to_documents(pdf_path: str) -> list[Document]:
                 'source_file': section['source_file'],
                 'chunk_index': i,
             }
-            documents.append(Document(page_content=chunk, metadata=metadata))
+            
+            # Contextual Retrieval: Prepend context to chunk
+            award_short = section['award_name'].replace(' Award 2020', '').replace(' Award 2010', '').replace(' Award 2015', '').replace(' Award 2016', '')
+            context_prefix = f"[{award_short} - {section['title']}] "
+            contextualized_chunk = context_prefix + chunk
+            
+            documents.append(Document(page_content=contextualized_chunk, metadata=metadata))
 
     return documents
 
 
 def nes_text_to_documents(nes_path: str) -> list[Document]:
-    """Convert NES text to LangChain Documents with metadata."""
+    """Convert NES text to LangChain Documents with metadata.
+    
+    Contextual Retrieval: Prepend NES section context to each chunk.
+    """
     with open(nes_path) as f:
         text = f.read()
 
@@ -360,7 +373,12 @@ def nes_text_to_documents(nes_path: str) -> list[Document]:
                 'source_file': 'nes_combined.txt',
                 'chunk_index': j,
             }
-            documents.append(Document(page_content=chunk, metadata=metadata))
+            
+            # Contextual Retrieval: Prepend NES context to chunk
+            context_prefix = f"[National Employment Standards - {section_name}] "
+            contextualized_chunk = context_prefix + chunk
+            
+            documents.append(Document(page_content=contextualized_chunk, metadata=metadata))
 
     return documents
 
