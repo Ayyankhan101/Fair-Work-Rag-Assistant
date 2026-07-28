@@ -21,37 +21,54 @@ def extract_award_name(pdf_path: str) -> str:
 
 
 def pdf_to_markdown(pdf_path: str) -> str:
-    """Convert PDF to markdown with proper formatting."""
+    """Convert PDF to markdown with proper formatting including tables."""
     award_name = extract_award_name(pdf_path)
     md_lines = [f"# {award_name}\n"]
     
     with pdfplumber.open(pdf_path) as pdf:
         for page in pdf.pages:
+            # Extract text
             text = page.extract_text()
-            if not text:
-                continue
+            if text:
+                lines = text.split('\n')
+                for line in lines:
+                    line = line.strip()
+                    if not line:
+                        md_lines.append("")
+                        continue
+                    
+                    # Detect Part headers
+                    if re.match(r'^Part \d+[A-Z]*[—–-]', line):
+                        md_lines.append(f"\n## {line}\n")
+                    # Detect Schedule headers
+                    elif re.match(r'^Schedule [A-Z][—–-]', line):
+                        md_lines.append(f"\n## {line}\n")
+                    # Detect clause numbers (e.g., "15.1 Something")
+                    elif re.match(r'^\d+[A-Z]*\.\d+\s', line):
+                        md_lines.append(f"\n### {line}\n")
+                    # Detect clause headers (e.g., "15. Title")
+                    elif re.match(r'^\d+[A-Z]*\.\s+[A-Z]', line):
+                        md_lines.append(f"\n### {line}\n")
+                    else:
+                        md_lines.append(line)
             
-            lines = text.split('\n')
-            for line in lines:
-                line = line.strip()
-                if not line:
-                    md_lines.append("")
+            # Extract tables and append as markdown tables
+            tables = page.extract_tables()
+            for table in tables:
+                if not table or len(table) < 2:
                     continue
-                
-                # Detect Part headers
-                if re.match(r'^Part \d+[A-Z]*[—–-]', line):
-                    md_lines.append(f"\n## {line}\n")
-                # Detect Schedule headers
-                elif re.match(r'^Schedule [A-Z][—–-]', line):
-                    md_lines.append(f"\n## {line}\n")
-                # Detect clause numbers (e.g., "15.1 Something")
-                elif re.match(r'^\d+[A-Z]*\.\d+\s', line):
-                    md_lines.append(f"\n### {line}\n")
-                # Detect clause headers (e.g., "15. Title")
-                elif re.match(r'^\d+[A-Z]*\.\s+[A-Z]', line):
-                    md_lines.append(f"\n### {line}\n")
-                else:
-                    md_lines.append(line)
+                # Convert table to markdown format
+                md_lines.append("")
+                for row_idx, row in enumerate(table):
+                    if row is None:
+                        continue
+                    # Clean cells
+                    cells = [str(cell).strip() if cell else "" for cell in row]
+                    md_lines.append("| " + " | ".join(cells) + " |")
+                    # Add separator after header row
+                    if row_idx == 0:
+                        md_lines.append("| " + " | ".join(["---"] * len(cells)) + " |")
+                md_lines.append("")
     
     return "\n".join(md_lines)
 

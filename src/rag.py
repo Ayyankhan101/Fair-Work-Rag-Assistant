@@ -4,7 +4,7 @@ import re
 from typing import Optional
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from vectorstore import load_vectorstore
@@ -264,11 +264,6 @@ def ask_question(rag_chain, question: str) -> str:
     except Exception as e:
         if "429" in str(e) or "rate_limit" in str(e) or "413" in str(e):
             print(f"Rate limit hit, retrying with fallback model (smaller context)...")
-            # Rebuild chain with fallback model and smaller k
-            from langchain_groq import ChatGroq
-            from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
-            from langchain_core.output_parsers import StrOutputParser
-            
             fallback_llm = get_llm(fallback=True)
             
             # Get context builder from original chain and rebuild with smaller k
