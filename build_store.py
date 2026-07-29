@@ -15,7 +15,7 @@ start = time.time()
 CACHE_PATH = Path("data/docs_cache.pkl")
 STORE_DIR = Path("data/vectorstore")
 CHECKPOINT_PATH = STORE_DIR / "build_checkpoint.json"
-BATCH_SIZE = int(os.getenv("VECTORSTORE_BATCH_SIZE", "32"))
+BATCH_SIZE = int(os.getenv("VECTORSTORE_BATCH_SIZE", "16"))
 CHECKPOINT_EVERY_BATCHES = int(os.getenv("VECTORSTORE_CHECKPOINT_EVERY", "5"))
 
 # Use markdown if available, otherwise PDFs

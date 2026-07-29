@@ -60,6 +60,33 @@ class CohereReranker:
         return reranked
 
 
+def _simple_rerank(query: str, documents: List[Document], top_n: int) -> List[Document]:
+    """Simple keyword-based reranker fallback when Cohere is unavailable."""
+    import re
+    q = query.lower()
+    scored = []
+    for doc in documents:
+        text = doc.page_content.lower()
+        score = 0
+        # Exact phrase matches from query
+        for word in q.split():
+            if len(word) > 2 and word in text:
+                score += 1
+        # Bonus for dollar amounts + level patterns (rate tables)
+        if re.search(r'\$\d+\.\d{2}', text):
+            score += 3
+        if re.search(r'level\s+\d', text):
+            score += 2
+        # Bonus for rate-related terms
+        if any(t in text for t in ['minimum hourly rate', 'minimum rate', 'hourly rate']):
+            score += 3
+        if any(t in text for t in ['schedule b', 'schedule of rates', 'summary of hourly']):
+            score += 2
+        scored.append((score, doc))
+    scored.sort(key=lambda x: x[0], reverse=True)
+    return [doc for _, doc in scored[:top_n]]
+
+
 def rerank_documents(
     query: str,
     documents: List[Document],
@@ -68,14 +95,14 @@ def rerank_documents(
 ) -> List[Document]:
     """Convenience function to rerank documents.
     
-    Falls back to original order if Cohere unavailable.
+    Uses Cohere if available, falls back to keyword-based reranking.
     """
     if not use_cohere or not os.getenv("COHERE_API_KEY"):
-        return documents[:top_n]
+        return _simple_rerank(query, documents, top_n)
     
     try:
         reranker = CohereReranker()
         return reranker.rerank(query, documents, top_n)
     except Exception as e:
-        print(f"Reranking failed, using original order: {e}")
-        return documents[:top_n]
+        print(f"Cohere reranking failed, using keyword fallback: {e}")
+        return _simple_rerank(query, documents, top_n)

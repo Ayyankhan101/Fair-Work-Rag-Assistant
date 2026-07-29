@@ -216,10 +216,23 @@ def create_rag_chain(vectorstore, cag_cache=None, docstore_path=None):
         award_filter = detect_award_filter(question)
         topic_filter = detect_topic_filter(question)
         
-        # Use filtered retriever for award-specific or general topic queries
+        # Use filtered retriever for award-specific queries with strong topic match
+        # Fall back to hybrid for weak topic matches or no award
+        use_filtered = False
         if (award_filter or topic_filter) and filtered_retriever:
-            docs = filtered_retriever.invoke(question)
-        else:
+            try:
+                test_docs = filtered_retriever.invoke(question)
+                # Check if filtered retriever found answer-relevant docs
+                if test_docs and any(
+                    any(kw in d.page_content.lower() for kw in question.lower().split() if len(kw) > 3)
+                    for d in test_docs[:5]
+                ):
+                    docs = test_docs
+                    use_filtered = True
+            except Exception:
+                pass
+        
+        if not use_filtered:
             docs = hybrid_retriever.invoke(question)
         
         # Rerank documents for better relevance

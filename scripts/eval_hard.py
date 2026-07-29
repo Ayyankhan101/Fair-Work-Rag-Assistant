@@ -260,6 +260,8 @@ def score_content(answer: str, expected: dict) -> dict:
             keywords_found += 1
         elif kw_lower == "12 months" and ("12 months" in answer_lower or "52 weeks" in answer_lower):
             keywords_found += 1
+        elif kw_lower == "maximum" and ("maximum" in answer_lower or "up to" in answer_lower or "max" in answer_lower):
+            keywords_found += 1
         elif kw_lower == "20 days" and ("20 days" in answer_lower or "4 weeks" in answer_lower):
             keywords_found += 1
         elif kw_lower == "minimum engagement" and ("minimum" in answer_lower and ("engagement" in answer_lower or "engaged" in answer_lower)):

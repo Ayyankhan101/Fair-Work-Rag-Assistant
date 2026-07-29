@@ -138,6 +138,10 @@ def md_to_documents(md_path: str) -> list[Document]:
         chunks = chunk_text(section['text'])
         
         for i, chunk in enumerate(chunks):
+            # Skip empty/header-only chunks (no real content)
+            if len(chunk.strip()) < 50:
+                continue
+            
             # Contextual Retrieval: Prepend context
             award_short = award_name.replace(' Award 2020', '').replace(' Award 2010', '').replace(' Award 2015', '').replace(' Award 2016', '')
             context_prefix = f"[{award_short} - {section['title']}] "
@@ -169,11 +173,15 @@ def nes_md_to_documents(md_path: str) -> list[Document]:
         section_name = sections[i].strip()
         section_text = sections[i + 1].strip() if i + 1 < len(sections) else ""
         
-        if not section_text:
+        if not section_text or len(section_text) < 50:
             continue
         
         chunks = chunk_text(section_text)
         for j, chunk in enumerate(chunks):
+            # Skip empty/header-only chunks
+            if len(chunk.strip()) < 50:
+                continue
+            
             clause_refs = re.findall(r'clause[s]?\s+(\d+[A-Z]*(?:\.\d+)?)', chunk.lower())
             
             context_prefix = f"[National Employment Standards - {section_name}] "

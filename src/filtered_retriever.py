@@ -71,8 +71,8 @@ class AwardFilteredRetriever(BaseRetriever):
             # Exact match
             if award_name.lower() in doc_award.lower():
                 award_docs.append(doc)
-            # Fuzzy match
-            elif fuzzy_match(award_name, doc_award) > 0.7:
+            # Fuzzy match — high threshold to avoid false positives (e.g. "Cleaning" matching "Telecommunications")
+            elif fuzzy_match(award_name, doc_award) > 0.9:
                 award_docs.append(doc)
         
         # Filter by topic keywords
@@ -85,10 +85,22 @@ class AwardFilteredRetriever(BaseRetriever):
                 if doc.metadata.get('clause_number'):
                     score += 2
                 # Bonus for rate tables (dollar amounts, schedules, tables)
-                if re.search(r'\$\d+\.\d{2}', content_lower):
-                    score += 5  # Has specific dollar amounts
-                if any(term in content_lower for term in ['table', 'schedule', 'minimum rates', 'hourly rates', 'summary of']):
-                    score += 3  # Rate table section
+                has_dollar = bool(re.search(r'\$\d+\.\d{2}', content_lower))
+                has_level = bool(re.search(r'level\s+\d', content_lower))
+                has_rate_table = any(term in content_lower for term in ['table', 'minimum rates', 'hourly rates', 'summary of'])
+                
+                if has_dollar:
+                    score += 5
+                if has_level:
+                    score += 3
+                if has_rate_table:
+                    score += 3
+                # Big bonus for rate table + dollar + level (actual rate data)
+                if has_dollar and has_level:
+                    score += 10
+                # Bonus for "minimum hourly rate" or "minimum rate" phrases
+                if 'minimum hourly rate' in content_lower or 'minimum rate' in content_lower:
+                    score += 5
                 if score > 0:
                     scored_docs.append((score, doc))
             
@@ -157,10 +169,16 @@ class AwardFilteredRetriever(BaseRetriever):
         return None
     
     def _extract_topic_keywords(self, query: str) -> List[str]:
-        """Extract topic keywords from query."""
+        """Extract topic keywords from query — match topic name OR any keyword value."""
         q = query.lower()
         keywords = []
         for topic, words in TOPIC_KEYWORDS.items():
             if topic in q:
                 keywords.extend(words)
+            else:
+                # Also check if any keyword phrase appears in the query
+                for word in words:
+                    if word in q:
+                        keywords.extend(words)
+                        break
         return list(set(keywords))
