@@ -25,6 +25,33 @@ def deduplicate_docs(docs: List[Document]) -> List[Document]:
     return unique
 
 
+def _is_rate_query(query: str) -> bool:
+    """Check if query is about pay rates/salary."""
+    q = query.lower()
+    rate_terms = ['rate', 'salary', 'pay', 'wage', 'earnings', 'income', 'hourly', 'per hour', 'per week', 'per year', 'annum']
+    return any(term in q for term in rate_terms)
+
+
+def _is_clause_query(query: str) -> bool:
+    """Check if query is about rules/entitlements/hours (not rates)."""
+    q = query.lower()
+    clause_terms = [
+        'consecutive', 'maximum', 'minimum', 'hours', 'overtime', 'break', 'rest',
+        'roster', 'penalty', 'loading', 'leave', 'notice', 'termination',
+        'probation', 'casual', 'junior', 'engagement', 'entitled', 'entitlement',
+        'can an employee', 'how many', 'what is the maximum', 'what is the minimum',
+        'days off', 'day off', 'public holiday', 'annual leave', 'parental',
+    ]
+    return any(term in q for term in clause_terms)
+
+
+def _is_rostering_query(query: str) -> bool:
+    """Check if query is about rostering/scheduling."""
+    q = query.lower()
+    roster_terms = ['roster', 'rostering', 'consecutive', 'days off', 'shift', 'spread', 'span', 'daily hours']
+    return any(term in q for term in roster_terms)
+
+
 class AwardFilteredRetriever(BaseRetriever):
     """Retriever that filters by award name, then by topic keywords."""
     
@@ -57,9 +84,12 @@ class AwardFilteredRetriever(BaseRetriever):
         # Extract topic keywords
         topic_keywords = self._extract_topic_keywords(query)
         
+        # Extract key terms from query for direct content matching
+        query_terms = self._extract_query_terms(query)
+        
         # If no award specified but has topic, use general retrieval
-        if not award_name and topic_keywords:
-            return self._general_topic_retrieval(query, topic_keywords)
+        if not award_name and (topic_keywords or query_terms):
+            return self._general_topic_retrieval(query, topic_keywords or query_terms)
         
         if not award_name:
             return []
@@ -75,32 +105,60 @@ class AwardFilteredRetriever(BaseRetriever):
             elif fuzzy_match(award_name, doc_award) > 0.9:
                 award_docs.append(doc)
         
-        # Filter by topic keywords
-        if topic_keywords:
+        # Filter by topic keywords or query terms
+        if topic_keywords or query_terms:
+            # Detect query intent for scoring adjustments
+            is_rate_q = _is_rate_query(query)
+            is_clause_q = _is_clause_query(query)
+            is_roster_q = _is_rostering_query(query)
+            
             scored_docs = []
             for doc in award_docs:
                 content_lower = doc.page_content.lower()
-                score = sum(1 for kw in topic_keywords if kw in content_lower)
-                # Bonus for clause numbers
-                if doc.metadata.get('clause_number'):
-                    score += 2
-                # Bonus for rate tables (dollar amounts, schedules, tables)
+                
+                # Score from topic keywords
+                score = sum(2 for kw in topic_keywords if kw in content_lower)
+                
+                # Score from direct query term matches (high signal)
+                for qt in query_terms:
+                    if qt in content_lower:
+                        score += 3
+                
+                # Bonus for clause numbers (more specific = better)
+                clause_num = doc.metadata.get('clause_number', '')
+                if clause_num:
+                    score += 3
+                
+                # Rate table detection
                 has_dollar = bool(re.search(r'\$\d+\.\d{2}', content_lower))
                 has_level = bool(re.search(r'level\s+\d', content_lower))
                 has_rate_table = any(term in content_lower for term in ['table', 'minimum rates', 'hourly rates', 'summary of'])
                 
-                if has_dollar:
-                    score += 5
-                if has_level:
-                    score += 3
-                if has_rate_table:
-                    score += 3
-                # Big bonus for rate table + dollar + level (actual rate data)
-                if has_dollar and has_level:
-                    score += 10
-                # Bonus for "minimum hourly rate" or "minimum rate" phrases
-                if 'minimum hourly rate' in content_lower or 'minimum rate' in content_lower:
-                    score += 5
+                # Penalty for rate table content in clause/rostering queries
+                if is_clause_q or is_roster_q:
+                    if has_rate_table:
+                        score -= 3  # Penalize rate tables for clause queries
+                    if has_dollar and has_level:
+                        score -= 5  # Heavily penalize rate data for clause queries
+                    # Boost clause-level operational content
+                    if any(term in content_lower for term in ['must not', 'must roster', 'maximum number', 'minimum number', 'ordinary hours', 'consecutive']):
+                        score += 5
+                    # Boost rostering-specific content
+                    if is_roster_q and any(term in content_lower for term in ['roster', 'consecutive', 'days off', 'daily hours', 'spread of hours']):
+                        score += 5
+                else:
+                    # Rate query — boost rate tables
+                    if has_dollar:
+                        score += 5
+                    if has_level:
+                        score += 3
+                    if has_rate_table:
+                        score += 3
+                    if has_dollar and has_level:
+                        score += 10
+                    if 'minimum hourly rate' in content_lower or 'minimum rate' in content_lower:
+                        score += 5
+                
                 if score > 0:
                     scored_docs.append((score, doc))
             
@@ -182,3 +240,31 @@ class AwardFilteredRetriever(BaseRetriever):
                         keywords.extend(words)
                         break
         return list(set(keywords))
+    
+    def _extract_query_terms(self, query: str) -> List[str]:
+        """Extract key terms from query for direct content matching."""
+        q = query.lower()
+        # Stop words to ignore
+        stop_words = {'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being',
+                      'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could',
+                      'should', 'may', 'might', 'can', 'shall', 'to', 'of', 'in', 'for',
+                      'on', 'with', 'at', 'by', 'from', 'as', 'into', 'through', 'during',
+                      'before', 'after', 'above', 'below', 'between', 'under', 'again',
+                      'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why',
+                      'how', 'all', 'both', 'each', 'few', 'more', 'most', 'other', 'some',
+                      'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than',
+                      'too', 'very', 'just', 'because', 'but', 'and', 'or', 'if', 'while',
+                      'about', 'against', 'up', 'down', 'out', 'off', 'over', 'under'}
+        
+        # Extract meaningful terms (>=3 chars, not stop words)
+        words = re.findall(r'\b[a-z]{3,}\b', q)
+        terms = [w for w in words if w not in stop_words]
+        
+        # Also extract key phrases (2-word combinations)
+        phrases = []
+        word_list = re.findall(r'\b[a-z]+\b', q)
+        for i in range(len(word_list) - 1):
+            if word_list[i] not in stop_words and word_list[i+1] not in stop_words:
+                phrases.append(f"{word_list[i]} {word_list[i+1]}")
+        
+        return list(set(terms + phrases))

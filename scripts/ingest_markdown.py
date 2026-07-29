@@ -61,14 +61,17 @@ def parse_md_sections(md_content: str, award_name: str, source_file: str) -> lis
 
 def extract_clause_number(section_title: str) -> str:
     """Extract clause number from section title."""
-    clause_match = re.match(r'^(\d+[A-Z]*)\.\s', section_title)
+    # Match "15.1." or "13.5." or "13." or "37A."
+    clause_match = re.match(r'^(\d+(?:\.\d+)?[A-Z]*)\.\s', section_title)
     if clause_match:
         return clause_match.group(1)
     
+    # Match "Part 2—" or "Part 8—"
     part_match = re.match(r'^Part (\d+[A-Z]*)', section_title)
     if part_match:
         return f"Part {part_match.group(1)}"
     
+    # Match "Schedule A—" or "Schedule B—"
     schedule_match = re.match(r'^Schedule ([A-Z])', section_title)
     if schedule_match:
         return f"Schedule {schedule_match.group(1)}"
