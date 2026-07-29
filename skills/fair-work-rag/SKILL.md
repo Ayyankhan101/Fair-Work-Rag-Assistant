@@ -36,17 +36,19 @@ Hybrid CAG+RAG system:
 | File | Purpose |
 |------|---------|
 | `src/config.py` | Shared config (119 award patterns, topic keywords, NES keywords) |
-| `src/rag.py` | RAG chain with LLM + reranker integration |
+| `src/rag.py` | RAG chain with LLM + reranker integration, smart retrieval fallback |
 | `src/cag.py` | CAG context cache for NES |
 | `src/router.py` | Query router (with negation handling) |
-| `src/filtered_retriever.py` | Award-specific retrieval (fuzzy matching, dedup) |
+| `src/filtered_retriever.py` | Award-specific retrieval (fuzzy matching, dedup, intent-aware scoring) |
 | `src/hybrid_retriever.py` | BM25 + Semantic with RRF fusion |
-| `src/reranker.py` | Cohere reranker (optional) |
+| `src/reranker.py` | Cohere reranker + keyword fallback |
 | `src/fastembeddings.py` | LangChain wrapper for fastembed ONNX |
 | `src/vectorstore.py` | TurboVec build/load/search |
 | `src/ingest.py` | PDF ingestion with contextual prefixes |
 | `src/app.py` | Gradio chat interface |
 | `build_store.py` | Auto-detects MD vs PDF, resumable |
+| `scripts/ingest_markdown.py` | Markdown ingestion with full-clause header parsing |
+| `scripts/convert_pdfs_to_markdown.py` | PDF → Markdown with table extraction |
 
 ## LLM Configuration
 
@@ -83,16 +85,16 @@ llm = get_llm(fallback=True)
 ## Vector Store
 
 **TurboVec** (4-bit quantized, file-based)
-- 33,239 chunks from 131 markdown files
-- ~50MB index size
+- 31,134 chunks from 131 markdown files
+- ~48MB index size
 - Supports similarity search (NOT MMR)
 
 ## Reranker (Optional)
 
-**Cohere rerank-english-v3.0**
-- +67% retrieval accuracy
-- Requires `COHERE_API_KEY` in `.env`
-- Graceful fallback if not configured
+**Cohere rerank-english-v3.0** + keyword fallback
+- +67% retrieval accuracy with Cohere
+- Keyword-based fallback when Cohere unavailable
+- Prioritizes dollar amounts, level patterns, rate terms
 
 ## Contextual Retrieval
 
@@ -139,9 +141,14 @@ venv/bin/python3 scripts/eval_prd_questions.py
 | DEF-062 | 119 award aliases mapped (was 40) |
 | DEF-063 | `needs_clarification()` for ambiguous queries |
 | DEF-064 | Negation handling ("not retail" → excludes Retail) |
-| DEF-066 | Fuzzy matching, k=30, deduplication |
+| DEF-066 | Fuzzy matching (0.9 threshold), k=30, deduplication |
 | DEF-049/050 | Smart award name extraction from content |
 | DEF-070 | BM25 retriever added |
+| NEW | Query intent detection (rate vs clause vs rostering) |
+| NEW | Dynamic scoring: clause queries penalize rate tables |
+| NEW | Direct query term matching (bypasses topic keyword dependency) |
+| NEW | Full-clause header parsing (resolves missing clause data) |
+| NEW | Clause number extraction for sub-clauses (15.1, 13.5) |
 
 ## Retrieval Settings
 
@@ -152,7 +159,8 @@ venv/bin/python3 scripts/eval_prd_questions.py
 | max_tokens | 1024 | Full responses |
 | doc truncation | 800 chars | More context per doc |
 | max_chars | 4000 | More documents in context |
-| reranker | Cohere v3.0 | Optional, +67% accuracy |
+| reranker | Cohere v3.0 + keyword fallback | Optional, +67% accuracy |
+| fuzzy threshold | 0.9 | High to avoid false positives |
 
 ## Award Mapping
 

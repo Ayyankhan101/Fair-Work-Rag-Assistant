@@ -2,23 +2,41 @@
 
 ## Hard Eval (Current)
 
-### Run 6 (Final)
+### Run 8 (Latest — July 2026)
+- Format: 23/25 (92%)
+- Content: 22/25 (88% pass)
+- Average: 82.5%
+- Note: ALL questions used fallback model (llama-3.1-8b-instant) due to Groq rate limits
+
+### Run 7 (Previous — before vectorstore rebuild)
 - Format: 25/25 (100%)
-- Content: 25/25 (100% pass)
-- Average: 89.3%
-- Target: 95%
+- Content: 21/25 (84% pass)
+- Average: 85.0%
+- Note: Questions 17-25 used fallback model
+
+### Best Score
+- 85.0% (Run 7) — with 70b model for Q1-16
 
 ### Lowest Scoring Questions
 | ID | Score | Issue |
 |----|-------|-------|
-| H11 | 76% | Saturday penalty — partial retrieval |
-| H13 | 76% | Casual engagement — partial retrieval |
-| H02 | 80% | Consecutive days — partial retrieval |
-| H04 | 80% | Restaurant hours — partial retrieval |
-| H18 | 80% | NES 10 standards — partial retrieval |
+| H02 | 30% | Hospitality consecutive days — data exists, 8b model can't extract |
+| H19 | 52% | Fast Food junior hours — data exists, 8b model can't extract |
+| H16 | 54% | Overtime part-time — partial retrieval |
 
 ### Root Cause
-Partial vector store (only 5280/16692 docs indexed). Full rebuild in progress.
+Rate limits from Groq daily TPD. All questions fell back to weak 8b model.
+Need to re-run after rate limit reset (~00:00 UTC) for 70b model.
+
+## Accuracy Progression
+| Run | Score | Model | Notes |
+|-----|-------|-------|-------|
+| 1 | 87.5% | 70b | Original baseline |
+| 2 | 73.5% | 70b | Filtered build (23,586 docs) |
+| 3 | 81.9% | 70b | Fuzzy threshold fix |
+| 4 | 85.0% | 70b | Parser + retriever fixes |
+| 5 | 78.9% | mixed | Rebuilt vectorstore (31,134 docs) |
+| 6 | 82.5% | fallback | Intent-aware retriever |
 
 ## Basic Eval
 - Format: 12/12 (100%)

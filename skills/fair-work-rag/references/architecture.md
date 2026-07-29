@@ -7,7 +7,11 @@ Combines Cache-Augmented Generation (NES) with Retrieval-Augmented Generation (A
 ```
 Question → Router → CAG (NES) or RAG (Awards) or Both
                          ↓
-                    LLM (Groq 70b/8b)
+                    Smart Retriever (filtered vs hybrid based on answer relevance)
+                         ↓
+                    Reranker (Cohere + keyword fallback)
+                         ↓
+                    LLM (Groq llama-3.3-70b-versatile)
                          ↓
                     5-Component Answer
 ```
@@ -18,10 +22,10 @@ Question → Router → CAG (NES) or RAG (Awards) or Both
 - No retrieval needed — instant, 100% recall
 
 ## RAG Path (Awards)
-- TurboVec vector store (16K+ docs, 130 awards)
+- TurboVec vector store (31,134 docs, 130 awards)
 - BM25 + Semantic hybrid search with RRF (k=60)
 - Filtered retriever for award-specific queries
-- Award detection via 40+ keyword patterns
+- Award detection via 119 keyword patterns
 - Topic detection via 20+ topic keywords
 
 ## Router Logic
@@ -30,23 +34,30 @@ Question → Router → CAG (NES) or RAG (Awards) or Both
 3. Check topic keywords → RAG with filtered retrieval
 4. Default → Hybrid RAG
 
-## Filtered Retriever
+## Filtered Retriever (Intent-Aware)
 Fixes embedding similarity mismatch (e.g., Hospitality Award query returning Wine Industry docs).
-- Detects award name from query (40+ patterns)
-- Detects topic from query (20+ topics)
-- Filters documents by award
-- Scores by topic keywords with weighted scoring:
-  - Exact phrase match = 5 points
-  - Single keyword match = 1 point
-  - Clause number presence = 2 bonus points
-  - Percentage/number in content = 1 bonus points
+
+### Detection Pipeline
+1. **Award detection**: 119 keyword patterns + fuzzy matching (0.9 threshold)
+2. **Topic detection**: 20+ topics with keyword values
+3. **Query term extraction**: Direct content matching (bypasses topic dependency)
+4. **Intent detection**: Rate vs clause vs rostering query classification
+
+### Dynamic Scoring
+- **Rate queries** (pay/salary/rate): Boost rate tables (+10 for dollar+level)
+- **Clause queries** (hours/rostering/rules): Penalize rate tables (-5), boost operational content (+5)
+- **Rostering queries**: Additional boost for roster/consecutive/days off content
+- **Direct term matches**: +3 per matching query term in content
 
 ## General Topic Retrieval
 For questions without specific Award (e.g., "overtime rules"):
 - Retrieves documents from multiple Awards
 - Scores by relevance and diversity
 - Boosts common Awards (Hospitality, Retail, Cleaning, Clerks)
-- Returns top 15 diverse documents
+- Returns top 20 diverse documents
+
+## Smart Retrieval Fallback
+In `src/rag.py`: Filtered retriever used only when top-5 docs contain query keywords. Falls back to hybrid otherwise.
 
 ## Auto Rate Limit Handling
 - `ask_question()` catches 429 errors
@@ -55,19 +66,22 @@ For questions without specific Award (e.g., "overtime rules"):
 - Retries automatically
 
 ## Evaluation
-- Basic eval: 12 questions (format only)
 - Hard eval: 25 questions (format + content scoring)
 - Scoring: Keywords 40% + Pattern 30% + Quality 30%
-- Current: 87.5% accuracy (23/25 pass)
+- Best: 85.0% (with 70b model, before vectorstore rebuild)
+- Latest: 82.5% (all questions on fallback model due to rate limits)
 - Target: 95%+
 
 ## Key Files
-- `src/config.py` — Shared config (award patterns, topic keywords, NES keywords)
-- `src/rag.py` — Main RAG chain
+- `src/config.py` — Shared config (119 award patterns, topic keywords, NES keywords)
+- `src/rag.py` — Main RAG chain with smart retrieval fallback
 - `src/cag.py` — CAG context cache
-- `src/router.py` — Query router
-- `src/filtered_retriever.py` — Award-specific retrieval
+- `src/router.py` — Query router with negation handling
+- `src/filtered_retriever.py` — Intent-aware award-specific retrieval
 - `src/hybrid_retriever.py` — BM25+Semantic with RRF
+- `src/reranker.py` — Cohere reranker + keyword fallback
 - `src/vectorstore.py` — TurboVec index
 - `src/fastembeddings.py` — fastembed wrapper
 - `src/ingest.py` — PDF ingestion
+- `scripts/ingest_markdown.py` — Markdown ingestion with full-clause parsing
+- `scripts/convert_pdfs_to_markdown.py` — PDF→MD with table extraction
