@@ -28,8 +28,18 @@ def parse_md_sections(md_content: str, award_name: str, source_file: str) -> lis
                     'title': current_section,
                     'text': '\n'.join(current_text),
                 })
-            current_section = line.replace('### ', '').strip()
-            current_text = []
+            # Handle headers that contain full clause text on one line
+            # e.g., "### 13.5 The maximum number of ordinary hours... is 11 hours."
+            header_text = line.replace('### ', '').strip()
+            # Match: "N. Text" or "N.M Text" (with or without trailing period on number)
+            clause_match = re.match(r'^(\d+(?:\.\d+)?[A-Z]*)[.\s]+(.+)$', header_text)
+            if clause_match:
+                # Split: clause number as title, rest as body text
+                current_section = clause_match.group(1) + '. ' + clause_match.group(2)[:60]
+                current_text = [clause_match.group(2)]
+            else:
+                current_section = header_text
+                current_text = []
         else:
             current_text.append(line)
     
