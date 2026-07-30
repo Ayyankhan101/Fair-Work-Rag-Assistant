@@ -1,0 +1,70 @@
+# Deployment Configuration Template
+# DEF-030: Deployment auth, privacy, data retention, residency requirements
+
+# === Authentication ===
+# Required before external deployment
+DEPLOYMENT_AUTH:
+  authentication_method: "API_KEY"  # Options: API_KEY, OAUTH2, SAML
+  api_key_rotation_days: 90
+  session_timeout_minutes: 30
+  max_failed_attempts: 5
+  lockout_duration_minutes: 15
+
+# === Privacy ===
+PRIVACY_CONFIG:
+  data_processing_basis: "LEGITIMATE_INTEREST"  # Options: CONSENT, LEGITIMATE_INTEREST, LEGAL_OBLIGATION
+  purpose_limitation: "Employment law Q&A only"
+  data_minimization: true
+  anonymize_queries: true
+  log_retention_days: 90
+
+# === Data Retention ===
+DATA_RETENTION:
+  query_logs_retention_days: 90
+  user_data_retention_days: 365
+  model_outputs_retention_days: 30
+  backup_retention_days: 30
+  automatic_deletion: true
+
+# === Data Residency ===
+DATA_RESIDENCY:
+  primary_region: "ap-southeast-2"  # Sydney, Australia
+  fallback_region: "ap-southeast-1"  # Singapore
+  data_cross_border: false
+  encryption_at_rest: "AES-256"
+  encryption_in_transit: "TLS_1_3"
+
+# === Provider Training Use ===
+PROVIDER_TRAINING:
+  allow_training_on_queries: false
+  allow_model_improvement: false
+  data_processing_agreement: "REQUIRED"
+  opt_out_endpoint: "/api/opt-out"
+
+# === CORS ===
+CORS:
+  allowed_origins:
+    - "https://fair-work-assistant.example.com"
+    - "https://localhost:7860"  # Development only
+  allowed_methods:
+    - "GET"
+    - "POST"
+  allowed_headers:
+    - "Content-Type"
+    - "Authorization"
+  max_age_seconds: 3600
+
+# === Rate Limiting ===
+RATE_LIMITING:
+  requests_per_minute: 60
+  requests_per_hour: 1000
+  concurrent_requests: 10
+  burst_size: 20
+
+# === Logging ===
+LOGGING:
+  level: "INFO"
+  audit_trail: true
+  log_pii: false
+  log_request_body: false
+  log_response_body: false

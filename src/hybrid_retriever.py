@@ -6,12 +6,15 @@ from bm25_retriever import BM25Retriever
 
 
 class HybridRetriever(BaseRetriever):
-    """Hybrid retriever using BM25 + Semantic with RRF fusion."""
+    """Hybrid retriever using BM25 + Semantic with RRF fusion.
+    
+    DEF-066: Increased k for better recall.
+    """
     
     bm25_retriever: BM25Retriever = None
     semantic_retriever: BaseRetriever = None
-    k: int = 20  # Number of results to retrieve from each
-    rrf_k: int = 60  # RRF constant
+    k: int = 20
+    rrf_k: int = 60
     
     class Config:
         arbitrary_types_allowed = True
@@ -23,17 +26,14 @@ class HybridRetriever(BaseRetriever):
         
         for ranked_list in ranked_lists:
             for rank, doc in enumerate(ranked_list):
-                # Create a unique key based on content hash
-                doc_key = hash(doc.page_content)
+                doc_key = hash(doc.page_content[:500])
                 
                 if doc_key not in doc_scores:
                     doc_scores[doc_key] = 0.0
                     doc_map[doc_key] = doc
                 
-                # RRF score: 1 / (k + rank)
                 doc_scores[doc_key] += 1.0 / (self.rrf_k + rank + 1)
         
-        # Sort by fusion score
         sorted_keys = sorted(doc_scores.keys(), key=lambda k: doc_scores[k], reverse=True)
         
         return [doc_map[key] for key in sorted_keys[:self.k]]
@@ -42,12 +42,10 @@ class HybridRetriever(BaseRetriever):
         """Retrieve documents using hybrid search."""
         results = []
         
-        # BM25 search
         if self.bm25_retriever:
             bm25_results = self.bm25_retriever.invoke(query)
             results.append(bm25_results[:self.k])
         
-        # Semantic search
         if self.semantic_retriever:
             semantic_results = self.semantic_retriever.invoke(query)
             results.append(semantic_results[:self.k])
@@ -58,5 +56,4 @@ class HybridRetriever(BaseRetriever):
         if len(results) == 1:
             return results[0][:self.k]
         
-        # Fuse using RRF
         return self._reciprocal_rank_fusion(results)
