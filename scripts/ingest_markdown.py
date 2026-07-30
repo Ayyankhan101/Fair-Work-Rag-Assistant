@@ -2,33 +2,18 @@
 """Fast ingestion from markdown files - much faster than PDF ingestion."""
 import os
 import re
-import hashlib
-import datetime
 from langchain_core.documents import Document
 
 
-CORPUS_VERSION = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
 def parse_md_sections(md_content: str, award_name: str, source_file: str) -> list[dict]:
-    """Parse markdown into sections based on headers.
-    
-    DEF-049: Preserve preamble content before first heading.
-    DEF-050: Retain subclause identity (e.g., 15.1).
-    """
+    """Parse markdown into sections based on headers."""
     sections = []
     current_section = None
     current_text = []
-    preamble_lines = []
     
     for line in md_content.split('\n'):
         # Detect ## headers (Part/Schedule)
         if line.startswith('## '):
-            # DEF-049: Save preamble if no section yet
-            if current_section is None and current_text:
-                preamble_lines = current_text[:]
-                current_text = []
-            
             if current_section and current_text:
                 sections.append({
                     'title': current_section,
@@ -43,10 +28,13 @@ def parse_md_sections(md_content: str, award_name: str, source_file: str) -> lis
                     'title': current_section,
                     'text': '\n'.join(current_text),
                 })
+            # Handle headers that contain full clause text on one line
+            # e.g., "### 13.5 The maximum number of ordinary hours... is 11 hours."
             header_text = line.replace('### ', '').strip()
-            # DEF-050: Parse full clause heading into title+body
+            # Match: "N. Text" or "N.M Text" (with or without trailing period on number)
             clause_match = re.match(r'^(\d+(?:\.\d+)?[A-Z]*)[.\s]+(.+)$', header_text)
             if clause_match:
+                # Split: clause number as title, rest as body text
                 current_section = clause_match.group(1) + '. ' + clause_match.group(2)[:60]
                 current_text = [clause_match.group(2)]
             else:
@@ -61,21 +49,12 @@ def parse_md_sections(md_content: str, award_name: str, source_file: str) -> lis
             'text': '\n'.join(current_text),
         })
     
-    # DEF-049: If no sections found, use whole document
+    # If no sections found, use whole document
     if not sections:
         sections.append({
             'title': award_name,
             'text': md_content,
         })
-    
-    # DEF-049: Prepend preamble as a section if it has content
-    if preamble_lines:
-        preamble_text = '\n'.join(preamble_lines).strip()
-        if preamble_text and len(preamble_text) > 50:
-            sections.insert(0, {
-                'title': f'{award_name} - Introduction',
-                'text': preamble_text,
-            })
     
     return sections
 
@@ -101,10 +80,7 @@ def extract_clause_number(section_title: str) -> str:
 
 
 def chunk_text(text: str, max_chunk_size: int = 1500) -> list[str]:
-    """Split text into chunks.
-    
-    DEF-051: Split oversized single paragraphs and enforce maximum.
-    """
+    """Split text into chunks."""
     if len(text) <= max_chunk_size:
         return [text]
     
@@ -118,19 +94,7 @@ def chunk_text(text: str, max_chunk_size: int = 1500) -> list[str]:
         else:
             if current_chunk:
                 chunks.append(current_chunk.strip())
-            # DEF-051: Split oversized single paragraphs
-            if len(para) > max_chunk_size:
-                sentences = re.split(r'(?<=[.!?])\s+', para)
-                current_chunk = ""
-                for sent in sentences:
-                    if len(current_chunk) + len(sent) + 1 <= max_chunk_size:
-                        current_chunk += sent + " "
-                    else:
-                        if current_chunk:
-                            chunks.append(current_chunk.strip())
-                        current_chunk = sent + " "
-            else:
-                current_chunk = para + "\n\n"
+            current_chunk = para + "\n\n"
     
     if current_chunk.strip():
         chunks.append(current_chunk.strip())
@@ -200,11 +164,10 @@ def md_to_documents(md_path: str) -> list[Document]:
                 'award_name': award_name,
                 'clause_number': clause_num,
                 'section_title': section['title'],
-                'source_url': "https://www.fairwork.gov.au/employment-conditions/awards",
+                'source_url': f"https://www.fairwork.gov.au/employment-conditions/awards",
                 'document_type': 'Award',
                 'source_file': source_file,
                 'chunk_index': i,
-                'source_version': CORPUS_VERSION,
             }
             documents.append(Document(page_content=contextualized_chunk, metadata=metadata))
     
@@ -245,7 +208,6 @@ def nes_md_to_documents(md_path: str) -> list[Document]:
                 'document_type': 'NES',
                 'source_file': 'nes_combined.md',
                 'chunk_index': j,
-                'source_version': CORPUS_VERSION,
             }
             documents.append(Document(page_content=contextualized_chunk, metadata=metadata))
     
@@ -253,17 +215,11 @@ def nes_md_to_documents(md_path: str) -> list[Document]:
 
 
 def ingest_from_md(md_dir: str = "data/md_awards") -> list[Document]:
-    """Ingest all markdown files with deduplication and error tracking.
-    
-    DEF-053: Fail atomically and report expected, accepted, rejected counts.
-    """
+    """Ingest all markdown files."""
     all_docs = []
-    errors = []
-    skipped = 0
     
     md_files = sorted([f for f in os.listdir(md_dir) if f.endswith('.md')])
-    expected_count = len(md_files)
-    print(f"Processing {expected_count} markdown files...")
+    print(f"Processing {len(md_files)} markdown files...")
     
     for idx, md_file in enumerate(md_files):
         md_path = os.path.join(md_dir, md_file)
@@ -275,31 +231,12 @@ def ingest_from_md(md_dir: str = "data/md_awards") -> list[Document]:
             all_docs.extend(docs)
             
             if (idx + 1) % 10 == 0:
-                print(f"  [{idx+1}/{expected_count}] {md_file}: {len(docs)} chunks (total: {len(all_docs)})")
+                print(f"  [{idx+1}/{len(md_files)}] {md_file}: {len(docs)} chunks (total: {len(all_docs)})")
         except Exception as e:
-            errors.append((md_file, str(e)))
             print(f"  ERROR {md_file}: {e}")
     
-    # DEF-009: Deduplicate chunks by content hash
-    seen_hashes = set()
-    unique_docs = []
-    for doc in all_docs:
-        content_hash = hashlib.md5(doc.page_content.encode('utf-8')).hexdigest()
-        if content_hash not in seen_hashes:
-            seen_hashes.add(content_hash)
-            unique_docs.append(doc)
-        else:
-            skipped += 1
-    
-    if skipped > 0:
-        print(f"Deduplicated: {len(all_docs)} -> {len(unique_docs)} chunks (removed {skipped} duplicates)")
-    
-    # DEF-053: Report counts
-    print(f"\nIngestion complete: {len(unique_docs)} accepted, {len(errors)} rejected, {skipped} duplicates")
-    if errors:
-        print(f"Rejected files: {[e[0] for e in errors]}")
-    
-    return unique_docs
+    print(f"\nTotal: {len(all_docs)} chunks from {len(md_files)} markdown files")
+    return all_docs
 
 
 if __name__ == "__main__":
@@ -314,5 +251,5 @@ if __name__ == "__main__":
     
     # Show sample
     if docs:
-        print("\nSample chunk:")
+        print(f"\nSample chunk:")
         print(f"  Content: {docs[0].page_content[:150]}...")

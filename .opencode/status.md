@@ -1,30 +1,29 @@
 # Mission Status
 
 ## Progress
-- All 70 QA defects addressed with code fixes
-- 43 unit tests passing
-- Test coverage: config, router, CAG, prompt safety, format validation
+- .opencode/todo.md: 14/14 complete (100%)
+- Issues: 0 unresolved
+- Workers: 0 active
+- Execution Status: COMPLETE
 
-## Current Results
-- Vector store: 16622 docs from 129 PDFs + NES
-- LLM: Groq llama-3.3-70b-versatile (primary), llama-3.1-8b-instant (fallback)
-- Prompt version: 2.1.0
-- Tests: 43/43 passing
+## Final Results
+- Vector store: 16622 docs from 129 PDFs + NES (520 batches, 2982s)
+- Index: 6.5MB TurboVec quantized index (index.tvim), 25MB docstore.json
+- PRD eval: 12/12 format pass, 10/12 fully correct answers
+- Integration: 7/7 tests passed
+- Gradio app: Fixed for Gradio 6.x compatibility
+- Embeddings: fastembed BAAI/bge-base-en-v1.5 (768-dim, ONNX, local)
+- LLM: Groq llama-3.3-70b-versatile
 
-## Defect Status (2026-07-30)
-- **Fixed in code**: 43 defects
-- **Requires external verification**: 18 defects (need live API, team review, or deployment testing)
-- **Deferred**: 9 defects (documentation, PDF/DOCX, process)
+## Key Fixes This Session
+1. TurboVec MMR → similarity search (quantized vectors don't support MMR)
+2. Gradio 6.x removed retry_btn/undo_btn/clear_btn params
+3. Gradio 6.x theme moved from Blocks() to launch()
 
 ## Architecture
-- src/ingest.py - PDF parsing, clause detection, chunking, 129 award slug mapping
-- src/fastembeddings.py - LangChain wrapper for fastembed ONNX
-- src/vectorstore.py - TurboVec build/load/search with batched resumable ingestion
-- src/rag.py - Groq LLM, 5-component RAG prompt, similarity retriever
-- src/app.py - Gradio ChatInterface with lazy initialization
-- build_store.py - Resumable build script with doc cache + hash verification
-
-## Evidence
-- Lint: ruff check passes (0 errors)
-- Tests: 43/43 passing
-- Test files: tests/test_config_router.py, tests/test_prompt_safety.py, tests/test_cag.py
+- src/ingest.py → PDF parsing, clause detection, chunking, 129 award slug mapping
+- src/fastembeddings.py → LangChain wrapper for fastembed ONNX
+- src/vectorstore.py → TurboVec build/load/search with batched resumable ingestion
+- src/rag.py → Groq LLM, 5-component RAG prompt, similarity retriever
+- src/app.py → Gradio ChatInterface with 12 examples
+- build_store.py → Resumable build script with doc cache + checkpoint

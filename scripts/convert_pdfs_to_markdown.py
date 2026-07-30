@@ -74,13 +74,11 @@ def pdf_to_markdown(pdf_path: str) -> str:
 
 
 def convert_all():
-    """Convert all PDFs to markdown with error tracking."""
+    """Convert all PDFs to markdown."""
     os.makedirs(MD_DIR, exist_ok=True)
     
     pdf_files = sorted([f for f in os.listdir(AWARDS_DIR) if f.endswith('.pdf')])
-    expected = len(pdf_files)
-    errors = []
-    print(f"Converting {expected} PDFs to markdown...")
+    print(f"Converting {len(pdf_files)} PDFs to markdown...")
     
     for idx, pdf_file in enumerate(pdf_files):
         pdf_path = os.path.join(AWARDS_DIR, pdf_file)
@@ -89,30 +87,27 @@ def convert_all():
         
         try:
             md_content = pdf_to_markdown(pdf_path)
-            with open(md_path, 'w', encoding='utf-8') as f:
+            with open(md_path, 'w') as f:
                 f.write(md_content)
             
             if (idx + 1) % 10 == 0:
-                print(f"  [{idx+1}/{expected}] {pdf_file} -> {md_file}")
+                print(f"  [{idx+1}/{len(pdf_files)}] {pdf_file} → {md_file}")
         except Exception as e:
-            errors.append((pdf_file, str(e)))
             print(f"  ERROR {pdf_file}: {e}")
     
-    accepted = expected - len(errors)
-    print(f"\nDone! {accepted}/{expected} PDFs converted, {len(errors)} rejected")
-    if errors:
-        print(f"Rejected: {[e[0] for e in errors]}")
+    print(f"\nDone! {len(pdf_files)} markdown files saved to {MD_DIR}/")
     
     # Also convert NES
     nes_path = "data/nes/nes_combined.txt"
     if os.path.exists(nes_path):
         md_nes_path = os.path.join(MD_DIR, "nes_combined.md")
-        with open(nes_path, encoding='utf-8', errors='replace') as f:
+        with open(nes_path) as f:
             nes_text = f.read()
+        # Convert NES section headers to markdown
         nes_md = re.sub(r'=== (.+?) ===', r'## \1', nes_text)
-        with open(md_nes_path, 'w', encoding='utf-8') as f:
+        with open(md_nes_path, 'w') as f:
             f.write(f"# National Employment Standards\n\n{nes_md}")
-        print("  NES converted -> nes_combined.md")
+        print(f"  NES converted → nes_combined.md")
 
 
 if __name__ == "__main__":

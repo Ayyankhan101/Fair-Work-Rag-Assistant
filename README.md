@@ -3,7 +3,7 @@
 > RAG-powered LLM assistant for Australian employment law — 130 Modern Awards + National Employment Standards
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![LLM-Claude](https://img.shields.io/badge/LLM-Groq_Llama_3.3-70B-blue.svg)](https://groq.com/)
+[![LLM-Claude](https://img.shields.io/badge/LLM-Claude_4.6-7B5EA7.svg)](https://anthropic.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
@@ -131,16 +131,6 @@ venv/bin/python3 scripts/eval_hard.py
 
 # Basic eval (12 questions)
 venv/bin/python3 scripts/eval_prd_questions.py
-```
-
-### Run Tests
-
-```bash
-# Run all unit tests
-python -m pytest tests/ -v
-
-# Run specific test module
-python -m pytest tests/test_config_router.py -v
 ```
 
 ---
@@ -280,9 +270,9 @@ fair-work-rag-assistant/
 
 | Metric | Value |
 |--------|-------|
-| **Accuracy** | 85.0%+ (content-based scoring) |
-| **Questions** | 25 hard questions + 12 PRD questions |
-| **Scoring** | Content-based (keywords 40% + pattern 30% + quality 30%) |
+| **Accuracy** | 87.5% (23/25 pass) |
+| **Questions** | 25 hard questions |
+| **Scoring** | Content-based (not exact match) |
 
 ### Running Eval
 

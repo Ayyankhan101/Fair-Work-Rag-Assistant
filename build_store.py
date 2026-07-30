@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 """Build vector store from markdown files (fast) or PDFs (slow)."""
-import hashlib
-import json
 import os
 import pickle
 import sys
@@ -15,7 +13,6 @@ from turbovec.langchain import TurboQuantVectorStore
 
 start = time.time()
 CACHE_PATH = Path("data/docs_cache.pkl")
-CACHE_META_PATH = Path("data/docs_cache_meta.json")
 STORE_DIR = Path("data/vectorstore")
 CHECKPOINT_PATH = STORE_DIR / "build_checkpoint.json"
 BATCH_SIZE = int(os.getenv("VECTORSTORE_BATCH_SIZE", "16"))
@@ -27,28 +24,9 @@ USE_MD = MD_DIR.exists() and len(list(MD_DIR.glob("*.md"))) > 100
 
 if CACHE_PATH.exists():
     print("Step 1: Loading cached docs...", flush=True)
-    # DEF-011: Verify cache integrity via metadata hash
-    if CACHE_META_PATH.exists():
-        try:
-            meta = json.loads(CACHE_META_PATH.read_text())
-            stored_hash = meta.get("content_hash", "")
-            current_hash = hashlib.sha256(CACHE_PATH.read_bytes()).hexdigest()[:32]
-            if stored_hash and stored_hash != current_hash:
-                print(f"  WARNING: Cache hash mismatch (expected {stored_hash[:16]}..., got {current_hash[:16]}...). Rebuilding.", flush=True)
-                CACHE_PATH.unlink(missing_ok=True)
-                CACHE_META_PATH.unlink(missing_ok=True)
-            else:
-                with CACHE_PATH.open("rb") as f:
-                    docs = pickle.load(f)
-                print(f"  Loaded {len(docs)} cached chunks in {time.time()-start:.0f}s", flush=True)
-        except (json.JSONDecodeError, KeyError):
-            with CACHE_PATH.open("rb") as f:
-                docs = pickle.load(f)
-            print(f"  Loaded {len(docs)} cached chunks in {time.time()-start:.0f}s", flush=True)
-    else:
-        with CACHE_PATH.open("rb") as f:
-            docs = pickle.load(f)
-        print(f"  Loaded {len(docs)} cached chunks in {time.time()-start:.0f}s", flush=True)
+    with CACHE_PATH.open("rb") as f:
+        docs = pickle.load(f)
+    print(f"  Loaded {len(docs)} cached chunks in {time.time()-start:.0f}s", flush=True)
 elif USE_MD:
     print("Step 1: Ingesting from markdown (fast)...", flush=True)
     from scripts.ingest_markdown import ingest_from_md
@@ -56,9 +34,6 @@ elif USE_MD:
     CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CACHE_PATH.open("wb") as f:
         pickle.dump(docs, f, protocol=pickle.HIGHEST_PROTOCOL)
-    # DEF-011: Store cache metadata with hash
-    cache_hash = hashlib.sha256(CACHE_PATH.read_bytes()).hexdigest()[:32]
-    CACHE_META_PATH.write_text(json.dumps({"content_hash": cache_hash, "doc_count": len(docs)}, indent=2))
     print(f"  Ingested {len(docs)} chunks in {time.time()-start:.0f}s", flush=True)
     print(f"  Cached docs to {CACHE_PATH}", flush=True)
 else:
@@ -68,9 +43,6 @@ else:
     CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CACHE_PATH.open("wb") as f:
         pickle.dump(docs, f, protocol=pickle.HIGHEST_PROTOCOL)
-    # DEF-011: Store cache metadata with hash
-    cache_hash = hashlib.sha256(CACHE_PATH.read_bytes()).hexdigest()[:32]
-    CACHE_META_PATH.write_text(json.dumps({"content_hash": cache_hash, "doc_count": len(docs)}, indent=2))
     print(f"  Ingested {len(docs)} chunks in {time.time()-start:.0f}s", flush=True)
     print(f"  Cached docs to {CACHE_PATH}", flush=True)
 
@@ -122,16 +94,4 @@ for batch_no, batch_start in enumerate(range(start_idx, len(docs), BATCH_SIZE), 
 store.dump(str(STORE_DIR))
 if CHECKPOINT_PATH.exists():
     CHECKPOINT_PATH.unlink()
-
-# DEF-019: Write immutable candidate metadata
-candidate_meta = {
-    "build_timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-    "total_docs": len(docs),
-    "store_path": str(STORE_DIR),
-    "corpus_hash": hashlib.sha256(str(MD_DIR).encode()).hexdigest()[:16],
-    "candidate_id": f"candidate-{int(time.time())}",
-}
-candidate_path = STORE_DIR / "candidate.json"
-candidate_path.write_text(json.dumps(candidate_meta, indent=2))
 print(f"Done. Vector store saved. Total: {time.time()-start:.0f}s", flush=True)
-print(f"Candidate ID: {candidate_meta['candidate_id']}", flush=True)

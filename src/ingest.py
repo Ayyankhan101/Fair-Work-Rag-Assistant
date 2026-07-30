@@ -1,9 +1,9 @@
 """PDF + NES ingestion pipeline for Fair Work Awards — optimized for 122+ PDFs."""
 import os
 import re
-import hashlib
-import datetime
+import json
 import pdfplumber
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from langchain_core.documents import Document
 
 
@@ -129,94 +129,11 @@ AWARD_URL_MAP = {
     'ma000119': 'restaurant-industry-award-2020',
     'ma000120': 'childrens-services-award-2010',
     'ma000153': 'australian-government-industry-award-2016',
-    'MA000095': 'car-parking-award-2020',
-    'MA000121': 'state-government-agencies-award-2015',
-    'MA000002': 'clerks-private-sector-award-2010',
-    'ma000095': 'car-parking-award-2020',
-    'ma000121': 'state-government-agencies-award-2015',
-    'ma000002': 'clerks-private-sector-award-2010',
-    'MA000120': 'childrens-services-award-2010',
-    'MA000018': 'aged-care-award-2010',
-    'MA000019': 'banking-finance-and-insurance-award-2020',
-    'MA000020': 'building-and-construction-general-on-site-award-2020',
-    'MA000021': 'business-equipment-award-2020',
-    'MA000022': 'cleaning-services-award-2020',
-    'MA000023': 'contract-call-centres-award-2020',
-    'MA000024': 'cotton-ginning-award-2020',
-    'MA000030': 'market-and-social-research-award-2020',
-    'MA000031': 'medical-practitioners-award-2020',
-    'MA000032': 'mobile-crane-hiring-award-2020',
-    'MA000033': 'nursery-award-2020',
-    'MA000034': 'nurses-award-2020',
-    'MA000035': 'pastoral-award-2020',
-    'MA000036': 'plumbing-and-fire-sprinklers-award-2020',
-    'MA000038': 'road-transport-and-distribution-award-2020',
-    'MA000039': 'road-transport-long-distance-operations-award-2020',
-    'MA000045': 'coal-export-terminals-award-2020',
-    'MA000046': 'air-pilots-award-2020',
-    'MA000047': 'aircraft-cabin-crew-award-2020',
-    'MA000048': 'airline-operations-ground-staff-award-2020',
-    'MA000049': 'airport-employees-award-2020',
-    'MA000050': 'marine-towage-award-2020',
-    'MA000051': 'port-authorities-award-2020',
-    'MA000052': 'ports-harbours-and-enclosed-water-vessels-award-2020',
-    'MA000054': 'asphalt-industry-award-2020',
-    'MA000055': 'cement-lime-and-quarrying-award-2020',
-    'MA000056': 'concrete-products-award-2020',
-    'MA000057': 'premixed-concrete-award-2020',
-    'MA000058': 'registered-and-licensed-clubs-award-2020',
-    'MA000059': 'meat-industry-award-2020',
-    'MA000060': 'aluminium-industry-award-2020',
-    'MA000065': 'professional-employees-award-2020',
-    'MA000069': 'pharmaceutical-industry-award-2020',
-    'MA000070': 'cemetery-industry-award-2020',
-    'MA000072': 'oil-refining-and-manufacturing-award-2020',
-    'MA000074': 'poultry-processing-award-2020',
-    'MA000076': 'educational-services-schools-general-staff-award-2020',
-    'MA000077': 'educational-services-teachers-award-2020',
-    'MA000078': 'book-industry-award-2020',
-    'MA000079': 'architects-award-2020',
-    'MA000080': 'amusement-events-and-recreation-award-2020',
-    'MA000083': 'commercial-sales-award-2020',
-    'MA000085': 'dredging-industry-award-2020',
-    'MA000086': 'maritime-offshore-oil-and-gas-award-2020',
-    'MA000088': 'electrical-power-industry-award-2020',
-    'MA000092': 'alpine-resorts-award-2020',
-    'MA000093': 'marine-tourism-and-charter-vessels-award-2020',
-    'MA000096': 'dry-cleaning-and-laundry-industry-award-2020',
-    'MA000097': 'pest-control-industry-award-2020',
-    'MA000098': 'ambulance-and-patient-transport-industry-award-2020',
-    'MA000104': 'miscellaneous-award-2020',
-    'MA000106': 'real-estate-industry-award-2020',
-    'MA000108': 'professional-diving-industry-industrial-award-2020',
-    'MA000109': 'professional-diving-industry-recreational-award-2020',
-    'MA000110': 'corrections-and-detention-private-sector-award-2020',
-    'MA000114': 'aquaculture-industry-award-2020',
-    'MA000115': 'services-award-2020',
-    'MA000117': 'mannequins-and-models-award-2020',
-    'MA000118': 'animal-care-and-veterinary-services-award-2020',
-    'MA000119': 'restaurant-industry-award-2020',
-    'MA000011': 'mining-industry-award-2020',
-    'MA000012': 'pharmacy-industry-award-2020',
-    'MA000013': 'racing-clubs-events-award-2020',
-    'MA000014': 'racing-industry-ground-maintenance-award-2020',
-    'MA000015': 'rail-industry-award-2020',
-    'MA000001': 'black-coal-mining-industry-award-2020',
-}
-
-
-AWARD_NAME_OVERRIDES = {
-    'MA000002.pdf': 'Clerks—Private Sector Award 2010',
-    'ma000002.pdf': 'Clerks—Private Sector Award 2010',
 }
 
 
 def extract_award_name_from_pdf(pdf_path: str) -> str:
     """Extract award name from first page of PDF."""
-    filename = os.path.basename(pdf_path)
-    if filename in AWARD_NAME_OVERRIDES:
-        return AWARD_NAME_OVERRIDES[filename]
-    
     with pdfplumber.open(pdf_path) as pdf:
         first_page = pdf.pages[0].extract_text()
         lines = first_page.split('\n')
@@ -320,9 +237,6 @@ def extract_clause_number(section_title: str) -> str:
     return ""
 
 
-CORPUS_VERSION = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
 def chunk_text(text: str, max_chunk_size: int = 1500) -> list[str]:
     """Split text into chunks, trying to break at paragraph boundaries."""
     if len(text) <= max_chunk_size:
@@ -366,10 +280,6 @@ def pdf_to_documents(pdf_path: str) -> list[Document]:
     sections = parse_pdf_structure(pdf_path)
     documents = []
     slug = get_award_slug(os.path.basename(pdf_path))
-    
-    # Compute source hash from all section text
-    all_text = '\n'.join(s['text'] for s in sections)
-    source_hash = hashlib.sha256(all_text.encode('utf-8')).hexdigest()[:16]
 
     for section in sections:
         clause_num = extract_clause_number(section['title'])
@@ -384,8 +294,6 @@ def pdf_to_documents(pdf_path: str) -> list[Document]:
                 'document_type': 'Award',
                 'source_file': section['source_file'],
                 'chunk_index': i,
-                'source_version': CORPUS_VERSION,
-                'source_hash': source_hash,
             }
             
             # Contextual Retrieval: Prepend context to chunk
@@ -403,8 +311,7 @@ def nes_text_to_documents(nes_path: str) -> list[Document]:
     
     Contextual Retrieval: Prepend NES section context to each chunk.
     """
-    # DEF-061: Always read NES with explicit UTF-8 encoding
-    with open(nes_path, encoding='utf-8', errors='replace') as f:
+    with open(nes_path) as f:
         text = f.read()
 
     documents = []
@@ -429,7 +336,6 @@ def nes_text_to_documents(nes_path: str) -> list[Document]:
                 'document_type': 'NES',
                 'source_file': 'nes_combined.txt',
                 'chunk_index': j,
-                'source_version': CORPUS_VERSION,
             }
             
             # Contextual Retrieval: Prepend NES context to chunk
@@ -463,25 +369,12 @@ def ingest_all(awards_dir: str, nes_path: str) -> list[Document]:
 
     # Process NES
     if os.path.exists(nes_path):
-        print("Processing NES...")
+        print(f"Processing NES...")
         nes_docs = nes_text_to_documents(nes_path)
         all_docs.extend(nes_docs)
         print(f"  NES: {len(nes_docs)} chunks")
 
     print(f"\nTotal: {len(all_docs)} chunks from {len(pdf_files)} PDFs + NES")
-
-    # DEF-009: Deduplicate chunks by content hash
-    seen_hashes = set()
-    unique_docs = []
-    for doc in all_docs:
-        content_hash = hashlib.md5(doc.page_content.encode('utf-8')).hexdigest()
-        if content_hash not in seen_hashes:
-            seen_hashes.add(content_hash)
-            unique_docs.append(doc)
-    if len(unique_docs) < len(all_docs):
-        print(f"Deduplicated: {len(all_docs)} -> {len(unique_docs)} chunks (removed {len(all_docs) - len(unique_docs)} duplicates)")
-    all_docs = unique_docs
-
     return all_docs
 
 
@@ -503,7 +396,7 @@ if __name__ == "__main__":
 
     # Show sample
     if docs:
-        print("\nSample chunk:")
+        print(f"\nSample chunk:")
         print(f"  Award: {docs[0].metadata['award_name']}")
         print(f"  Clause: {docs[0].metadata['clause_number']}")
         print(f"  Section: {docs[0].metadata['section_title']}")

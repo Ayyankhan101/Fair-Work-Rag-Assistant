@@ -1,8 +1,6 @@
 """RAG chain with Groq LLM for Fair Work Awards & NES Q&A."""
 import os
 import re
-import time
-import logging
 from typing import Optional
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
@@ -14,13 +12,7 @@ from bm25_retriever import build_bm25_retriever_from_docstore
 from hybrid_retriever import HybridRetriever
 from filtered_retriever import AwardFilteredRetriever
 from reranker import rerank_documents
-from config import detect_award, detect_topic
-
-logger = logging.getLogger(__name__)
-
-# DEF-037: Prompt versioning
-PROMPT_VERSION = "2.1.0"
-PROMPT_HASH = None  # Computed at module load time
+from config import AWARD_PATTERNS, TOPIC_KEYWORDS, detect_award, detect_topic
 
 
 SYSTEM_PROMPT = """You are a Fair Work Award expert assistant for Australian employment law.
@@ -77,20 +69,12 @@ Question: {question}
 
 Answer:"""
 
-# Compute prompt hash for versioning
-import hashlib as _hashlib
-PROMPT_HASH = _hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest()[:16]
-
 
 def get_llm(fallback=False) -> ChatGroq:
     """Initialize Groq LLM with optional fallback.
     
     Args:
         fallback: If True, use smaller model (8b-instant) for rate limit avoidance
-    
-    DEF-031: Model IDs updated to avoid deprecated models (shutting down 16 Aug 2026).
-    Primary: llama-3.3-70b-versatile → llama-3.3-70b-versatile (latest stable)
-    Fallback: llama-3.1-8b-instant → llama-3.1-8b-instant (latest stable)
     """
     load_dotenv()
     model = "llama-3.1-8b-instant" if fallback else "llama-3.3-70b-versatile"
@@ -98,8 +82,6 @@ def get_llm(fallback=False) -> ChatGroq:
         model=model,
         temperature=0,
         max_tokens=1024,
-        timeout=30,
-        max_retries=2,
     )
 
 
@@ -207,12 +189,14 @@ def create_rag_chain(vectorstore, cag_cache=None, docstore_path=None):
     ])
 
     # Award name mapping for filtering (from shared config)
+    AWARD_KEYWORDS = AWARD_PATTERNS
     
     def detect_award_filter(question: str) -> Optional[str]:
         """Detect if question mentions a specific Award."""
         return detect_award(question)
     
     # Topic keywords for general questions (from shared config)
+    TOPIC_KEYWORDS_MAP = TOPIC_KEYWORDS
     
     def detect_topic_filter(question: str) -> Optional[str]:
         """Detect if question is about a general topic."""
@@ -271,12 +255,8 @@ def create_rag_chain(vectorstore, cag_cache=None, docstore_path=None):
 
 
 def ask_question(rag_chain, question: str) -> str:
-    """Ask a question and get a formatted answer with auto-fallback on rate limit.
-    
-    DEF-043: Added timeout handling and structured error responses.
-    DEF-044: Rate limit fallback reduces context and uses correct role messages.
-    DEF-045: Added request logging with timing.
-    """
+    """Ask a question and get a formatted answer with auto-fallback on rate limit."""
+    # Check if question needs clarification
     if needs_clarification(question):
         return """**Answer:** Could you please provide more details about your question?
 
@@ -291,57 +271,42 @@ def ask_question(rag_chain, question: str) -> str:
 - "What are the casual loading rates in the Retail Award?"
 - "How much annual leave am I entitled to under the NES?" """
     
-    start_time = time.time()
     try:
         response = rag_chain.invoke(question)
-        elapsed = time.time() - start_time
-        logger.info(f"RAG request completed in {elapsed:.2f}s | prompt_version={PROMPT_VERSION} | prompt_hash={PROMPT_HASH}")
         return response
     except Exception as e:
-        elapsed = time.time() - start_time
-        error_str = str(e)
-        logger.error(f"RAG request failed in {elapsed:.2f}s | error={error_str[:200]}")
-        
-        if "429" in error_str or "rate_limit" in error_str:
-            logger.warning("Rate limit hit, retrying with fallback model and reduced context...")
+        if "429" in str(e) or "rate_limit" in str(e) or "413" in str(e):
+            print(f"Rate limit hit, retrying with fallback model (smaller context)...")
             fallback_llm = get_llm(fallback=True)
             
-            # DEF-044: Build fallback chain with smaller context window
+            # Get context builder from original chain and rebuild with smaller k
             original_context_builder = rag_chain.first
+            if hasattr(original_context_builder, 'func'):
+                # Rebuild with smaller k
+                fallback_chain = (
+                    original_context_builder  # Same context builder
+                    | ChatPromptTemplate.from_messages([
+                        SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT),
+                        HumanMessagePromptTemplate.from_template("{question}"),
+                    ])
+                    | fallback_llm
+                    | StrOutputParser()
+                )
+            else:
+                # Fallback: rebuild entire chain
+                fallback_chain = (
+                    {"context": original_context_builder, "question": lambda x: x}
+                    | ChatPromptTemplate.from_messages([
+                        SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT),
+                        HumanMessagePromptTemplate.from_template("{question}"),
+                    ])
+                    | fallback_llm
+                    | StrOutputParser()
+                )
             
-            # Create a wrapper that reduces context
-            def reduced_context(question_text):
-                if callable(original_context_builder):
-                    ctx = original_context_builder(question_text)
-                    # DEF-044: Truncate context to reduce token usage
-                    if isinstance(ctx, str) and len(ctx) > 2000:
-                        ctx = ctx[:2000] + "\n\n[Context truncated for rate limit fallback]"
-                    return ctx
-                return original_context_builder
-            
-            fallback_chain = (
-                {"context": reduced_context, "question": lambda x: x}
-                | ChatPromptTemplate.from_messages([
-                    SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT),
-                    HumanMessagePromptTemplate.from_template("{question}"),
-                ])
-                | fallback_llm
-                | StrOutputParser()
-            )
-            
-            try:
-                response = fallback_chain.invoke(question)
-                elapsed = time.time() - start_time
-                logger.info(f"Fallback request completed in {elapsed:.2f}s")
-                return response
-            except Exception as fallback_err:
-                logger.error(f"Fallback also failed: {fallback_err}")
-                return "**Answer:** I'm experiencing technical difficulties. Please try again shortly.\n\n**Note:** Service temporarily unavailable."
-        
-        if "413" in error_str:
-            return "**Answer:** Your question is too complex for the current context window. Please try a more specific question.\n\n**Note:** Question too large."
-        
-        return f"**Answer:** An error occurred while processing your question.\n\n**Note:** {error_str[:200]}"
+            response = fallback_chain.invoke(question)
+            return response
+        raise
 
 
 if __name__ == "__main__":
