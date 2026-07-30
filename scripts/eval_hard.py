@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-"""Hard eval suite: 25 questions with expected answers for content accuracy scoring."""
+"""Hard eval suite: 20+ questions with expected answers for content accuracy scoring."""
 import json
 import re
 import sys
 import time
-import hashlib
-import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -328,7 +326,7 @@ def score_content(answer: str, expected: dict) -> dict:
 
 
 def main() -> int:
-    """Run hard eval suite with provenance metadata."""
+    """Run hard eval suite."""
     store_dir = ROOT / "data" / "vectorstore"
     out_path = ROOT / "data" / "hard_eval_results.json"
     
@@ -340,10 +338,6 @@ def main() -> int:
     vectorstore = load_vectorstore(str(store_dir))
     docstore_path = str(store_dir / "docstore.json")
     rag_chain = create_rag_chain(vectorstore, docstore_path=docstore_path)
-    
-    # DEF-005: Provenance metadata
-    run_timestamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    store_hash = hashlib.sha256((store_dir / "index.tvim").read_bytes()).hexdigest()[:16] if (store_dir / "index.tvim").exists() else "unknown"
     
     results = []
     total_score = 0
@@ -359,10 +353,12 @@ def main() -> int:
         except Exception as e:
             answer = f"Error: {e}"
         
+        # Format validation
         fmt = validate_format(answer)
         if fmt:
             format_failures += 1
         
+        # Content scoring
         content = score_content(answer, q)
         total_score += content["score"]
         max_total += content["max_score"]
@@ -371,7 +367,7 @@ def main() -> int:
         if passed:
             content_pass += 1
         
-        status = "PASS" if passed else "FAIL"
+        status = "✓" if passed else "✗"
         print(f"  {status} Content: {content['percentage']:.0f}% ({content['score']:.0f}/{content['max_score']:.0f})")
         
         results.append({
@@ -385,9 +381,11 @@ def main() -> int:
             "passed": passed,
         })
         
+        # Rate limit avoidance
         if i < len(HARD_QUESTIONS) - 1:
             time.sleep(1)
     
+    # Summary
     overall = (total_score / max_total) * 100 if max_total > 0 else 0
     
     summary = {
@@ -397,26 +395,18 @@ def main() -> int:
         "overall_accuracy": overall,
         "total_score": total_score,
         "max_score": max_total,
-        # DEF-005: Provenance fields
-        "run_timestamp": run_timestamp,
-        "store_hash": store_hash,
-        "prompt_version": "2.1.0",
-        "model": "llama-3.3-70b-versatile",
-        "eval_version": "2.0.0",
     }
     
     output = {"summary": summary, "results": results}
     out_path.write_text(json.dumps(output, indent=2))
     
     print(f"\n{'='*60}")
-    print("EVAL SUMMARY")
+    print(f"EVAL SUMMARY")
     print(f"{'='*60}")
     print(f"Total Questions: {summary['total_questions']}")
     print(f"Format Pass: {summary['format_pass']}/{summary['total_questions']}")
     print(f"Content Pass: {summary['content_pass']}/{summary['total_questions']}")
     print(f"Overall Accuracy: {summary['overall_accuracy']:.1f}%")
-    print(f"Run Timestamp: {summary['run_timestamp']}")
-    print(f"Store Hash: {summary['store_hash']}")
     print(f"Saved to: {out_path}")
     
     return 0 if summary["overall_accuracy"] >= 95 else 1

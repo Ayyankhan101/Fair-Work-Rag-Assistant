@@ -14,7 +14,6 @@ data/vectorstore/
 data/vectorstore_smoke/
 data/md_awards/
 data/docs_cache.pkl
-data/docs_cache_meta.json
 
 # Build artifacts
 monitor_build.out
@@ -33,15 +32,3 @@ Thumbs.db
 
 # Node
 .opencode/node_modules/
-
-# Coverage
-.coverage
-.coverage.*
-htmlcov/
-
-# QA artifacts (not product code)
-Cortex-insight-analytics/
-Quality\ Assurance\ Officer/
-.opencode/status.md
-.opencode/quality-plan.md
-.opencode/todo.md

@@ -1,4 +1,4 @@
-"""Filtered retriever for award-specific queries with improved recall."""
+"""Filtered retriever for award-specific queries."""
 import re
 import json
 from difflib import SequenceMatcher
@@ -18,8 +18,7 @@ def deduplicate_docs(docs: List[Document]) -> List[Document]:
     seen = set()
     unique = []
     for doc in docs:
-        # Use first 500 chars for dedup to catch near-duplicates
-        content_hash = hash(doc.page_content[:500])
+        content_hash = hash(doc.page_content[:200])
         if content_hash not in seen:
             seen.add(content_hash)
             unique.append(doc)
@@ -76,42 +75,40 @@ class AwardFilteredRetriever(BaseRetriever):
             self.all_docs.append(Document(page_content=text, metadata=metadata))
     
     def _get_relevant_documents(self, query: str) -> List[Document]:
-        """Retrieve documents filtered by award name or general topic.
-        
-        DEF-066: Improved recall by expanding k and improving scoring.
-        """
+        """Retrieve documents filtered by award name or general topic."""
         self._load_docs()
         
+        # Extract award name from query
         award_name = self._extract_award_name(query)
+        
+        # Extract topic keywords
         topic_keywords = self._extract_topic_keywords(query)
+        
+        # Extract key terms from query for direct content matching
         query_terms = self._extract_query_terms(query)
         
+        # If no award specified but has topic, use general retrieval
         if not award_name and (topic_keywords or query_terms):
             return self._general_topic_retrieval(query, topic_keywords or query_terms)
         
         if not award_name:
             return []
         
-        # DEF-066: Expand award matching to include partial and fuzzy matches
+        # Filter by award name with fuzzy matching
         award_docs = []
-        award_lower = award_name.lower()
         for doc in self.all_docs:
             doc_award = doc.metadata.get('award_name', '')
-            doc_award_lower = doc_award.lower()
             # Exact match
-            if award_lower in doc_award_lower:
+            if award_name.lower() in doc_award.lower():
                 award_docs.append(doc)
-            # DEF-066: Also try matching on award ID or partial name
-            elif award_lower.split()[0] in doc_award_lower:
-                award_docs.append(doc)
-            # Fuzzy match
-            elif fuzzy_match(award_name, doc_award) > 0.85:
+            # Fuzzy match — high threshold to avoid false positives (e.g. "Cleaning" matching "Telecommunications")
+            elif fuzzy_match(award_name, doc_award) > 0.9:
                 award_docs.append(doc)
         
         # Filter by topic keywords or query terms
         if topic_keywords or query_terms:
             # Detect query intent for scoring adjustments
-            _is_rate_query(query)
+            is_rate_q = _is_rate_query(query)
             is_clause_q = _is_clause_query(query)
             is_roster_q = _is_rostering_query(query)
             

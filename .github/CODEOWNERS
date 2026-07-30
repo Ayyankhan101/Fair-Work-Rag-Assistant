@@ -1,16 +1,6 @@
-# DEF-060: Require multiple reviewers for protected branches
-# Each line is a file pattern followed by one or more owners
-
 # Default owner for everything
 * @Ayyankhan101
 
-# Require review for protected branches - at least 2 reviewers
+# Require review for protected branches
 /main @Ayyankhan101
 /develop @Ayyankhan101
-
-# Source code requires additional review
-/src/ @Ayyankhan101
-/scripts/ @Ayyankhan101
-
-# GitHub Actions require security review
-/.github/ @Ayyankhan101
