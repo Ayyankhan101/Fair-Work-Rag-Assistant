@@ -1,0 +1,174 @@
+Fair Work Act 2009 - Part 3-2 Division 4 - Unfair Dismissal
+Source: https://www.legislation.gov.au/C2009A00142
+Compilation date: 1 January 2024
+Includes amendments up to: Fair Work Legislation Amendment (Closing Loopholes) Act 2023
+
+================================================================================
+
+Division 4—Unfair dismissal
+
+385  What is an unfair dismissal
+
+(1) A person has been unfairly dismissed if the FWC is satisfied that:
+    (a) the person has been dismissed; and
+    (b) the dismissal was harsh, unjust or unreasonable.
+
+(2) However, the FWC is not satisfied that a person has been unfairly dismissed if:
+    (a) the person was dismissed for a reason that is related to:
+        (i) the conduct of the person; or
+        (ii) the capacity of the person; and
+    (b) the FWC is satisfied that the reason was a valid reason based on the conduct or capacity of the person.
+
+(3) The FWC is not to consider whether a dismissal was harsh, unjust or unreasonable if the dismissal was consistent with the Small Business Fair Dismissal Code.
+
+(4) The FWC is not to consider whether a dismissal was harsh, unjust or unreasonable if the person was dismissed because of genuine redundancy and:
+    (a) the employer's obligations under an enterprise agreement or other award did not apply to the employer; or
+    (b) the employer did not comply with its obligations under an enterprise agreement or other award in relation to the dismissal; or
+    (c) the employer complied with its obligations under an enterprise agreement or other award in relation to the dismissal and the reason for the dismissal was:
+        (i) a genuine redundancy; or
+        (ii) the person's capacity or conduct.
+
+386  Meaning of dismissed
+
+(1) A person has been dismissed if:
+    (a) the person's employer has terminated the person's employment at the employer's initiative; or
+    (b) the person has resigned or terminated his or her employment, but was forced to do so because of conduct, or a course of conduct, engaged in by his or her employer.
+
+(2) A person has not been dismissed if:
+    (a) the person was employed under a contract of employment for a specified period of time, or for the duration of a specified task, or for the duration of a specified event or happening, and the employment has terminated at the end of the period, on completion of the task, or on the happening of the event; or
+    (b) the person was employed under a training arrangement and his or her employment has ended because the person was not appointed to a position after the training arrangement ended.
+
+387  Criteria for considering unfairness
+
+In considering whether it is satisfied that a dismissal was harsh, unjust or unreasonable, the FWC must take into account:
+    (a) whether there was a valid reason for the dismissal related to the person's capacity or conduct (including its connection with the person's work); and
+    (b) whether the person was notified of that reason; and
+    (c) whether the person was given an opportunity to respond to any reason related to the capacity or conduct of the person; and
+    (d) any unreasonable refusal by the employer to allow the person to have a support person present during discussions relating to the dismissal; and
+    (e) if the dismissal related to unsatisfactory performance by the person—whether the person had been warned about that unsatisfactory performance before the dismissal; and
+    (f) the degree to which the size of the employer's enterprise would be likely to impact on the procedures followed in effecting the dismissal; and
+    (g) the degree to which the absence of dedicated human resource management specialists or expertise in the enterprise would be likely to impact on the procedures followed in effecting the dismissal; and
+    (h) any other matters that the FWC considers relevant.
+
+388  Summary dismissal
+
+(1) For the purposes of this Part, a person has been summarily dismissed if:
+    (a) the person's employer has terminated the person's employment without giving notice in accordance with section 117; and
+    (b) the employer would not have been required to give the person notice under section 117 because of:
+        (i) the person's conduct; or
+        (ii) the person's capacity.
+
+(2) The FWC must not determine that a summary dismissal was harsh, unjust or unreasonable unless the FWC is satisfied that the person's conduct or capacity was not such as to warrant the action taken by the employer.
+
+389  Exceptions to minimum employment period
+
+(1) This section applies if:
+    (a) a person is dismissed; and
+    (b) the person's employment was:
+        (i) under a contract of employment for a specified period of time; or
+        (ii) under a training arrangement; and
+    (c) the person's employment was for a period of less than the minimum employment period.
+
+(2) For the purposes of this Part, the person is taken not to have been dismissed.
+
+(3) However, subsection (2) does not apply if:
+    (a) the person's employment was terminated at the employer's initiative; and
+    (b) the termination was:
+        (i) because of the person's conduct; or
+        (ii) because of the person's capacity.
+
+(4) For the purposes of this section:
+    minimum employment period means:
+    (a) 6 months; or
+    (b) if the employer is a small business employer—12 months.
+
+390  Remedies for unfair dismissal—reinstatement
+
+(1) If the FWC is satisfied that a person has been unfairly dismissed, the FWC may make an order for the person's reinstatement.
+
+(2) The FWC must make an order for the person's reinstatement unless the FWC is satisfied that reinstatement is inappropriate in the circumstances.
+
+(3) If the FWC makes an order for reinstatement, the order must include:
+    (a) an order that the employer pay to the person the amount of the remuneration lost, or likely to have been lost, because of the dismissal; and
+    (b) an order that the employer not employ or engage the person during any period when the person is not performing work for the employer.
+
+(4) If the FWC makes an order for reinstatement, the FWC may order:
+    (a) that the employer reinstate the person to the person's former position; or
+    (b) that the employer reinstate the person to a position equivalent to the person's former position in terms of remuneration, status and responsibility.
+
+(5) If the FWC makes an order for reinstatement, the FWC may also order that the employer:
+    (a) pay an amount to the person for the remuneration lost, or likely to have been lost, because of the dismissal; and
+    (b) compensate the person for any loss or damage suffered because of the dismissal, other than remuneration lost.
+
+391  Compensation instead of reinstatement
+
+(1) If the FWC is satisfied that reinstatement of a person is inappropriate in the circumstances, the FWC may make an order for the payment of compensation to the person instead.
+
+(2) The amount of the compensation must be an amount that the FWC considers appropriate in the circumstances.
+
+(3) However, the amount must not exceed the lesser of:
+    (a) the amount worked out under subsection (4); and
+    (b) the high income threshold immediately before the dismissal.
+
+(4) The amount worked out under this subsection is:
+    (a) the total of the following amounts:
+        (i) the total amount of remuneration:
+            (A) received by the person; or
+            (B) to which the person was entitled;
+        (whichever is higher) for the 26 weeks immediately before the dismissal; and
+        (ii) if the FWC considers it appropriate—the amount of any other remuneration received by the person, or to which the person was entitled, during the period of 26 weeks after the dismissal; and
+    (b) multiplied by 1.
+
+(5) The amount of the compensation may include a component for:
+    (a) shock; or
+    (b) humiliation; or
+    (c) distress; or
+    (d) injury to feelings.
+
+(6) In calculating the amount of compensation, the FWC must disregard:
+    (a) any component attributable to a remuneration payment made under section 390; and
+    (b) any component attributable to a payment in lieu of notice of termination; and
+    (c) any component attributable to redundancy, other than a genuine redundancy payment.
+
+392  How compensation is calculated
+
+(1) In determining the amount of compensation to be ordered under section 391, the FWC must:
+    (a) make a finding as to the amount of remuneration lost, or likely to have been lost, because of the dismissal; and
+    (b) make a finding as to the amount of remuneration that the person is likely to earn, or be capable of earning, in reasonable alternative employment.
+
+(2) The FWC must not order the payment of compensation to the person under section 391 unless the FWC is satisfied that:
+    (a) the person suffered loss or damage because of the dismissal; and
+    (b) the loss or damage was not caused or contributed to, either directly or indirectly, by:
+        (i) the person's conduct before or after the dismissal; or
+        (ii) the person's unreasonable refusal to accept an offer of re-employment.
+
+393  Notice of termination
+
+(1) If an employer terminates an employee's employment by giving notice, the employer must not give a period of notice that is less than the period required by section 117.
+
+(2) However, subsection (1) does not apply if the termination is for serious misconduct.
+
+(3) For the purposes of this section, serious misconduct has the meaning given by the regulations.
+
+394  Application for remedy—unfair dismissal
+
+(1) An application for an order under Division 4 (remedy for unfair dismissal) must be made:
+    (a) within 21 days after the dismissal took effect; or
+    (b) within such further period as the FWC allows under subsection (2).
+
+(2) The FWC may allow a further period for the application to be made by a person under subsection (1) if the FWC is satisfied that there are exceptional circumstances, taking into account:
+    (a) the reason for the delay; and
+    (b) whether the person first became aware of the dismissal after it took effect; and
+    (c) any action taken by the person to dispute the dismissal; and
+    (d) prejudice to the employer (including prejudice caused by the delay); and
+    (e) the merits of the application; and
+    (f) fairness as between the person and other persons in a similar position.
+
+================================================================================
+
+Notes:
+1. This is a simplified extract for reference purposes. Always verify against the authoritative source at legislation.gov.au.
+2. The Fair Work Act 2009 (Cth) is Commonwealth legislation, generally available under CC BY 4.0.
+3. Attribution: Commonwealth of Australia, Fair Work Act 2009, sourced from legislation.gov.au.
+4. Compilation date: This text reflects amendments up to and including the Fair Work Legislation Amendment (Closing Loopholes) Act 2023.
+5. For current consolidated text, visit: https://www.legislation.gov.au/C2009A00142/latest/text
