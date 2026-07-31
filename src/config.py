@@ -86,6 +86,8 @@ QUERY_CATEGORIES = {
             "size of business", "absence of HR", "other matters",
             "fwc consider", "assess", "criteria", "factors",
             "unsatisfactory performance", "warned", "support person",
+            "compensation", "reinstatement", "remedy", "26 weeks",
+            "calculate", "calculation", "lost income",
         ],
     },
     "analogous_facts": {
