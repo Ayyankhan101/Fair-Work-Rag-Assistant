@@ -1,181 +1,136 @@
-# Quality Improvement Plan: >97% Answer Accuracy
+# Quality Plan: Unfair Dismissal RAG Assistant
 
 ## Current State
-- **12/12 format pass** (5-component structure works)
-- **10/12 correct answers** (83% accuracy)
-- **Target: >97%** (need 12/12 or 11/12 minimum)
+- **Pipeline tested** with Fair Work Act legislation only
+- **8/8 section accuracy** (100%)
+- **7/8 answer accuracy** (87.5%)
+- **0% abstention rate** (all questions answered)
+- **Target: >95% answer accuracy** with FWC decisions
 
-## Root Cause Analysis
+## Architecture: Quality Gates
 
-### Issue 1: Slug Mapping Errors (CRITICAL)
-- `MA000006.pdf` is mapped to "hospitality-industry-award-2020" but is actually "Higher Education Industry-Academic Staff-Award 2020"
-- Actual Hospitality Award is `MA000009.pdf`
-- This causes wrong Award names in responses and missing content
-
-### Issue 2: Retrieval Quality
-- Embedding model (BAAI/bge-base-en-v1.5) doesn't always match semantic intent
-- "Hospitality Award minimum break" retrieves Restaurant, Wine Industry awards instead
-- Need hybrid search (semantic + keyword) or re-ranking
-
-### Issue 3: Chunking Strategy
-- Current chunking may split clauses across chunks
-- Important clauses (like breaks) may lose context
-- Need clause-aware chunking
-
-### Issue 4: Prompt Engineering
-- LLM sometimes says "not specified" when context exists
-- Need better instructions for extracting answers from context
-
-## Improvement Strategy (5 Approaches)
-
-### Approach 1: Fix Slug Mapping (Quick Win, +5-10%)
-**Priority: HIGH | Effort: LOW | Impact: HIGH**
-
-Fix the `AWARD_URL_MAP` in `src/ingest.py` to correctly map PDF filenames to award names.
-
-```python
-# Current (WRONG):
-'ma000006': 'hospitality-industry-award-2020'
-
-# Correct:
-'ma000006': 'higher-education-industry-academic-staff-award-2020'
-'ma000009': 'hospitality-industry-general-award-2020'
+```
+Query → Router → CAG/RAG → Generate → Verify → Resolve → Abstain → Output
+                              ↓          ↓         ↓          ↓
+                         Confidence   Citations  Corpus    4-Rule
+                         Score        Extracted  Valid     Check
 ```
 
-**Action**: Audit ALL 129 slug mappings against actual PDF content.
+### Gate 1: Router Classification
+- **Purpose**: Route to correct path (CAG vs RAG)
+- **Quality Check**: Query type matches expected category
+- **Current**: 4 types (jurisdictional, statutory_criteria, analogous_facts, procedural)
 
-### Approach 2: Hybrid Search (Medium Win, +5-10%)
-**Priority: HIGH | Effort: MEDIUM | Impact: HIGH**
+### Gate 2: Citation Verification
+- **Purpose**: Ensure all cited sections exist in source
+- **Quality Check**: Regex extract + corpus validation
+- **Current**: Extracts "s385", validates against legislation
 
-Combine semantic search with keyword/BM25 search.
+### Gate 3: Abstention Gate
+- **Purpose**: Don't answer if uncertain
+- **4 Rules**:
+  1. Too few citations (< 1) → abstain
+  2. Low confidence (< 0.6) → abstain
+  3. Conflicting citations → abstain
+  4. Unverified citations → abstain
+- **Current**: 0% abstention (all legislation queries answered)
 
-```python
-# Options:
-1. Use TurbVec's built-in keyword search if available
-2. Add BM25 retriever alongside embeddings
-3. Use reciprocal rank fusion (RRF) to combine results
-```
+## Improvement Strategy
 
-**Action**: Implement hybrid retrieval with RRF.
+### Phase 1: Legislation Only (Current)
+**Status**: Complete
+- Fair Work Act s385-394 ingested (13 chunks)
+- CAG loads legislation context
+- Router classifies queries
+- Pipeline tested: 100% section accuracy
 
-### Approach 3: Clause-Aware Chunking (Medium Win, +5%)
-**Priority: MEDIUM | Effort: MEDIUM | Impact: MEDIUM**
+### Phase 2: Add FWC Decisions
+**Status**: Blocked (user must download)
+- 100 FWC decisions from 2023-2026
+- Structure-aware paragraph chunking
+- Metadata extraction (decision number, date, member)
+- Hybrid search (BM25 + Semantic)
 
-Improve chunking to preserve clause boundaries:
+### Phase 3: Evaluate with Decisions
+**Status**: Pending
+- Expand golden set to 20+ questions
+- Test analogous_facts queries
+- Measure retrieval quality
+- Fine-tune parameters
 
-```python
-# Current: Fixed-size chunks (512 tokens)
-# Improved: Split at clause boundaries (e.g., "16.1", "16.2")
-# Add overlap to maintain context across chunks
-```
+### Phase 4: Production Hardening
+**Status**: Pending
+- Audit logging for every query
+- Hallucination rate tracking
+- Performance monitoring
+- Error handling
 
-**Action**: Update `src/ingest.py` chunking logic.
+## Evaluation Framework
 
-### Approach 4: Re-ranking (Medium Win, +5%)
-**Priority: MEDIUM | Effort: MEDIUM | Impact: MEDIUM**
+### Golden Set (8 Questions)
 
-Use a cross-encoder model to re-rank retrieved results:
+| Question | Expected | Category | Status |
+|----------|----------|----------|--------|
+| What is an unfair dismissal? | s385 | jurisdictional | ✅ Pass |
+| How long to apply? | s394 | jurisdictional | ✅ Pass |
+| Minimum employment period? | s389 | jurisdictional | ✅ Pass |
+| High income threshold? | s391/s392 | jurisdictional | ✅ Pass |
+| FWC criteria? | s387 | statutory_criteria | ✅ Pass |
+| Compensation instead of reinstatement? | s391 | statutory_criteria | ✅ Pass |
+| How is compensation calculated? | s392 | statutory_criteria | ✅ Pass |
+| What is summary dismissal? | s388 | procedural | ✅ Pass |
 
-```python
-# After initial retrieval (k=20):
-# 1. Re-rank with cross-encoder
-# 2. Return top-k after re-ranking
-```
+### Metrics
 
-**Action**: Add cross-encoder re-ranking step.
+| Metric | Current | Target |
+|--------|---------|--------|
+| Section Accuracy | 100% | >95% |
+| Answer Accuracy | 87.5% | >90% |
+| Abstention Rate | 0% | <20% |
+| Avg Latency | 7.6s | <10s |
+| Citation Faithfulness | N/A | >95% |
 
-### Approach 5: Prompt Engineering (Quick Win, +3-5%)
-**Priority: HIGH | Effort: LOW | Impact: MEDIUM**
+## Quality Assurance Checklist
 
-Improve the RAG prompt to better extract answers from context:
+### Pre-Release
+- [ ] All 8 golden set questions pass
+- [ ] FWC decisions ingested and indexed
+- [ ] Hybrid search working
+- [ ] Citation verification working
+- [ ] Abstention gate working
+- [ ] Audit logging working
+- [ ] UI working
+- [ ] Documentation updated
 
-```python
-RAG_PROMPT_TEMPLATE = """You are an expert on Australian employment law.
-
-Answer the question using ONLY the provided context from Modern Awards and the National Employment Standards (NES).
-
-IMPORTANT RULES:
-1. If the context contains relevant information, USE IT - do not say "not specified"
-2. If multiple clauses mention the topic, synthesize the answer from all relevant clauses
-3. If the Award name in the context matches the question's Award, prioritize that information
-4. If the context mentions "breaks", "meal breaks", "rest breaks", or "entitlement to breaks", extract the specific provisions
-
-[... rest of template ...]
-"""
-```
-
-**Action**: Update `src/rag.py` prompt template.
-
-## Implementation Plan
-
-### Phase 1: Quick Wins (1-2 hours)
-1. Fix slug mapping in `src/ingest.py`
-2. Update RAG prompt in `src/rag.py`
-3. Re-run eval to measure improvement
-
-### Phase 2: Retrieval Improvements (2-4 hours)
-4. Implement hybrid search (semantic + keyword)
-5. Add re-ranking with cross-encoder
-6. Re-run eval to measure improvement
-
-### Phase 3: Chunking Improvements (2-3 hours)
-7. Implement clause-aware chunking
-8. Rebuild vector store
-9. Re-run eval to measure improvement
-
-### Phase 4: Final Optimization (1-2 hours)
-10. Fine-tune parameters (top-k, similarity threshold)
-11. Add fallback mechanisms
-12. Final eval and validation
-
-## Success Criteria
-- **Format**: 12/12 pass (already achieved)
-- **Accuracy**: >97% (12/12 or 11/12 correct)
-- **No weak answers**: All answers should be substantive
-- **Correct Award attribution**: Every answer cites the correct Award
-
-## Technical Details
-
-### Slug Mapping Fix
-The `AWARD_URL_MAP` in `src/ingest.py` needs to be regenerated by:
-1. Reading each PDF's first page
-2. Extracting the actual award name
-3. Mapping PDF filename to correct award slug
-
-### Hybrid Search Implementation
-```python
-from langchain.retrievers import EnsembleRetriever
-from langchain_community.retrievers import BM25Retriever
-
-# Create BM25 retriever from documents
-bm25_retriever = BM25Retriever.from_documents(documents)
-bm25_retriever.k = 10
-
-# Create semantic retriever
-semantic_retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
-
-# Combine with RRF
-ensemble_retriever = EnsembleRetriever(
-    retrievers=[bm25_retriever, semantic_retriever],
-    weights=[0.3, 0.7]
-)
-```
-
-### Re-ranking Implementation
-```python
-from sentence_transformers import CrossEncoder
-
-# Load cross-encoder model
-cross_encoder = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
-
-def rerank(query, docs, top_k=8):
-    pairs = [(query, doc.page_content) for doc in docs]
-    scores = cross_encoder.predict(pairs)
-    ranked = sorted(zip(docs, scores), key=lambda x: x[1], reverse=True)
-    return [doc for doc, score in ranked[:top_k]]
-```
+### Production
+- [ ] No AustLII content (Do Not List)
+- [ ] No parametric memory citations
+- [ ] All citations from retrieved docs
+- [ ] Every citation individually verified
+- [ ] Export only with human verification
 
 ## Risk Assessment
-- **Low Risk**: Slug mapping fix, prompt engineering
-- **Medium Risk**: Hybrid search, re-ranking (may add latency)
-- **High Risk**: Rebuilding vector store (time-consuming)
+
+### Low Risk
+- Legislation ingestion (stable)
+- Router classification (tested)
+- Citation extraction (regex-based)
+
+### Medium Risk
+- FWC decision ingestion (format variability)
+- Hybrid search quality (needs tuning)
+- Abstention threshold (needs calibration)
+
+### High Risk
+- FWC decision download (bot protection)
+- Groq rate limits (daily TPD)
+- No SME for validation
+
+## Next Steps
+
+1. **User downloads 100 FWC decisions**
+2. **Build vectorstore** from decisions
+3. **Test hybrid search** with decisions
+4. **Expand golden set** to 20+ questions
+5. **Measure retrieval quality** with decisions
+6. **Fine-tune parameters** based on results
