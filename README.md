@@ -321,7 +321,7 @@ Every generated answer passes through three verification stages before reaching 
 ```mermaid
 graph LR
     A["Generated Answer"] --> B["Citation Extractor"]
-    B -->|Regex: s\\d{3}[A-Z]?| C["Corpus Validator"]
+    B -->|Extract section refs| C["Corpus Validator"]
     C -->|Exists in source?| D["Abstention Gate"]
     D -->|4 rules| E{Pass?}
     E -->|Yes| F["Return Answer"]
@@ -445,11 +445,11 @@ gitGraph
     commit id: "RAG Pipeline"
     commit id: "CAG"
     commit id: "Eval Framework"
-    branch feature/fwc-decisions
-    checkout feature/fwc-decisions
+    branch fwc-decisions
+    checkout fwc-decisions
     commit id: "Ingest Pipeline"
     checkout develop
-    merge feature/fwc-decisions
+    merge fwc-decisions
 ```
 
 | Branch | Push Policy | PR Required | Purpose |
