@@ -18,11 +18,13 @@ jobs:
         with:
           script: |
             const { payload } = context;
-            if (payload.head_commit && !payload.pull_request) {
-              const commits = payload.commits || [];
-              const isDirectPush = !payload.workflow;
-              
-              if (isDirectPush && !payload.ref.startsWith('refs/pull/')) {
-                core.setFailed('Direct push to protected branch is not allowed. Please create a Pull Request.');
-              }
+            // If triggered by a pull_request event, it's fine
+            if (payload.pull_request) {
+              return;
             }
+            // If it's a merge queue or workflow dispatch, allow
+            if (payload.workflow || payload.merge_group) {
+              return;
+            }
+            // Otherwise it's a direct push - block it
+            core.setFailed('Direct push to protected branch is not allowed. Please create a Pull Request.');
