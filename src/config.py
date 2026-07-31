@@ -83,6 +83,8 @@ QUERY_CATEGORIES = {
             "s387", "valid reason", "notification", "response opportunity",
             "harsh", "unjust", "unreasonable", "small business HR",
             "size of business", "absence of HR", "other matters",
+            "fwc consider", "assess", "criteria", "factors",
+            "unsatisfactory performance", "warned", "support person",
         ],
     },
     "analogous_facts": {

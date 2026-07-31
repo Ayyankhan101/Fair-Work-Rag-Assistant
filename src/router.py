@@ -1,100 +1,92 @@
-"""Query router for hybrid CAG+RAG architecture."""
+"""Query router for unfair dismissal RAG — classifies queries by type."""
 import re
 from enum import Enum
 from dataclasses import dataclass
 from typing import Optional
-from config import AWARD_PATTERNS, has_nes_keywords, detect_award
+from src.config import QUERY_CATEGORIES
 
 
-class RouteType(Enum):
-    CAG = "cag"           # Cache hit - use pre-loaded context only
-    RAG = "rag"           # Retrieval - use vector search only
-    COMBINED = "combined" # Both cache and retrieval needed
+class QueryType(Enum):
+    JURISDICTIONAL = "jurisdictional"      # Threshold questions (time limits, eligibility)
+    STATUTORY_CRITERIA = "statutory_criteria"  # s387 factors, harsh/unjust/unreasonable
+    ANALOGOUS_FACTS = "analogous_facts"    # "cases where...", similar situations
+    PROCEDURAL = "procedural"              # Extensions, objections, process
+    GENERAL = "general"                    # Does not fit above categories
 
 
 @dataclass
 class RoutingDecision:
-    route: RouteType
+    query_type: QueryType
     confidence: float
     reasoning: str
-    award_filter: Optional[str] = None  # For RAG: filter to specific Award
-    negated_awards: list = None  # Awards explicitly excluded
+    relevant_sections: list = None  # e.g., ["s385", "s387"]
+    is_cag_candidate: bool = False
 
 
-def detect_negation(question: str) -> list:
-    """Detect negated awards in question. Returns list of negated award names."""
+def classify_query(question: str) -> RoutingDecision:
+    """Classify an unfair dismissal question by type.
+    
+    Per playbook Part 5.1: "Classify: jurisdictional / principle / analogous-facts / procedural"
+    """
     q = question.lower()
-    negated = []
+    scores = {}
+    matched_sections = set()
     
-    # Patterns: "not X", "no X", "without X", "except X", "excluding X"
-    negation_patterns = [
-        r'not\s+([\w\s]+?)(?:\s+award|\s+rate|\s+rule|$)',
-        r'no\s+([\w\s]+?)(?:\s+award|\s+rate|\s+rule|$)',
-        r'without\s+([\w\s]+?)(?:\s+award|\s+rate|\s+rule|$)',
-        r'except\s+([\w\s]+?)(?:\s+award|\s+rate|\s+rule|$)',
-        r'excluding\s+([\w\s]+?)(?:\s+award|\s+rate|\s+rule|$)',
-    ]
+    # Check each category
+    for category, data in QUERY_CATEGORIES.items():
+        keywords = data.get("keywords", [])
+        score = sum(1 for kw in keywords if kw.lower() in q)
+        if score > 0:
+            scores[category] = score
     
-    for pattern in negation_patterns:
-        for match in re.finditer(pattern, q):
-            negated_word = match.group(1).strip()
-            # Check if this matches any award
-            for keyword, award_name in AWARD_PATTERNS.items():
-                if keyword in negated_word or negated_word in keyword:
-                    if award_name not in negated:
-                        negated.append(award_name)
+    # Check for specific section references
+    section_pattern = r's(?:ection)?\s*(\d{3})'
+    for match in re.finditer(section_pattern, q):
+        section_num = match.group(1)
+        if section_num in ["385", "386", "387", "388", "389", "390", "391", "392", "393", "394"]:
+            matched_sections.add(f"s{section_num}")
     
-    return negated
-
-
-def detect_award_with_negation(question: str):
-    """Detect award with negation support. Returns (award_name, negated_awards)."""
-    negated = detect_negation(question)
-    award = detect_award(question)
-    
-    # If detected award is negated, return None
-    if award and award in negated:
-        return None, negated
-    
-    return award, negated
-
-
-def route_question(question: str, cag_cache) -> RoutingDecision:
-    """Route a question to CAG, RAG, or Combined path."""
-    # Check for NES-related content
-    nes_detected = has_nes_keywords(question)
-    
-    # Check for Award-specific content with negation
-    award_name, negated_awards = detect_award_with_negation(question)
-    
-    # Decision logic
-    if nes_detected and award_name:
+    # Determine category
+    if scores:
+        best_category = max(scores, key=scores.get)
+        best_score = scores[best_category]
+        
+        # Map config category to QueryType
+        category_map = {
+            "jurisdictional": QueryType.JURISDICTIONAL,
+            "statutory_criteria": QueryType.STATUTORY_CRITERIA,
+            "analogous_facts": QueryType.ANALOGOUS_FACTS,
+            "procedural": QueryType.PROCEDURAL,
+        }
+        
+        query_type = category_map.get(best_category, QueryType.GENERAL)
+        confidence = min(0.9, 0.5 + best_score * 0.1)
+        
+        # Check if this is a CAG candidate (legislation question)
+        is_cag = bool(matched_sections) or best_category in ["jurisdictional", "statutory_criteria"]
+        
         return RoutingDecision(
-            route=RouteType.COMBINED,
-            confidence=0.9,
-            reasoning=f"NES keywords + specific Award ({award_name})",
-            award_filter=award_name,
-            negated_awards=negated_awards,
+            query_type=query_type,
+            confidence=confidence,
+            reasoning=f"Matched {best_category} ({best_score} keywords)",
+            relevant_sections=list(matched_sections),
+            is_cag_candidate=is_cag,
         )
-    elif nes_detected:
+    
+    # No category match — check if it references any section
+    if matched_sections:
         return RoutingDecision(
-            route=RouteType.CAG,
-            confidence=0.85,
-            reasoning="NES keywords detected, no specific Award",
-            negated_awards=negated_awards,
+            query_type=QueryType.STATUTORY_CRITERIA,
+            confidence=0.6,
+            reasoning=f"Section reference found: {matched_sections}",
+            relevant_sections=list(matched_sections),
+            is_cag_candidate=True,
         )
-    elif award_name:
-        return RoutingDecision(
-            route=RouteType.RAG,
-            confidence=0.8,
-            reasoning=f"Specific Award detected: {award_name}",
-            award_filter=award_name,
-            negated_awards=negated_awards,
-        )
-    else:
-        return RoutingDecision(
-            route=RouteType.RAG,
-            confidence=0.7,
-            reasoning="No NES or specific Award keywords",
-            negated_awards=negated_awards,
-        )
+    
+    # Default to general
+    return RoutingDecision(
+        query_type=QueryType.GENERAL,
+        confidence=0.4,
+        reasoning="No category keywords matched",
+        is_cag_candidate=False,
+    )
