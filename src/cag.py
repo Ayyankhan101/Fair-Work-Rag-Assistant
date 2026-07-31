@@ -1,160 +1,102 @@
-"""Cache-Augmented Generation (CAG) context cache for NES and high-frequency Award clauses."""
+"""Cache-Augmented Generation (CAG) for Fair Work Act s385-394 (Unfair Dismissal)."""
 import os
-from config import NES_KEYWORDS
+from src.config import FAIR_WORK_ACT_PROVISIONS
 
 
-# NES is always cached - it's small, stable, and universally relevant
-NES_PATH = "data/nes/nes_combined.txt"
+# Fair Work Act is always cached - small, stable, universally relevant
+FAIR_WORK_ACT_PATH = "data/legislation/fair_work_act_s385_394.txt"
 
-# NES topic segments for targeted retrieval (DEF-067: avoid sending full NES)
-NES_TOPIC_SEGMENTS = {
-    "annual leave": ["annual leave", "4 weeks", "20 days", "leave loading"],
-    "personal leave": ["personal leave", "sick leave", "carer's leave", "2 days", "10 days"],
-    "parental leave": ["parental leave", "unpaid parental", "12 months", "52 weeks", "parental"],
-    "notice of termination": ["notice of termination", "notice period", "weeks notice"],
-    "redundancy": ["redundancy", "redundancy pay", "severance", "genuine redundancy"],
-    "public holiday": ["public holiday", "public holidays", "national public holiday"],
-    "maximum weekly hours": ["maximum weekly hours", "38 hours", "average hours", "flexible working"],
-    "casual employment": ["casual employment", "casual conversion", "casual entitlement"],
-    "community service leave": ["community service leave", "jury duty", "jury service", "volunteer"],
-    "long service leave": ["long service leave", "long service", "service leave"],
-    "superannuation": ["superannuation", "super guarantee", "SG", "retirement"],
-    "family domestic violence": ["family and domestic violence", "domestic violence", "family violence"],
-    "fair work information": ["fair work information statement", "FWIS", "casual employment information", "CEIS"],
+# Key thresholds for quick lookup
+KEY_THRESHOLDS = {
+    "minimum_employment_period": "6 months (12 months for small business)",
+    "small_business_definition": "fewer than 15 employees",
+    "application_time_limit": "21 days after dismissal",
+    "high_income_threshold": "$175,000 (2024-25)",
+    "compensation_cap": "26 weeks pay or high income threshold (whichever less)",
 }
-
-# High-frequency Award clauses to cache (from shared config)
-CAG_KEYWORDS = NES_KEYWORDS + [
-    "meal break", "rest break", "minimum break",
-    "overtime", "penalty rates", "weekend",
-    "allowance", "classification", "minimum rate",
-    "notice period", "resignation",
-]
 
 
 class CAGCache:
-    """Manages pre-loaded context for CAG path.
+    """Manages pre-loaded Fair Work Act context for CAG path."""
     
-    DEF-067: Segment NES by topic to reduce context size.
-    """
+    def __init__(self, act_path: str = FAIR_WORK_ACT_PATH):
+        self.act_text = ""
+        self.provisions = {}
+        self._load_act(act_path)
     
-    def __init__(self, nes_path: str = NES_PATH):
-        self.nes_text = ""
-        self.nes_segments = {}
-        self._load_nes(nes_path)
-    
-    def _load_nes(self, nes_path: str):
-        """Load NES text into cache with explicit UTF-8 encoding."""
-        if not os.path.exists(nes_path):
-            print(f"WARNING: NES file not found: {nes_path}")
+    def _load_act(self, act_path: str):
+        """Load Fair Work Act text into cache."""
+        if not os.path.exists(act_path):
+            print(f"WARNING: Fair Work Act file not found: {act_path}")
             return
         
-        # DEF-061: Always read with explicit UTF-8
-        with open(nes_path, encoding='utf-8', errors='replace') as f:
-            raw_text = f.read()
+        with open(act_path, encoding='utf-8', errors='replace') as f:
+            self.act_text = f.read()
         
-        lines = raw_text.split('\n')
-        content_started = False
-        content_lines = []
+        # Parse provisions into sections
+        self._parse_provisions()
         
-        skip_patterns = [
-            'skip to main', 'close', 'go to home', 'fair work ombuds',
-            'translate', 'login', 'register', 'my account', 'resources',
-            'log out', 'open search', 'popular searches', 'minimum wages',
-            'annual leave', 'long service leave', 'on this page',
-            'list of minimum', 'nes videos', 'who the nes', 'tools and',
-            'related information', 'minimum entitlements for employees',
-            'the national employment standards make up', 'other workplace',
-            'award', 'enterprise agreement', 'a document between',
-            'these also', 'employers have to give', 'fair work information',
-            'casual employment information', 'the fwis', 'the ceis',
-            'when they start', 'list of minimum nes entitlements',
-            'automatic translation', 'our automatic translation',
-            'select a language', 'professional translated',
-            'default language is', 'english', 'arabic', 'bengali',
-            'bosnian', 'bulgarian', 'chinese', 'croatian', 'czech',
-            'danish', 'dutch', 'farsi', 'french', 'german', 'greek',
-            'hebrew', 'hindi', 'hungarian', 'bahasa indonesia', 'italian',
-            'japanese', 'korean', 'latvian', 'lithuanian', 'polish',
-            'portuguese', 'romanian', 'russian', 'serbian', 'slovak',
-            'slovene', 'spanish', 'swedish', 'thai', 'turkish',
-            'ukrainian', 'vietnamese', 'language help',
-        ]
-        
-        for line in lines:
-            if "National Employment Standards" in line and not content_started:
-                content_started = True
-                continue
-            if content_started:
-                line_lower = line.strip().lower()
-                if any(skip in line_lower for skip in skip_patterns):
-                    continue
-                if line.strip():
-                    content_lines.append(line.strip())
-        
-        self.nes_text = '\n'.join(content_lines)
-        
-        # DEF-067: Build topic segments from full NES text
-        self._build_segments()
-        
-        print(f"CAG: Loaded NES ({len(self.nes_text)} chars, {len(self.nes_segments)} segments)")
+        print(f"CAG: Loaded Fair Work Act s385-394 ({len(self.act_text)} chars, {len(self.provisions)} sections)")
     
-    def _build_segments(self):
-        """Build topic-specific NES segments for targeted retrieval."""
-        self.nes_text.lower()
-        for topic, keywords in NES_TOPIC_SEGMENTS.items():
-            relevant_lines = []
-            for line in self.nes_text.split('\n'):
-                line_lower = line.lower()
-                if any(kw in line_lower for kw in keywords):
-                    relevant_lines.append(line)
-            if relevant_lines:
-                self.nes_segments[topic] = '\n'.join(relevant_lines)
+    def _parse_provisions(self):
+        """Parse act text into individual sections."""
+        current_section = None
+        current_text = []
+        
+        for line in self.act_text.split('\n'):
+            # Check for section header (e.g., "385  What is an unfair dismissal")
+            stripped = line.strip()
+            if stripped and stripped[0].isdigit() and '  ' in stripped:
+                # Save previous section
+                if current_section:
+                    self.provisions[current_section] = '\n'.join(current_text)
+                # Start new section
+                parts = stripped.split('  ', 1)
+                current_section = parts[0].strip()
+                current_text = [parts[1] if len(parts) > 1 else ""]
+            elif current_section:
+                current_text.append(line)
+        
+        # Save last section
+        if current_section:
+            self.provisions[current_section] = '\n'.join(current_text)
     
-    def get_nes_context(self) -> str:
-        """Get pre-loaded NES context."""
-        return self.nes_text
+    def get_act_context(self) -> str:
+        """Get full Fair Work Act context."""
+        return self.act_text
+    
+    def get_section(self, section_num: str) -> str:
+        """Get a specific section."""
+        return self.provisions.get(section_num, "")
     
     def is_cag_candidate(self, question: str) -> bool:
-        """Check if question is a CAG candidate (NES or high-frequency topic)."""
+        """Check if question is a CAG candidate (unfair dismissal related)."""
         question_lower = question.lower()
-        return any(kw in question_lower for kw in CAG_KEYWORDS)
-    
-    def _find_relevant_segment(self, question: str) -> str:
-        """Find the most relevant NES segment for a question."""
-        question_lower = question.lower()
-        best_topic = None
-        best_score = 0
-        
-        for topic, keywords in NES_TOPIC_SEGMENTS.items():
-            score = sum(1 for kw in keywords if kw in question_lower)
-            if score > best_score:
-                best_score = score
-                best_topic = topic
-        
-        if best_topic and best_topic in self.nes_segments:
-            return self.nes_segments[best_topic]
-        return ""
+        keywords = [
+            "unfair dismissal", "unfairly dismissed", "dismissed",
+            "harsh", "unjust", "unreasonable",
+            "s385", "s386", "s387", "s388", "s389", "s390", "s391", "s392", "s393", "s394",
+            "section 385", "section 386", "section 387", "section 388", "section 389",
+            "section 390", "section 391", "section 392", "section 393", "section 394",
+            "minimum employment period", "high income threshold",
+            "small business", "21 days", "reinstatement", "compensation",
+            "remedy", "application", "lodgment",
+            "apply", "criteria", "criteria for", " unfair ", "dismissal",
+            "employment", "terminated", "termination", "notice",
+        ]
+        return any(kw in question_lower for kw in keywords)
     
     def get_context(self, question: str) -> str:
-        """Get CAG context for a question.
+        """Get CAG context for a question."""
+        if not self.is_cag_candidate(question):
+            return ""
         
-        DEF-067: Use segmented retrieval to reduce context size.
-        """
-        context_parts = []
-        
-        if self.is_cag_candidate(question):
-            # DEF-067: Try topic-specific segment first
-            segment = self._find_relevant_segment(question)
-            if segment and len(segment) < len(self.nes_text) * 0.5:
-                context_parts.append(f"[National Employment Standards - Specific Topic]\n{segment}")
-            else:
-                # Fall back to full NES if no good segment match
-                nes_ctx = self.get_nes_context()
-                if nes_ctx:
-                    context_parts.append(f"[National Employment Standards]\n{nes_ctx}")
-        
-        return "\n\n".join(context_parts)
+        # Return full act text (it's small enough)
+        return f"[Fair Work Act 2009 - Part 3-2 Division 4 - Unfair Dismissal]\n{self.act_text}"
+    
+    def get_threshold(self, key: str) -> str:
+        """Get a key threshold value."""
+        return KEY_THRESHOLDS.get(key, "")
 
 
 def get_cag_cache() -> CAGCache:
