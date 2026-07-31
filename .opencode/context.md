@@ -1,77 +1,56 @@
 # Project Context
 
-## Code Quality Rules
-- **Minimal code** — no unnecessary complexity
-- **Smaller version preferred** — if 10 lines work, don't write 50
-- **No boilerplate** — skip obvious comments, obvious functions
-- **DRY** — never repeat logic
-- **Readability > cleverness** — simple beats fancy
-
-## Git Workflow (CRITICAL)
-**⛔ NEVER touch `main` branch unless user explicitly says so.**
-**All development happens via PRs to `develop` branch ONLY.**
-
-### Auto PR Script
-```bash
-# Make changes, then run:
-./scripts/auto-pr.sh "fix: resolve rate limit issue"
-```
-
-This will:
-1. Create new branch: `feature/fix-rate-limit-issue-{timestamp}`
-2. Commit changes
-3. Push branch to origin
-4. Create PR to `develop`
-5. Auto-merge if no conflicts
-6. Switch back to `develop`
-
-### Manual PR Flow
-```bash
-# 1. Create feature branch
-git checkout -b feature/add-new-award
-
-# 2. Make changes, commit
-git add .
-git commit -m "feat: add new award support"
-
-# 3. Push branch
-git push origin feature/add-new-award
-
-# 4. Create PR on GitHub
-gh pr create --base develop --head feature/add-new-award --title "feat: add new award"
-
-# 5. Merge after review
-gh pr merge --merge --delete-branch
-```
-
-### Branch Rules
-| Branch | Direct Push | PR Required |
-|--------|-------------|-------------|
-| `main` | ❌ Blocked | ✅ Yes |
-| `develop` | ❌ Blocked | ✅ Yes |
-| `feature/*` | ✅ Allowed | No |
-
-## CRITICAL: Vectorstore Resume Protocol
-**ALWAYS resume from checkpoint — NEVER delete index and rebuild from scratch.**
-
-When restarting build:
-```bash
-venv/bin/python3 build_store.py  # Auto-resumes from checkpoint
-```
-
-Checkpoint location: `data/vectorstore/build_checkpoint.json`
-
-If you see "Resuming from doc X/16692" — it's working correctly.
-
-If you see "Batch 1/522" — something went wrong. Check checkpoint file.
+## Environment
+- Language: Python 3.12
+- Runtime: Groq API (llama-3.3-70b-versatile)
+- Embeddings: fastembed (BAAI/bge-base-en-v1.5, 768-dim, ONNX)
+- Vector DB: TurboVec (bit_width=4)
+- UI: Gradio 6.x
+- Repo: github.com/Ayyankhan101/fair-work-rag-assistant (private)
+- Branch: develop
 
 ## Current Status
-- **Accuracy**: 87.5% (23/25 pass)
-- **Vectorstore**: 16,692 docs indexed
-- **Repo**: https://github.com/Ayyankhan101/fair-work-rag-assistant
+- **Phase 0: COMPLETE** (committed as 62599ee)
+- **Phase 1: IN PROGRESS** — testing components before FWC decisions download
 
-## Key Commands
-- Run eval: `venv/bin/python3 scripts/eval_hard.py`
-- Start build: `venv/bin/python3 build_store.py`
-- Auto PR: `./scripts/auto-pr.sh "commit message"`
-- Test vectorstore: `venv/bin/python3 -c "from src.vectorstore import load_vectorstore; vs = load_vectorstore('data/vectorstore'); print(len(vs._store))"`
+### What's Done (Phase 0)
+- CORPUS_LICENCE_REGISTER.md (11 sources)
+- DO_NOT_LIST.md (12 hard "do not" items)
+- PIVOT_PLAN.md (comprehensive pivot plan)
+- src/config.py — FWC provisions s385-394
+- src/verifier.py — post-hoc citation verifier (needs Groq API)
+- src/citation_resolver.py — regex extract + corpus validation ✅ tested
+- src/abstention_gate.py — 4-rule abstention ✅ tested (needs method signature fix)
+- src/audit_log.py — full audit trail
+- src/corpus_manager.py — point-in-time, versioning
+- src/cag.py — rewritten for Fair Work Act ✅ tested
+- scripts/download_fwc_decisions.py — FWC scraper (blocked by bot protection)
+- data/legislation/fair_work_act_s385_394.txt — legislation text
+
+### What's Working
+- Config loads 10 FWC provisions
+- CAG detects unfair dismissal queries and returns legislation context
+- Citation resolver extracts citations (e.g., "s385")
+- Abstention gate loaded (needs method signature fix)
+
+### Blockers
+1. **FWC decisions** — website has bot protection, no public API
+2. **Groq rate limits** — daily TPD exhausted, resets ~00:00 UTC
+3. **No SME** — need employment law practitioner
+4. **No sponsor decisions** — D1-D6 not made
+
+### Can Be Done Now (No FWC needed)
+- Fix abstention gate method signature
+- Test full pipeline with Fair Work Act only
+- Build UI
+- Set up eval framework
+
+## Pending Tasks (Phase 1)
+- [ ] Fix abstention_gate.py method signature
+- [ ] Test full RAG pipeline with legislation only
+- [ ] Rewrite src/ingest.py for FWC decisions (when available)
+- [ ] Rewrite src/rag.py with verifier + resolver + abstention
+- [ ] Rewrite src/router.py for query classification
+- [ ] Rewrite src/filtered_retriever.py for decision filtering
+- [ ] Update src/app.py for unfair dismissal
+- [ ] Download 100 FWC decisions (manual, user task)
