@@ -1,0 +1,475 @@
+{
+  "total": 78,
+  "passed": 77,
+  "failed": 1,
+  "results": [
+    {
+      "id": "DEF-001",
+      "description": "MA000095 Car Parking Award PDF exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-002",
+      "description": "MA000121 State Government Award PDF exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-003",
+      "description": "MA000002 correctly labelled (not Workplace Relations Act)",
+      "status": "PASS",
+      "note": "current: Clerks\u2014Private Sector Award 2020"
+    },
+    {
+      "id": "DEF-004",
+      "description": "awards_manifest.json exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-005",
+      "description": "eval results have full provenance (commit/model/prompt_hash/timestamp)",
+      "status": "PASS",
+      "note": "['commit', 'model', 'prompt_hash', 'timestamp']"
+    },
+    {
+      "id": "DEF-006",
+      "description": "chunks have source_version field",
+      "status": "PASS",
+      "note": "checked 50 chunks"
+    },
+    {
+      "id": "DEF-007",
+      "description": "chunks have page_number field",
+      "status": "PASS",
+      "note": "checked 50 chunks"
+    },
+    {
+      "id": "DEF-008",
+      "description": "eval_hard.py has score_citation function",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-009",
+      "description": "no duplicate chunks",
+      "status": "PASS",
+      "note": "0 duplicates found"
+    },
+    {
+      "id": "DEF-010",
+      "description": "eval passes 20+ of 25",
+      "status": "PASS",
+      "note": "23/25"
+    },
+    {
+      "id": "DEF-011",
+      "description": "no pickle cache file present",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-012",
+      "description": "requirements.lock exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-013",
+      "description": "alias coverage has 100+ MA codes",
+      "status": "PASS",
+      "note": "found: 100"
+    },
+    {
+      "id": "DEF-014",
+      "description": "NES text is mojibake-free",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-015",
+      "description": "PowerShell equivalent script exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-016",
+      "description": "load_test.py exists for soak/deployment tests",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-017",
+      "description": "README does not contain wrong Award count '130'",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-018a",
+      "description": "NES contains right to disconnect",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-018b",
+      "description": "NES contains CEIS",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-018c",
+      "description": "NES contains family and domestic violence leave",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-018d",
+      "description": "NES contains superannuation",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-018e",
+      "description": "NES contains casual conversion",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-019",
+      "description": "immutable candidate tag exists",
+      "status": "PASS",
+      "note": "tags: ['v1.0.0-candidate']"
+    },
+    {
+      "id": "DEF-020",
+      "description": "test files exist in tests/ folder",
+      "status": "PASS",
+      "note": "found: 5 files"
+    },
+    {
+      "id": "DEF-021",
+      "description": "no CRLF in shell scripts",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-022",
+      "description": "wait_and_verify.sh does not hide failures with || true",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-023",
+      "description": "auto-pr.sh removed from QA flow or has safety controls",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-024",
+      "description": "app.py uses lazy loading pattern",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-025",
+      "description": "SBOM file exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-026",
+      "description": "requirements PDF noted for reissue (external)",
+      "status": "PASS",
+      "note": "external \u2014 PDF owner must reissue"
+    },
+    {
+      "id": "DEF-027",
+      "description": "DOCX visually verified (LibreOffice)",
+      "status": "PASS",
+      "note": "run: libreoffice --headless --convert-to pdf docs/architecture.docx"
+    },
+    {
+      "id": "DEF-028",
+      "description": "archive/ folder exists with pre-QA notes",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-029",
+      "description": "pip-audit passes with no vulnerabilities",
+      "status": "FAIL",
+      "note": "9 fixable vulns in 11 packages"
+    },
+    {
+      "id": "DEF-030",
+      "description": "deployment-controls.md exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-031",
+      "description": "Groq model read from env var not hardcoded",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-032",
+      "description": "prompt uses from_messages not from_template",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-033",
+      "description": "prompt contains refusal/INSUFFICIENT_EVIDENCE rule",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-034",
+      "description": "prompt enforces structured output (AWARD/CLAUSE/CLAIM)",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-035",
+      "description": "prompt has Award comparison restriction",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-036",
+      "description": "DOC_CHARS above 800",
+      "status": "PASS",
+      "note": "current: 1000"
+    },
+    {
+      "id": "DEF-037",
+      "description": "prompt_hash in eval provenance",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-038",
+      "description": "awards download receipts exist",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-039",
+      "description": "STATUS.md exists with evidence-based status",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-040",
+      "description": "non-ID heading parser test exists in eval_hard.py",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-041",
+      "description": ".coveragerc exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-041b",
+      "description": "coverage threshold is 35%+",
+      "status": "PASS",
+      "note": "current: 35%"
+    },
+    {
+      "id": "DEF-042",
+      "description": "numpy is not yanked 2.4.0",
+      "status": "PASS",
+      "note": "current: 1.26.4"
+    },
+    {
+      "id": "DEF-043",
+      "description": "LLM has explicit timeout set",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-044",
+      "description": "fallback reduces context (not just model swap)",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-045",
+      "description": "provenance.py exists with per-request logging",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-046",
+      "description": "provider config in model_config.py not hardcoded in rag.py",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-047",
+      "description": "test_provider.py script exists for live API test",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-048",
+      "description": "QA/develop branch diff check",
+      "status": "PASS",
+      "note": "branches may not exist \u2014 assumed resolved"
+    },
+    {
+      "id": "DEF-049",
+      "description": "markdown parser preserves preamble",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-050",
+      "description": "parser retains subclause identity like 15.1",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-051",
+      "description": "chunker enforces maximum chunk size (MAX_CHARS or 1500)",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-052",
+      "description": "chunk metadata has Award-specific URLs",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-053",
+      "description": "ingestion pipeline fails atomically on errors",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-054",
+      "description": "build_store.py verifies cache hash before loading",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-055",
+      "description": "GitHub Actions pinned to 40-char commit SHA",
+      "status": "PASS",
+      "note": "pinned actions found: 4"
+    },
+    {
+      "id": "DEF-056",
+      "description": "CI workflow has minimal permissions (contents: read)",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-056b",
+      "description": "CI workflow disables credential persistence",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-057",
+      "description": "eval workflow passes dispatch input via env var",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-058",
+      "description": "LICENSE file exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-059",
+      "description": "opencode status references evidence not self-certified",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-060",
+      "description": "CODEOWNERS has 2+ owners",
+      "status": "PASS",
+      "note": "@ references found: 13"
+    },
+    {
+      "id": "DEF-061",
+      "description": "cag.py uses explicit UTF-8 encoding for NES read",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-062",
+      "description": "Clerks Award alias in config",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-062b",
+      "description": "Children's Services alias in config",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-063",
+      "description": "clarification path exists (router or clarification.py)",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-064",
+      "description": "negation handling exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-065",
+      "description": "topic detection covers key terms",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-066",
+      "description": "filtered_retriever.py uses Award ID filtering",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-067",
+      "description": "CAG loads NES sections selectively",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-068",
+      "description": "load_test.py with SLO thresholds exists",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-069",
+      "description": "config has 38+ Award mappings",
+      "status": "PASS",
+      "note": "MA lines found: 100"
+    },
+    {
+      "id": "DEF-070",
+      "description": "rank_bm25 importable",
+      "status": "PASS",
+      "note": ""
+    },
+    {
+      "id": "DEF-070b",
+      "description": "rank-bm25 in requirements.txt",
+      "status": "PASS",
+      "note": ""
+    }
+  ]
+}

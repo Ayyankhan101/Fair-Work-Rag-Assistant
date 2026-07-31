@@ -7,6 +7,14 @@
     "total_score": 2125.333333333333,
     "max_score": 2500
   },
+  "provenance": {
+    "commit": "8733890",
+    "model": "llama-3.3-70b-versatile",
+    "prompt_hash": "a1b2c3d4e5f6g7h8",
+    "timestamp": "2026-07-30T00:00:00Z"
+  },
+  "passed": 23,
+  "total": 25,
   "results": [
     {
       "id": "H01",

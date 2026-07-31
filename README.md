@@ -1,9 +1,9 @@
 # 🏛️ Fair Work Awards & NES Knowledge Assistant
 
-> RAG-powered LLM assistant for Australian employment law — 130 Modern Awards + National Employment Standards
+> RAG-powered LLM assistant for Australian employment law — 122 Modern Awards + National Employment Standards
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![LLM-Claude](https://img.shields.io/badge/LLM-Claude_4.6-7B5EA7.svg)](https://anthropic.com/)
+[![LLM-Claude](https://img.shields.io/badge/LLM-Groq_Llama_3.3-70B-blue.svg)](https://groq.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ---
@@ -133,6 +133,16 @@ venv/bin/python3 scripts/eval_hard.py
 venv/bin/python3 scripts/eval_prd_questions.py
 ```
 
+### Run Tests
+
+```bash
+# Run all unit tests
+python -m pytest tests/ -v
+
+# Run specific test module
+python -m pytest tests/test_config_router.py -v
+```
+
 ---
 
 ## 🏗️ Architecture Details
@@ -221,7 +231,7 @@ fair-work-rag-assistant/
 │   └── 🐍 rename_pdfs.py           # PDF rename utility
 │
 ├── 📂 data/                        # Data files
-│   ├── 📂 awards/                  # 130 award PDFs (gitignored)
+│   ├── 📂 awards/                  # 122 award PDFs (gitignored)
 │   ├── 📂 nes/                     # NES text files
 │   │   └── 📄 nes_combined.txt     # Full NES (~28K chars)
 │   ├── 📂 vectorstore/             # TurboVec index (LFS)
@@ -270,9 +280,9 @@ fair-work-rag-assistant/
 
 | Metric | Value |
 |--------|-------|
-| **Accuracy** | 87.5% (23/25 pass) |
-| **Questions** | 25 hard questions |
-| **Scoring** | Content-based (not exact match) |
+| **Accuracy** | 87.5% (content-based scoring, 22/25 hard questions) |
+| **Questions** | 25 hard questions + 12 PRD questions |
+| **Scoring** | Content-based (keywords 40% + pattern 30% + quality 30%) |
 
 ### Running Eval
 
@@ -314,7 +324,7 @@ model = "llama-3.1-8b-instant"
 
 | Source | Count | Size | Description |
 |--------|-------|------|-------------|
-| **Modern Awards** | 130 | ~133MB PDFs | All Australian awards |
+| **Modern Awards** | 122 | ~133MB PDFs | All Australian awards |
 | **NES** | 1 | ~28K chars | National Employment Standards |
 | **Vector Store** | 16,692 docs | ~31MB | Indexed chunks |
 

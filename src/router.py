@@ -3,7 +3,10 @@ import re
 from enum import Enum
 from dataclasses import dataclass
 from typing import Optional
-from config import AWARD_PATTERNS, NES_KEYWORDS, has_nes_keywords, detect_award
+from config import AWARD_PATTERNS, has_nes_keywords, detect_award
+
+# DEF-063: Clarification constant for insufficient identity/evidence
+CLARIFICATION = "clarification"
 
 
 class RouteType(Enum):

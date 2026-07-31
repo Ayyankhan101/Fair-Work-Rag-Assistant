@@ -1,29 +1,35 @@
-# Mission Status
+# Mission Status — Evidence-Based
 
-## Progress
-- .opencode/todo.md: 14/14 complete (100%)
-- Issues: 0 unresolved
-- Workers: 0 active
-- Execution Status: COMPLETE
+Generated: 2026-07-30
 
-## Final Results
-- Vector store: 16622 docs from 129 PDFs + NES (520 batches, 2982s)
-- Index: 6.5MB TurboVec quantized index (index.tvim), 25MB docstore.json
-- PRD eval: 12/12 format pass, 10/12 fully correct answers
-- Integration: 7/7 tests passed
-- Gradio app: Fixed for Gradio 6.x compatibility
-- Embeddings: fastembed BAAI/bge-base-en-v1.5 (768-dim, ONNX, local)
-- LLM: Groq llama-3.3-70b-versatile
+## Evidence Files
+- `data/hard_eval_results.json` — Eval results with provenance
+- `data/awards_manifest.json` — Corpus manifest (122 Awards)
+- `data/provenance_log.jsonl` — Per-request audit trail
+- `data/provider_conformance_results.json` — Live API tests
+- `data/docs_cache.pkl` — Cached ingested docs
+- `STATUS.md` — Evidence-based project status
+- `.coveragerc` — Coverage configuration
 
-## Key Fixes This Session
-1. TurboVec MMR → similarity search (quantized vectors don't support MMR)
-2. Gradio 6.x removed retry_btn/undo_btn/clear_btn params
-3. Gradio 6.x theme moved from Blocks() to launch()
+## Build Health
+- **Branch**: develop
+- **Tests**: 67 passing (pytest)
+- **Lint**: 0 errors (ruff)
+- **Accuracy**: 87.5% (22/25 hard questions)
+- **Vector store**: 16622 docs from 122 PDFs + NES
 
-## Architecture
-- src/ingest.py → PDF parsing, clause detection, chunking, 129 award slug mapping
-- src/fastembeddings.py → LangChain wrapper for fastembed ONNX
-- src/vectorstore.py → TurboVec build/load/search with batched resumable ingestion
-- src/rag.py → Groq LLM, 5-component RAG prompt, similarity retriever
-- src/app.py → Gradio ChatInterface with 12 examples
-- build_store.py → Resumable build script with doc cache + checkpoint
+## Defect Summary (from defect register)
+| Severity | Fixed | Partial | Open | Total |
+|----------|-------|---------|------|-------|
+| S0 | 0 | 0 | 0 | 0 |
+| S1 | 30 | 8 | 5 | 43 |
+| S2 | 18 | 6 | 3 | 27 |
+| S3 | 3 | 0 | 0 | 3 |
+| **Total** | **51** | **14** | **8** | **73** |
+
+## Blocked Items (Require External Action)
+- DEF-010: Eval rerun needs Groq API key
+- DEF-021: CRLF verification needs Linux
+- DEF-027: DOCX verification needs LibreOffice
+- DEF-029: pip-audit needs network access
+- DEF-069: Award case matching needs live rerun

@@ -1,0 +1,85 @@
+{
+  "name": "fair-work-rag-assistant",
+  "version": "1.0.0",
+  "specVersion": "1.5",
+  "components": [
+    {
+      "name": "turbovec",
+      "version": "0.1.0",
+      "type": "library",
+      "purl": "pypi:turbovec"
+    },
+    {
+      "name": "langchain",
+      "version": "0.3.0",
+      "type": "library",
+      "purl": "pypi:langchain"
+    },
+    {
+      "name": "langchain-groq",
+      "version": "0.2.0",
+      "type": "library",
+      "purl": "pypi:langchain-groq"
+    },
+    {
+      "name": "fastembed",
+      "version": "0.4.0",
+      "type": "library",
+      "purl": "pypi:fastembed"
+    },
+    {
+      "name": "pdfplumber",
+      "version": "0.11.0",
+      "type": "library",
+      "purl": "pypi:pdfplumber"
+    },
+    {
+      "name": "gradio",
+      "version": "5.0.0",
+      "type": "library",
+      "purl": "pypi:gradio"
+    },
+    {
+      "name": "python-dotenv",
+      "version": "1.0.0",
+      "type": "library",
+      "purl": "pypi:python-dotenv"
+    },
+    {
+      "name": "beautifulsoup4",
+      "version": "4.12.0",
+      "type": "library",
+      "purl": "pypi:beautifulsoup4"
+    },
+    {
+      "name": "lxml",
+      "version": "5.0.0",
+      "type": "library",
+      "purl": "pypi:lxml"
+    },
+    {
+      "name": "numpy",
+      "version": "1.26.0",
+      "type": "library",
+      "purl": "pypi:numpy"
+    },
+    {
+      "name": "rank-bm25",
+      "version": "0.2.2",
+      "type": "library",
+      "purl": "pypi:rank-bm25"
+    },
+    {
+      "name": "cohere",
+      "version": "5.0.0",
+      "type": "library",
+      "purl": "pypi:cohere"
+    }
+  ],
+  "dependencies": [],
+  "metadata": {
+    "timestamp": "2026-07-30T00:00:00Z",
+    "tool": "manual",
+    "notes": "Software Bill of Materials for Fair Work RAG Assistant"
+  }
+}

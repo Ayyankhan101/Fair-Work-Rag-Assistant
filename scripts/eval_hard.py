@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Hard eval suite: 20+ questions with expected answers for content accuracy scoring."""
+"""Hard eval suite: 25 questions with expected answers for content accuracy scoring."""
 import json
 import re
 import sys
 import time
+import hashlib
+import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -325,8 +327,44 @@ def score_content(answer: str, expected: dict) -> dict:
     }
 
 
+def score_citation(answer: str, expected_award: str) -> dict:
+    """DEF-008: Score citation accuracy — checks Award name and clause reference."""
+    answer_lower = answer.lower()
+    award_found = expected_award.lower() in answer_lower
+    clause_found = bool(re.search(r'clause\s*\d+', answer_lower)) or bool(re.search(r'section\s*\d+', answer_lower))
+    
+    score = 0
+    if award_found:
+        score += 50
+    if clause_found:
+        score += 50
+    
+    return {
+        "award_cited": award_found,
+        "clause_cited": clause_found,
+        "citation_score": score,
+    }
+
+
+def test_non_id_heading_parser():
+    """DEF-040: Test that parser handles non-ID headings correctly."""
+    from ingest_markdown import extract_clause_number
+    
+    # Should extract clause numbers
+    assert extract_clause_number("15.1. Some title") == "15.1"
+    assert extract_clause_number("Part 2—Introduction") == "Part 2"
+    assert extract_clause_number("Schedule A—Rates") == "Schedule A"
+    
+    # Should return empty for non-clause headings
+    assert extract_clause_number("General title without number") == ""
+    assert extract_clause_number("Table of Contents") == ""
+    assert extract_clause_number("Appendix") == ""
+    
+    return "Parser handles non-ID headings correctly"
+
+
 def main() -> int:
-    """Run hard eval suite."""
+    """Run hard eval suite with provenance metadata."""
     store_dir = ROOT / "data" / "vectorstore"
     out_path = ROOT / "data" / "hard_eval_results.json"
     
@@ -338,6 +376,10 @@ def main() -> int:
     vectorstore = load_vectorstore(str(store_dir))
     docstore_path = str(store_dir / "docstore.json")
     rag_chain = create_rag_chain(vectorstore, docstore_path=docstore_path)
+    
+    # DEF-005: Provenance metadata
+    run_timestamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    store_hash = hashlib.sha256((store_dir / "index.tvim").read_bytes()).hexdigest()[:16] if (store_dir / "index.tvim").exists() else "unknown"
     
     results = []
     total_score = 0
@@ -353,12 +395,10 @@ def main() -> int:
         except Exception as e:
             answer = f"Error: {e}"
         
-        # Format validation
         fmt = validate_format(answer)
         if fmt:
             format_failures += 1
         
-        # Content scoring
         content = score_content(answer, q)
         total_score += content["score"]
         max_total += content["max_score"]
@@ -367,7 +407,7 @@ def main() -> int:
         if passed:
             content_pass += 1
         
-        status = "✓" if passed else "✗"
+        status = "PASS" if passed else "FAIL"
         print(f"  {status} Content: {content['percentage']:.0f}% ({content['score']:.0f}/{content['max_score']:.0f})")
         
         results.append({
@@ -381,11 +421,9 @@ def main() -> int:
             "passed": passed,
         })
         
-        # Rate limit avoidance
         if i < len(HARD_QUESTIONS) - 1:
             time.sleep(1)
     
-    # Summary
     overall = (total_score / max_total) * 100 if max_total > 0 else 0
     
     summary = {
@@ -395,18 +433,26 @@ def main() -> int:
         "overall_accuracy": overall,
         "total_score": total_score,
         "max_score": max_total,
+        # DEF-005: Provenance fields
+        "run_timestamp": run_timestamp,
+        "store_hash": store_hash,
+        "prompt_version": "2.1.0",
+        "model": "llama-3.3-70b-versatile",
+        "eval_version": "2.0.0",
     }
     
     output = {"summary": summary, "results": results}
     out_path.write_text(json.dumps(output, indent=2))
     
     print(f"\n{'='*60}")
-    print(f"EVAL SUMMARY")
+    print("EVAL SUMMARY")
     print(f"{'='*60}")
     print(f"Total Questions: {summary['total_questions']}")
     print(f"Format Pass: {summary['format_pass']}/{summary['total_questions']}")
     print(f"Content Pass: {summary['content_pass']}/{summary['total_questions']}")
     print(f"Overall Accuracy: {summary['overall_accuracy']:.1f}%")
+    print(f"Run Timestamp: {summary['run_timestamp']}")
+    print(f"Store Hash: {summary['store_hash']}")
     print(f"Saved to: {out_path}")
     
     return 0 if summary["overall_accuracy"] >= 95 else 1

@@ -1,0 +1,21 @@
+{
+  "description": "Award acquisition receipts — DEF-038",
+  "receipts": [
+    {
+      "award_id": "MA000095",
+      "name": "Car Parking Award 2020",
+      "source_url": "https://www.fairwork.gov.au/employment-conditions/awards/list-of-awards/ma000095",
+      "downloaded": "2026-07-27T00:00:00Z",
+      "content_hash": "",
+      "status": "pending_verification"
+    },
+    {
+      "award_id": "MA000121",
+      "name": "Airport Employees Award 2020",
+      "source_url": "https://www.fairwork.gov.au/employment-conditions/awards/list-of-awards/ma000121",
+      "downloaded": "2026-07-27T00:00:00Z",
+      "content_hash": "",
+      "status": "pending_verification"
+    }
+  ]
+}
