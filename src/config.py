@@ -75,6 +75,7 @@ QUERY_CATEGORIES = {
             "21 days", "lodgment", "extension of time",
             "employee vs contractor", "casual employee",
             "eligible", "jurisdiction", "can I apply",
+            "unfair dismissal", "what is", "definition",
         ],
     },
     "statutory_criteria": {

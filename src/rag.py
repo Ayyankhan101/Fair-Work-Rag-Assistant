@@ -15,7 +15,7 @@ from src.router import classify_query, QueryType
 from src.verifier import CitationVerifier
 from src.citation_resolver import CitationResolver
 from src.abstention_gate import AbstentionGate
-from src.audit_log import AuditLog
+from src.audit_log import AuditLogger
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +79,7 @@ class UnfairDismissalRAG:
         self.verifier = CitationVerifier()
         self.citation_resolver = CitationResolver()
         self.abstention_gate = AbstentionGate()
-        self.audit_log = AuditLog()
+        self.audit_log = AuditLogger()
         
         # Prompt
         self.prompt = ChatPromptTemplate.from_template(SYSTEM_PROMPT)
@@ -119,17 +119,9 @@ class UnfairDismissalRAG:
         if not context:
             response = self.abstention_gate.get_abstention_response(
                 question=question,
-                found_citations=0,
-                verified_citations=0,
-                confidence=0.0,
+                found_citations=[],
             )
-            self.audit_log.log_query(
-                question=question,
-                query_type=routing.query_type.value,
-                context_length=0,
-                response=response,
-                latency=time.time() - start_time,
-            )
+            logger.info(f"ABSTAIN: {question[:50]}... (no context)")
             return {
                 "answer": response,
                 "query_type": routing.query_type.value,
@@ -156,10 +148,10 @@ class UnfairDismissalRAG:
             })
         
         # Step 6: Citation resolver
-        resolved = []
-        for vc in verified_citations:
-            if vc["verified"]:
-                resolved.append(self.citation_resolver.resolve_citation(vc["citation"]))
+        if verified_citations:
+            resolved = self.citation_resolver.resolve([vc["citation"] for vc in verified_citations])
+        else:
+            resolved = []
         
         # Step 7: Abstention gate (post-generation)
         from dataclasses import dataclass
@@ -180,23 +172,15 @@ class UnfairDismissalRAG:
         if abstention_decision.should_abstain:
             response = self.abstention_gate.get_abstention_response(
                 question=question,
-                found_citations=len(verified_citations),
-                verified_citations=sum(1 for vc in verified_citations if vc["verified"]),
-                confidence=avg_confidence,
+                found_citations=mock_citations,
             )
         else:
             response = answer
         
         # Step 8: Audit log
         latency = time.time() - start_time
-        self.audit_log.log_query(
-            question=question,
-            query_type=routing.query_type.value,
-            context_length=len(context),
-            response=response,
-            latency=latency,
-            citations=verified_citations,
-        )
+        logger.info(f"QUERY: {question[:50]}... | type={routing.query_type.value} | "
+                    f"citations={len(verified_citations)} | latency={latency:.2f}s")
         
         return {
             "answer": response,
