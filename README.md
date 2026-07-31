@@ -36,14 +36,14 @@ The **Fair Work Unfair Dismissal RAG Assistant** is a production-grade legal res
 
 ```mermaid
 graph TB
-    User([👤 User]) -->|Query| Router
+    User([👤 User]) -->|Query| QRouter
 
-    subgraph Router["Query Classification"]
-        Router["Router<br/><i>jurisdictional · statutory_criteria · analogous_facts · procedural</i>"]
+    subgraph QC["Query Classification"]
+        QRouter["Router<br/><i>jurisdictional · statutory_criteria · analogous_facts · procedural</i>"]
     end
 
-    Router -->|Legislation query| CAG
-    Router -->|Case law query| RAG
+    QRouter -->|Legislation query| CAG
+    QRouter -->|Case law query| RAG
 
     subgraph CAG["Cache-Augmented Generation"]
         Cache["Fair Work Act Cache<br/>s385–394 · 10,978 chars"]
@@ -61,14 +61,14 @@ graph TB
     CAG --> Generator
     RAG --> Generator
 
-    subgraph Generator["LLM Generation"]
+    subgraph Gen["LLM Generation"]
         LLM["Groq API<br/>llama-3.3-70b-versatile"]
     end
 
     LLM --> Verify
 
-    subgraph Verify["Post-Hoc Verification Pipeline"]
-        Extract["Citation Extractor<br/>Regex: s\\d{3}[A-Z]?"]
+    subgraph VP["Post-Hoc Verification Pipeline"]
+        Extract["Citation Extractor<br/>Regex pattern"]
         Validate["Corpus Validator<br/>Source existence check"]
         Abstain["Abstention Gate<br/>4-rule safety check"]
         Extract --> Validate --> Abstain
@@ -76,7 +76,7 @@ graph TB
 
     Verify --> Output
 
-    subgraph Output["Structured Response"]
+    subgraph Out["Structured Response"]
         A["Answer"]
         B["Legislation Reference"]
         C["Section Number"]
@@ -84,12 +84,12 @@ graph TB
         E["Confidence Note"]
     end
 
-    style Router fill:#1e40af,stroke:#1e3a8a,color:#fff
+    style QC fill:#1e40af,stroke:#1e3a8a,color:#fff
     style CAG fill:#047857,stroke:#065f46,color:#fff
     style RAG fill:#7c3aed,stroke:#6d28d9,color:#fff
-    style Generator fill:#b45309,stroke:#92400e,color:#fff
-    style Verify fill:#be123c,stroke:#9f1239,color:#fff
-    style Output fill:#334155,stroke:#1e293b,color:#fff
+    style Gen fill:#b45309,stroke:#92400e,color:#fff
+    style VP fill:#be123c,stroke:#9f1239,color:#fff
+    style Out fill:#334155,stroke:#1e293b,color:#fff
 ```
 
 ### Query Processing Pipeline
