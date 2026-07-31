@@ -1,74 +1,47 @@
-"""RAG chain with Groq LLM for Fair Work Awards & NES Q&A."""
+"""RAG chain for unfair dismissal law with post-hoc verification."""
 import os
 import re
 import time
 import logging
-from typing import Optional
+from typing import Optional, List
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
-from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
-from vectorstore import load_vectorstore
-from bm25_retriever import build_bm25_retriever_from_docstore
-from hybrid_retriever import HybridRetriever
-from filtered_retriever import AwardFilteredRetriever
-from reranker import rerank_documents
-from config import detect_award, detect_topic
+from langchain_core.documents import Document
+
+from src.cag import get_cag_cache
+from src.router import classify_query, QueryType
+from src.verifier import CitationVerifier
+from src.citation_resolver import CitationResolver
+from src.abstention_gate import AbstentionGate
+from src.audit_log import AuditLog
 
 logger = logging.getLogger(__name__)
 
-# DEF-037: Prompt versioning
-PROMPT_VERSION = "2.1.0"
-PROMPT_HASH = None  # Computed at module load time
 
+SYSTEM_PROMPT = """You are an unfair dismissal research assistant for Australian employment law.
 
-SYSTEM_PROMPT = """You are a Fair Work Award expert assistant for Australian employment law.
+You answer questions about unfair dismissal under Part 3-2 Division 4 of the Fair Work Act 2009.
 
-You answer questions about Modern Awards and the National Employment Standards (NES).
-
-RULES:
+CRITICAL RULES:
 1. ONLY use the provided context to answer — never fabricate information.
-2. Extract specific numbers, percentages, time periods, and dollar amounts from the context.
-3. If the context does not contain enough information, say "I don't have enough information to answer this question accurately."
-4. If you're unsure, say "I'm not certain — please consult the full Award text or a Fair Work specialist."
-5. Reference specific clause numbers and section titles from context.
-6. For questions about a specific Award, PRIORITIZE that Award's provisions.
-7. For general questions, COMPARE across multiple Awards when context allows.
-8. If the context references a table or schedule, mention the table name.
-9. NEVER make up numbers, dates, or clause references not in the context.
+2. Cite specific sections (e.g., "s385", "s387") from the context.
+3. If the context does not contain enough information, say "I could not find authority for this question."
+4. NEVER make up section numbers, case names, or legal principles not in the context.
+5. For analogous-facts questions, cite specific FWC decisions from the context.
+6. Do NOT provide legal advice — provide legal information retrieval.
 
 RESPONSE FORMAT:
+**Answer:** [Direct answer with specific section references]
 
-**Answer:** [Direct answer with specific numbers/details from context]
+**Legislation Reference:** [Fair Work Act 2009, Part 3-2 Division 4]
 
-**Award/NES Reference:** [Exact Award name(s) as they appear in context]
-
-**Clause/Section:** [Specific clause numbers, e.g., "Clause 16.1, Table 2"]
+**Section:** [Specific sections, e.g., "s385", "s387"]
 
 **Explanation:** [How the answer was derived from the specific context]
 
-**Note:** [One of: "Multiple Awards may apply — please check specific Award for details" OR "Information is limited — please consult the full Award text for complete details" OR "This answer is based on the specific context provided"]
-
-EXAMPLES:
-
-Example 1 - Specific Award question:
-Context: [Hospitality Industry (General) Award 2020 - Clause 16.1] An employee must be given an unpaid meal break of not less than 30 minutes...
-Q: "What is the minimum break under the Hospitality Award?"
-**Answer:** An unpaid meal break of no less than 30 minutes.
-**Award/NES Reference:** Hospitality Industry (General) Award 2020
-**Clause/Section:** Clause 16.1
-**Explanation:** The context specifies a 30-minute unpaid meal break in Clause 16.
-**Note:** This answer is based on the specific context provided.
-
-Example 2 - Insufficient context:
-Context: [General Retail Industry Award 2020 - Clause 15] Overtime is payable at 150%...
-Q: "What is the minimum salary for a Level 5 retail employee in 2024?"
-**Answer:** I don't have enough information to answer this question accurately. The context mentions overtime rates but does not include specific salary rates for Level 5 employees.
-**Award/NES Reference:** General Retail Industry Award 2020
-**Clause/Section:** Clause 15
-**Explanation:** The retrieved context covers overtime provisions but does not contain salary rate tables.
-**Note:** Information is limited — please consult the full Award text for complete details.
+**Note:** [One of: "This is legal information, not legal advice" OR "Additional case law may apply" OR "Information is limited — please consult a legal professional"]
 
 Context:
 {context}
@@ -77,295 +50,170 @@ Question: {question}
 
 Answer:"""
 
-# Compute prompt hash for versioning
-import hashlib as _hashlib
-PROMPT_HASH = _hashlib.sha256(SYSTEM_PROMPT.encode()).hexdigest()[:16]
 
-
-def get_llm(fallback=False) -> ChatGroq:
-    """Initialize Groq LLM with optional fallback.
+class UnfairDismissalRAG:
+    """RAG chain for unfair dismissal with post-hoc verification.
     
-    Args:
-        fallback: If True, use smaller model (8b-instant) for rate limit avoidance
-    
-    DEF-031: Model IDs updated to avoid deprecated models (shutting down 16 Aug 2026).
-    Primary: llama-3.3-70b-versatile → llama-3.3-70b-versatile (latest stable)
-    Fallback: llama-3.1-8b-instant → llama-3.1-8b-instant (latest stable)
+    Per playbook Part 5.1:
+    1. Query understanding (classify)
+    2. Hybrid retrieval (top ~50) → Rerank (top ~8)
+    3. Constrained generation
+    4. POST-HOC VERIFIER
+    5. CITATION RESOLVER
+    6. ABSTENTION GATE
+    7. Render
     """
-    load_dotenv()
-    model = "llama-3.1-8b-instant" if fallback else "llama-3.3-70b-versatile"
-    return ChatGroq(
-        model=model,
-        temperature=0,
-        max_tokens=1024,
-        timeout=30,
-        max_retries=2,
-    )
-
-
-def needs_clarification(question: str) -> bool:
-    """Check if question needs clarification before answering."""
-    q = question.lower().strip()
     
-    # Too short to be meaningful
-    if len(q) < 5:
-        return True
-    
-    # Greetings only
-    greeting_patterns = [
-        r'^(hi|hello|hey|greetings|good morning|good afternoon|good evening)[\s!]*$',
-        r'^(yo|sup|howdy|hiya)[\s!]*$',
-    ]
-    if any(re.match(p, q) for p in greeting_patterns):
-        return True
-    
-    # Just a question word
-    just_question = r'^(what|how|when|where|who|why|can|could|would|should|is|are|do|does|did|tell|explain|show)[\s?]*$'
-    if re.match(just_question, q):
-        return True
-    
-    # Just punctuation
-    if all(c in '?!. ' for c in q):
-        return True
-    
-    return False
-
-
-def format_docs(docs, max_chars=4000) -> str:
-    """Format retrieved documents into context string with optional truncation.
-    
-    Strips contextual retrieval prefix before displaying to user.
-    """
-    formatted = []
-    total_chars = 0
-    for i, doc in enumerate(docs):
-        if total_chars >= max_chars:
-            break
-        metadata = doc.metadata
-        header = f"[Document {i+1}: {metadata['award_name']}"
-        if metadata.get('clause_number'):
-            header += f" — {metadata['clause_number']}"
-        header += f" ({metadata['document_type']})]"
-        source_url = metadata.get('source_url', '')
-        section = metadata.get('section_title', '')
+    def __init__(self):
+        load_dotenv()
         
-        # Strip contextual retrieval prefix: "[Award Name - Section] "
-        content = doc.page_content
-        content = re.sub(r'^\[.+?\]\s*', '', content)
-        
-        # Show more content for better answer quality
-        content = content[:800] + "..." if len(content) > 800 else content
-        formatted.append(
-            f"{header}\n"
-            f"Section: {section}\n"
-            f"Source: {source_url}\n"
-            f"{content}"
+        # LLM
+        self.llm = ChatGroq(
+            model_name=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+            groq_api_key=os.getenv("GROQ_API_KEY"),
+            temperature=0.1,
         )
-        total_chars += len(content)
-    return "\n\n".join(formatted)
-
-
-def format_cag_context(cag_text: str) -> str:
-    """Format CAG context for inclusion in prompt."""
-    if not cag_text:
-        return ""
-    return f"[CAG Cache - Pre-loaded Content]\n{cag_text}"
-
-
-def create_rag_chain(vectorstore, cag_cache=None, docstore_path=None):
-    """Create RAG chain with optional CAG context.
-    
-    Args:
-        vectorstore: TurboVec vector store for RAG path
-        cag_cache: Optional CAGCache instance for CAG path
-        docstore_path: Path to docstore.json for BM25 index
-    """
-    llm = get_llm()
-    
-    # Create semantic retriever
-    semantic_retriever = vectorstore.as_retriever(
-        search_type="similarity",
-        search_kwargs={"k": 10},
-    )
-    
-    # Create filtered retriever for award-specific queries
-    if docstore_path and os.path.exists(docstore_path):
-        filtered_retriever = AwardFilteredRetriever(docstore_path=docstore_path)
-        bm25_retriever = build_bm25_retriever_from_docstore(docstore_path)
-        hybrid_retriever = HybridRetriever(
-            bm25_retriever=bm25_retriever,
-            semantic_retriever=semantic_retriever,
-            k=10,
-        )
-    else:
-        filtered_retriever = None
-        hybrid_retriever = semantic_retriever
-
-    prompt = ChatPromptTemplate.from_messages([
-        SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT),
-        HumanMessagePromptTemplate.from_template("{question}"),
-    ])
-
-    # Award name mapping for filtering (from shared config)
-    
-    def detect_award_filter(question: str) -> Optional[str]:
-        """Detect if question mentions a specific Award."""
-        return detect_award(question)
-    
-    # Topic keywords for general questions (from shared config)
-    
-    def detect_topic_filter(question: str) -> Optional[str]:
-        """Detect if question is about a general topic."""
-        return detect_topic(question)
-    
-    def build_context(question: str):
-        """Build context from CAG cache, RAG retrieval, or both."""
-        context_parts = []
         
-        # Check if CAG cache is available and question is CAG candidate
-        if cag_cache and cag_cache.is_cag_candidate(question):
-            cag_ctx = cag_cache.get_context(question)
-            if cag_ctx:
-                context_parts.append(format_cag_context(cag_ctx))
+        # Components
+        self.cag_cache = get_cag_cache()
+        self.verifier = CitationVerifier()
+        self.citation_resolver = CitationResolver()
+        self.abstention_gate = AbstentionGate()
+        self.audit_log = AuditLog()
         
-        # Detect award filter or topic filter
-        award_filter = detect_award_filter(question)
-        topic_filter = detect_topic_filter(question)
+        # Prompt
+        self.prompt = ChatPromptTemplate.from_template(SYSTEM_PROMPT)
+        self.output_parser = StrOutputParser()
         
-        # Use filtered retriever for award-specific queries with strong topic match
-        # Fall back to hybrid for weak topic matches or no award
-        use_filtered = False
-        if (award_filter or topic_filter) and filtered_retriever:
-            try:
-                test_docs = filtered_retriever.invoke(question)
-                # Check if filtered retriever found answer-relevant docs
-                if test_docs and any(
-                    any(kw in d.page_content.lower() for kw in question.lower().split() if len(kw) > 3)
-                    for d in test_docs[:5]
-                ):
-                    docs = test_docs
-                    use_filtered = True
-            except Exception:
-                pass
-        
-        if not use_filtered:
-            docs = hybrid_retriever.invoke(question)
-        
-        # Rerank documents for better relevance
-        if docs and len(docs) > 10:
-            docs = rerank_documents(question, docs, top_n=10, use_cohere=True)
-        
-        if docs:
-            context_parts.append(format_docs(docs))
-        
-        return "\n\n".join(context_parts) if context_parts else "No relevant context found."
-
-    rag_chain = (
-        {"context": build_context, "question": RunnablePassthrough()}
-        | prompt
-        | llm
-        | StrOutputParser()
-    )
-
-    return rag_chain
-
-
-def ask_question(rag_chain, question: str) -> str:
-    """Ask a question and get a formatted answer with auto-fallback on rate limit.
+        # Retriever (set later)
+        self.retriever = None
     
-    DEF-043: Added timeout handling and structured error responses.
-    DEF-044: Rate limit fallback reduces context and uses correct role messages.
-    DEF-045: Added request logging with timing.
-    """
-    if needs_clarification(question):
-        return """**Answer:** Could you please provide more details about your question?
-
-**Award/NES Reference:** N/A
-
-**Clause/Section:** N/A
-
-**Explanation:** Your question appears to be too brief or unclear for me to provide an accurate answer.
-
-**Note:** Please ask a specific question about a Modern Award or the National Employment Standards. For example:
-- "What is the minimum break under the Hospitality Award?"
-- "What are the casual loading rates in the Retail Award?"
-- "How much annual leave am I entitled to under the NES?" """
+    def set_retriever(self, retriever):
+        """Set the base retriever for RAG path."""
+        self.retriever = retriever
     
-    start_time = time.time()
-    try:
-        response = rag_chain.invoke(question)
-        elapsed = time.time() - start_time
-        logger.info(f"RAG request completed in {elapsed:.2f}s | prompt_version={PROMPT_VERSION} | prompt_hash={PROMPT_HASH}")
-        return response
-    except Exception as e:
-        elapsed = time.time() - start_time
-        error_str = str(e)
-        logger.error(f"RAG request failed in {elapsed:.2f}s | error={error_str[:200]}")
+    def query(self, question: str) -> dict:
+        """Process a question through the full pipeline."""
+        start_time = time.time()
         
-        if "429" in error_str or "rate_limit" in error_str:
-            logger.warning("Rate limit hit, retrying with fallback model and reduced context...")
-            fallback_llm = get_llm(fallback=True)
-            
-            # DEF-044: Build fallback chain with smaller context window
-            original_context_builder = rag_chain.first
-            
-            # Create a wrapper that reduces context
-            def reduced_context(question_text):
-                if callable(original_context_builder):
-                    ctx = original_context_builder(question_text)
-                    # DEF-044: Truncate context to reduce token usage
-                    if isinstance(ctx, str) and len(ctx) > 2000:
-                        ctx = ctx[:2000] + "\n\n[Context truncated for rate limit fallback]"
-                    return ctx
-                return original_context_builder
-            
-            fallback_chain = (
-                {"context": reduced_context, "question": lambda x: x}
-                | ChatPromptTemplate.from_messages([
-                    SystemMessagePromptTemplate.from_template(SYSTEM_PROMPT),
-                    HumanMessagePromptTemplate.from_template("{question}"),
-                ])
-                | fallback_llm
-                | StrOutputParser()
+        # Step 1: Query understanding
+        routing = classify_query(question)
+        logger.info(f"Query classified as {routing.query_type.value} (confidence: {routing.confidence:.2f})")
+        
+        # Step 2: Get context (CAG or RAG)
+        context = ""
+        docs_used = []
+        
+        if routing.is_cag_candidate:
+            # CAG path — legislation context
+            context = self.cag_cache.get_context(question)
+            if context:
+                docs_used = [Document(page_content=context, metadata={"source": "Fair Work Act 2009"})]
+        
+        if not context and self.retriever:
+            # RAG path — retrieve from decisions
+            docs_used = self.retriever.get_relevant_documents(question)
+            context = "\n\n".join([doc.page_content for doc in docs_used])
+        
+        # Step 3: Abstention gate (pre-generation)
+        if not context:
+            response = self.abstention_gate.get_abstention_response(
+                question=question,
+                found_citations=0,
+                verified_citations=0,
+                confidence=0.0,
             )
-            
-            try:
-                response = fallback_chain.invoke(question)
-                elapsed = time.time() - start_time
-                logger.info(f"Fallback request completed in {elapsed:.2f}s")
-                return response
-            except Exception as fallback_err:
-                logger.error(f"Fallback also failed: {fallback_err}")
-                return "**Answer:** I'm experiencing technical difficulties. Please try again shortly.\n\n**Note:** Service temporarily unavailable."
+            self.audit_log.log_query(
+                question=question,
+                query_type=routing.query_type.value,
+                context_length=0,
+                response=response,
+                latency=time.time() - start_time,
+            )
+            return {
+                "answer": response,
+                "query_type": routing.query_type.value,
+                "citations": [],
+                "verified": False,
+                "abstained": True,
+                "latency": time.time() - start_time,
+            }
         
-        if "413" in error_str:
-            return "**Answer:** Your question is too complex for the current context window. Please try a more specific question.\n\n**Note:** Question too large."
+        # Step 4: Generate answer
+        chain = self.prompt | self.llm | self.output_parser
+        answer = chain.invoke({"context": context, "question": question})
         
-        return f"**Answer:** An error occurred while processing your question.\n\n**Note:** {error_str[:200]}"
+        # Step 5: Post-hoc verification
+        citations = self.citation_resolver.extract_citations(answer)
+        verified_citations = []
+        for citation in citations:
+            # Check if citation exists in context
+            verified = citation.lower() in context.lower()
+            verified_citations.append({
+                "citation": citation,
+                "verified": verified,
+                "source": "Fair Work Act 2009" if verified else None,
+            })
+        
+        # Step 6: Citation resolver
+        resolved = []
+        for vc in verified_citations:
+            if vc["verified"]:
+                resolved.append(self.citation_resolver.resolve_citation(vc["citation"]))
+        
+        # Step 7: Abstention gate (post-generation)
+        from dataclasses import dataclass
+        @dataclass
+        class MockCitation:
+            citation: str
+            verified: bool
+        
+        mock_citations = [MockCitation(vc["citation"], vc["verified"]) for vc in verified_citations]
+        avg_confidence = 0.8 if any(vc["verified"] for vc in verified_citations) else 0.3
+        
+        abstention_decision = self.abstention_gate.should_abstain(
+            question=question,
+            verified_citations=mock_citations,
+            confidence=avg_confidence,
+        )
+        
+        if abstention_decision.should_abstain:
+            response = self.abstention_gate.get_abstention_response(
+                question=question,
+                found_citations=len(verified_citations),
+                verified_citations=sum(1 for vc in verified_citations if vc["verified"]),
+                confidence=avg_confidence,
+            )
+        else:
+            response = answer
+        
+        # Step 8: Audit log
+        latency = time.time() - start_time
+        self.audit_log.log_query(
+            question=question,
+            query_type=routing.query_type.value,
+            context_length=len(context),
+            response=response,
+            latency=latency,
+            citations=verified_citations,
+        )
+        
+        return {
+            "answer": response,
+            "query_type": routing.query_type.value,
+            "citations": verified_citations,
+            "verified": any(vc["verified"] for vc in verified_citations),
+            "abstained": abstention_decision.should_abstain,
+            "latency": latency,
+        }
 
 
-if __name__ == "__main__":
-    import sys
-    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Singleton
+_rag_instance = None
 
-    store_dir = "data/vectorstore"
-
-    # Load vector store
-    vectorstore = load_vectorstore(store_dir)
-
-    # Create RAG chain
-    rag_chain = create_rag_chain(vectorstore)
-
-    # Test with sample questions
-    test_questions = [
-        "What is the minimum break under the Hospitality Award?",
-        "What are overtime rules for a casual employee?",
-        "What leave entitlements are covered by the NES?",
-    ]
-
-    for q in test_questions:
-        print(f"\n{'='*60}")
-        print(f"Q: {q}")
-        print(f"{'='*60}")
-        answer = ask_question(rag_chain, q)
-        print(answer)
+def get_rag() -> UnfairDismissalRAG:
+    """Get or create RAG instance."""
+    global _rag_instance
+    if _rag_instance is None:
+        _rag_instance = UnfairDismissalRAG()
+    return _rag_instance
