@@ -5,7 +5,10 @@ import logging
 import gradio as gr
 from dotenv import load_dotenv
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# Ensure project root is on path (for `from src.X` imports)
+_project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _project_root not in sys.path:
+    sys.path.insert(0, _project_root)
 
 logger = logging.getLogger(__name__)
 
