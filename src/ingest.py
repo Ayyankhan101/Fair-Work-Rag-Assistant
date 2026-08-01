@@ -279,6 +279,70 @@ def ingest_legislation(legislation_path: str = "data/legislation/fair_work_act_s
     return documents
 
 
+def ingest_all(awards_dir: str = "data/awards", nes_path: str = "data/nes/nes_combined.txt") -> List[Document]:
+    """Legacy ingestion for Awards + NES (backward compatibility).
+    
+    Used by build_store.py and vectorstore.py.
+    For new code, use ingest_fwc_decisions() + ingest_legislation() instead.
+    """
+    import glob as glob_mod
+    
+    documents = []
+    
+    # Ingest Awards (PDFs)
+    if awards_dir and os.path.isdir(awards_dir):
+        pdf_files = sorted(glob_mod.glob(os.path.join(awards_dir, "*.pdf")))
+        if pdf_files:
+            print(f"Found {len(pdf_files)} Award PDFs in {awards_dir}")
+            # Try to use PyPDF2 for PDF ingestion
+            try:
+                from PyPDF2 import PdfReader
+                for pdf_path in pdf_files:
+                    filename = os.path.basename(pdf_path)
+                    try:
+                        reader = PdfReader(pdf_path)
+                        for page_num, page in enumerate(reader.pages):
+                            text = page.extract_text()
+                            if text and len(text.strip()) > 50:
+                                metadata = {
+                                    "document_type": "Award",
+                                    "source_file": filename,
+                                    "page_number": page_num + 1,
+                                }
+                                documents.append(Document(
+                                    page_content=text.strip(),
+                                    metadata=metadata,
+                                ))
+                    except Exception as e:
+                        print(f"  ERROR {filename}: {e}")
+                print(f"Awards: {len(documents)} chunks from {len(pdf_files)} PDFs")
+            except ImportError:
+                print("WARNING: PyPDF2 not installed. Cannot ingest Award PDFs.")
+    
+    # Ingest NES
+    if nes_path and os.path.exists(nes_path):
+        with open(nes_path, encoding='utf-8', errors='replace') as f:
+            nes_text = f.read()
+        
+        # Split into paragraphs
+        paragraphs = [p.strip() for p in nes_text.split('\n\n') if p.strip() and len(p.strip()) > 50]
+        
+        for i, para in enumerate(paragraphs):
+            metadata = {
+                "document_type": "NES",
+                "source_file": "nes_combined.txt",
+                "chunk_index": i,
+            }
+            documents.append(Document(
+                page_content=f"[National Employment Standards] {para}",
+                metadata=metadata,
+            ))
+        print(f"NES: {len(paragraphs)} chunks from nes_combined.txt")
+    
+    print(f"Total (legacy): {len(documents)} chunks")
+    return documents
+
+
 if __name__ == "__main__":
     # Ingest legislation
     leg_docs = ingest_legislation()
