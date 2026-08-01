@@ -70,6 +70,7 @@
 - [x] S1.6.13: Run final compilation check | size:S
 - [x] S1.6.14: Final app health check | size:S
 - [x] S1.6.15: Final git status clean | size:S
+- [x] S1.6.16: Fix quality-plan.md incomplete checklist items | size:S
 
 ---
 
