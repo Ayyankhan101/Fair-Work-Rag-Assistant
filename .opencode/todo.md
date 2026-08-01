@@ -66,6 +66,8 @@
 - [x] S1.6.9: Verify all Python files compile | size:S
 - [x] S1.6.10: Push all changes to develop | size:S
 - [x] S1.6.11: Verify app responds on port 7860 | size:S
+- [x] S1.6.12: Verify all docs up to date | size:S
+- [x] S1.6.13: Run final compilation check | size:S
 
 ---
 
