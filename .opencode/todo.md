@@ -68,6 +68,8 @@
 - [x] S1.6.11: Verify app responds on port 7860 | size:S
 - [x] S1.6.12: Verify all docs up to date | size:S
 - [x] S1.6.13: Run final compilation check | size:S
+- [x] S1.6.14: Final app health check | size:S
+- [x] S1.6.15: Final git status clean | size:S
 
 ---
 
