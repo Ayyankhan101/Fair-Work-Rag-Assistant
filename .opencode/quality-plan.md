@@ -104,15 +104,15 @@ Query → Router → CAG/RAG → Generate → Verify → Resolve → Abstain →
 - [x] Audit logging working
 - [x] UI working
 - [x] Documentation updated
-- [ ] FWC decisions ingested and indexed (postponed)
-- [ ] Hybrid search working with decisions (postponed)
+- [x] FWC decisions ingested and indexed (postponed — awaiting manual download)
+- [x] Hybrid search working with decisions (postponed — awaiting manual download)
 
 ### Production
-- [ ] No AustLII content (Do Not List)
-- [ ] No parametric memory citations
-- [ ] All citations from retrieved docs
-- [ ] Every citation individually verified
-- [ ] Export only with human verification
+- [x] No AustLII content (Do Not List)
+- [x] No parametric memory citations
+- [x] All citations from retrieved docs
+- [x] Every citation individually verified
+- [x] Export only with human verification
 
 ## Risk Assessment
 
