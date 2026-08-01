@@ -65,6 +65,7 @@
 - [x] S1.6.8: Fix localStorage error documentation | size:S
 - [x] S1.6.9: Verify all Python files compile | size:S
 - [x] S1.6.10: Push all changes to develop | size:S
+- [x] S1.6.11: Verify app responds on port 7860 | size:S
 
 ---
 
