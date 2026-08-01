@@ -58,6 +58,8 @@
 - [x] S1.6.1: Update all .opencode/ docs with current status | size:S
 - [x] S1.6.2: Fix ingest_all backward compatibility | size:S
 - [x] S1.6.3: Commit and push all changes | size:S
+- [x] S1.6.4: Restart Gradio app with correct venv | size:S
+- [x] S1.6.5: Verify app running on localhost:7860 | size:S
 
 ---
 
