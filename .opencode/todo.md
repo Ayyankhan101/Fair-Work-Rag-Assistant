@@ -54,6 +54,11 @@
 - [x] S1.5.2: Verify citation faithfulness with decisions | size:S (POSTPONED: awaiting S1.1.1 — user decision)
 - [x] S1.5.3: Test abstention on unsupported questions | size:S (out-of-scope questions correctly abstain)
 
+### T1.6: Documentation & Cleanup | agent:Worker
+- [x] S1.6.1: Update all .opencode/ docs with current status | size:S
+- [x] S1.6.2: Fix ingest_all backward compatibility | size:S
+- [x] S1.6.3: Commit and push all changes | size:S
+
 ---
 
 ## Phase 1 Summary
