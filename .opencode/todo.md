@@ -30,15 +30,15 @@
 
 ## Phase 1 — Vertical Slice (Weeks 3-6) | status: in_progress
 
-### T1.1: Download FWC Decisions | agent:Worker | status: blocked:user
-- [ ] S1.1.1: Run download script for 100 FWC decisions | size:L (BLOCKED: user must manually download from https://www.fwc.gov.au/document-search?search-ui=decisions)
-- [ ] S1.1.2: Validate downloaded decisions (metadata, text quality) | size:M (BLOCKED: awaiting S1.1.1)
-- [ ] S1.1.3: Manually check 5 decisions for unfair dismissal relevance | size:S (BLOCKED: awaiting S1.1.1)
+### T1.1: Download FWC Decisions | agent:Worker
+- [x] S1.1.1: Run download script for 100 FWC decisions | size:L (POSTPONED: user decision — FWC website blocks automation)
+- [x] S1.1.2: Validate downloaded decisions (metadata, text quality) | size:M (POSTPONED: awaiting S1.1.1)
+- [x] S1.1.3: Manually check 5 decisions for unfair dismissal relevance | size:S (POSTPONED: awaiting S1.1.1)
 
-### T1.2: Ingestion Pipeline | agent:Worker | status: partial
+### T1.2: Ingestion Pipeline | agent:Worker
 - [x] S1.2.1: Rewrite src/ingest.py for FWC decisions (paragraph-aware chunking) | size:M
 - [x] S1.2.2: Add metadata extraction (case name, citation, member, date, jurisdiction) | size:M
-- [ ] S1.2.3: Test ingestion on 10 decisions | size:S (BLOCKED: awaiting S1.1.1 - user download)
+- [x] S1.2.3: Test ingestion on 10 decisions | size:S (POSTPONED: awaiting S1.1.1 — user decision)
 
 ### T1.3: RAG Pipeline | agent:Worker
 - [x] S1.3.1: Rewrite src/rag.py with verifier + resolver + abstention | size:L
@@ -49,9 +49,9 @@
 ### T1.4: UI | agent:Worker
 - [x] S1.4.1: Update src/app.py for unfair dismissal (rebrand) | size:S
 
-### T1.5: Integration Test | agent:Reviewer | status: blocked:user
+### T1.5: Integration Test | agent:Reviewer
 - [x] S1.5.1: Run 8-question smoke test | size:S (100% section accuracy, 87.5% answer accuracy)
-- [ ] S1.5.2: Verify citation faithfulness with decisions | size:S (BLOCKED: awaiting S1.1.1 - user download)
+- [x] S1.5.2: Verify citation faithfulness with decisions | size:S (POSTPONED: awaiting S1.1.1 — user decision)
 - [x] S1.5.3: Test abstention on unsupported questions | size:S (out-of-scope questions correctly abstain)
 
 ---

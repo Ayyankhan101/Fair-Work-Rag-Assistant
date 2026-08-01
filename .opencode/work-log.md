@@ -33,7 +33,11 @@
 | Abstention gate | pass | 0% abstention on legislation queries |
 | Legislation ingestion | pass | 13 chunks from s385-394 |
 
-## Pending Integration
-- FWC decisions download (blocked: user must manually download)
-- Vectorstore build (blocked: awaiting decisions)
-- Hybrid search with decisions (blocked: awaiting decisions)
+## Router Fix (2026-08-01)
+- Added keywords: "how long", "time limit", "deadline", "within", "apply for", "application", "eligible to"
+- Now correctly classifies "How long do I have to apply?" as jurisdictional
+
+## Pending Integration (POSTPONED per user decision)
+- FWC decisions download — user will handle manually via Brave browser
+- Vectorstore build — awaiting decisions
+- Hybrid search with decisions — awaiting decisions
